@@ -2,7 +2,7 @@ CFLAGS = -Wall
 LIBS = 
 PROG = sha256
 
-SRCS = sha256_example.c sha256.c
+SRCS = main.c sha256.c ../Utils/utils.c
 OBJ_FILES = 
 
 all: gcc
