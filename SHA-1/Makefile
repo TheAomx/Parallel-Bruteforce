@@ -2,7 +2,7 @@ CFLAGS = -Wall
 LIBS = 
 PROG = sha1
 
-SRCS = main.c sha1.c ../Utils/utils.c
+SRCS = main.c sha1.c ../Utils/utils.c ../Utils/bruteforce.c
 OBJ_FILES = 
 
 all: gcc
