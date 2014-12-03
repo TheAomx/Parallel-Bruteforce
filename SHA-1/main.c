@@ -20,7 +20,7 @@ void get_sha1_from_string_iter(SHA1_CTX *ctx, char *string, uchar *hash, int num
 	int i = 0;	
 	sha1_init(ctx);
 	for (i = 0; i < numIterations; i++) {
-		sha1_update(ctx, (uchar*) string,strlen(string));
+		sha1_update(ctx, (uchar*) string, strlen(string));
 	}
 	sha1_final(ctx, hash);
 }
@@ -51,7 +51,6 @@ int main (int argc, char **argv) {
 	get_sha1_and_print (&sha_context, text1, sha1Hash);
 
 	get_sha1_and_print (&sha_context, text2, sha1Hash);
-
 
 	get_sha1_from_string_iter(&sha_context, text3, sha1Hash, 100000);
 	

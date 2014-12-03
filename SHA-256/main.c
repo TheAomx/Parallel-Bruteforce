@@ -25,7 +25,7 @@ void get_sha256_from_string_iter(SHA256_CTX *ctx, char *string, uchar *hash, int
 	int i = 0;	
 	sha256_init(ctx);
 	for (i = 0; i < numIterations; i++) {
-		sha256_update(ctx, (uchar*) string,strlen(string));
+		sha256_update(ctx, (uchar*) string, strlen(string));
 	}
 	sha256_final(ctx, hash);
 }
