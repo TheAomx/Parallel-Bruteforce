@@ -76,11 +76,11 @@ void bruteforcePassword(SHA1_CTX *ctx, uchar *toBreakHash, char *alphabet, char 
 	}
 }
 
-void bruteforcePasswordAll(SHA1_CTX *ctx, uchar *toBreakHash, char *alphabet, char *currentPassphrase, unsigned int searchLength, unsigned int currentLength) {
+void bruteforcePasswordAll(SHA1_CTX *ctx, uchar *toBreakHash, char *alphabet, char *currentPassphrase, unsigned int searchLength) {
 	int pwLen;
 	
 	for (pwLen = 1; pwLen <= searchLength; pwLen++) {
-		bruteforcePassword(ctx, toBreakHash, alphabet, currentPassphrase, pwLen, currentLength);
+		bruteforcePassword(ctx, toBreakHash, alphabet, currentPassphrase, pwLen, 0);
 	}
 }
 
@@ -90,7 +90,7 @@ int main (int argc, char **argv) {
 	char alphabet[] = {"abcdefghiklmnopqrstuvwxyzABCDEFGHIKLMOPQRSTUVXYZ123456789"};
 	char passwordBuffer[PW_LEN+1]; 
 	
-	uchar toBreakHash[SHA1_SIZE], passwordHash[SHA1_SIZE];
+	uchar toBreakHash[SHA1_SIZE];
 	
 	SHA1_CTX sha_context;
 
@@ -98,55 +98,7 @@ int main (int argc, char **argv) {
 	
 	memset(passwordBuffer, 0, sizeof(passwordBuffer));
 	
-	unsigned int offset = 0;
-
-	
-	bruteforcePasswordAll(&sha_context, toBreakHash, alphabet, passwordBuffer, PW_LEN, 0);
-	
-	/*
-	for (i = 0; i < 26; i++) {
-		passwordBuffer[offset++] = toChar(i);
-		for (j = 0; j < 26; j++) {
-			passwordBuffer[offset++] = toChar(j);
-			for (k = 0; k < 26; k++) {
-				passwordBuffer[offset++] = toChar(k);
-				for (l = 0; l < 26; l++) {
-					passwordBuffer[offset] = toChar(l);
-					
-					get_sha1_from_string( &sha_context, passwordBuffer, passwordHash);
-					
-					if (sha1_equal(toBreakHash, passwordHash)) {
-						printf("broken the hash! password was %s\n", passwordBuffer);
-					}
-
-					
-				}
-				offset--;
-			}
-			offset--;
-		}
-		offset--;
-	}
-	*/
-
-
-	/*
-
-	get_sha1_and_print (&sha_context, text1, sha1Hash);
-
-	get_sha1_and_print (&sha_context, text2, sha1Hash);
-
-	get_sha1_from_string_iter(&sha_context, text3, sha1Hash, 100000);
-	
-	sha1_print(sha1Hash);
-	printf("\n");
-
-	
-	get_sha1_from_file(&sha_context, "test", sha1Hash);
-	
-	sha1_print(sha1Hash);
-	printf("\n");
-	*/
+	bruteforcePasswordAll(&sha_context, toBreakHash, alphabet, passwordBuffer, PW_LEN);
 	
 	return 0;
 }
