@@ -21,6 +21,7 @@ typedef struct {
 } SHA1_CTX; 
 
 void sha1_print(unsigned char hash[]);
+int sha1_equal(unsigned char hash1[], unsigned char hash2[]);
 void sha1_init(SHA1_CTX *ctx);
 void sha1_update(SHA1_CTX *ctx, uchar data[], uint len);
 void sha1_final(SHA1_CTX *ctx, uchar hash[]);

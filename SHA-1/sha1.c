@@ -14,9 +14,20 @@
 void sha1_print(unsigned char hash[]) 
 {   
 	int idx; 
-	for (idx=0; idx < 20; idx++) {
+	for (idx=0; idx < SHA1_SIZE; idx++) {
 		printf("%02x",hash[idx]);
 	}
+}
+
+int sha1_equal(unsigned char hash1[], unsigned char hash2[]) {
+	return memcmp(hash1, hash2, SHA1_SIZE) == 0;
+	/*int i = 0;
+	for (i = 0; i < SHA1_SIZE; i++) {
+		if (hash1[i] != hash2[i]) {
+			return 0;
+		}
+	}
+	return 1;*/
 }
 
 
