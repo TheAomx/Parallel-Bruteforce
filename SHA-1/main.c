@@ -3,13 +3,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
-#include <math.h>
 
 #include "sha1.h"
 #include "../Utils/utils.h"
 #include "../Utils/bruteforce.h"
-
-#define PW_LEN 5
 
 unsigned long counter = 0;
 unsigned long needToCheck = 0;
@@ -44,10 +41,8 @@ int checkPasswordSHA1 (void *ctx, char *password, uchar *toBreakHash) {
 	static uchar passwordHash[SHA1_SIZE];
 
 	currentPassword = password;	
-
 	counter++;
 
-	
 	get_sha1_from_string( ctx, password, passwordHash);
 	
 	if (sha1_equal(toBreakHash, passwordHash)) {
@@ -71,23 +66,14 @@ void handleAlarm(int signal) {
 	printf("%s %lu pws/s total:  %.2f%%\n", currentPassword, counterNow - counterBefore, curProcess*100);
 }
 
-unsigned long pow_ul (unsigned long base, unsigned long exp) {
-	unsigned long t = 1;
-	unsigned long i = 0;
-	
-	for (i = 0; i < exp; i++) {
-		t *= base;
-	}
-		
-	return t;
-}
 
 int main (int argc, char **argv) {
-	//int i, j, k, l;
-	char passphrase[]={"99999"};
+
+	unsigned int passwordSearchLength = 6;
+	char passphrase[]={"zaa9"};
 	char alphabet[] = {"abcdefghiklmnopqrstuvwxyzABCDEFGHIKLMOPQRSTUVXYZ123456789"};
 	
-	needToCheck = pow_ul(strlen(alphabet), PW_LEN);
+	needToCheck = calcNumPasswords(strlen(alphabet), passwordSearchLength);
 	
 	uchar toBreakHash[SHA1_SIZE];
 	
@@ -97,10 +83,9 @@ int main (int argc, char **argv) {
 	
 	signal(SIGALRM, handleAlarm );
 
-
 	alarm(1);
 	
-	bruteforcePasswordAll(&sha_context, toBreakHash, checkPasswordSHA1, alphabet, PW_LEN);
+	bruteforcePasswordAll(&sha_context, toBreakHash, checkPasswordSHA1, alphabet, passwordSearchLength);
 	
 	return 0;
 }

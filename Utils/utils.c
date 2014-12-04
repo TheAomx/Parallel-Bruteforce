@@ -33,3 +33,25 @@ void readFile(char *filename, FileReader callback, void *ctx) {
 	fclose(file);
 }
 
+unsigned long pow_ul (unsigned long base, unsigned long exp) {
+	unsigned long t = 1;
+	unsigned long i = 0;
+	
+	for (i = 0; i < exp; i++) {
+		t *= base;
+	}
+		
+	return t;
+}
+
+unsigned long calcNumPasswords(unsigned long alphabetLength, unsigned long maxPasswordLength) {
+	unsigned long i = 1;
+	unsigned long numPasswords = 0;
+	
+	for (i = 1; i <= maxPasswordLength; i++) {
+		numPasswords += pow_ul(alphabetLength, i);
+	}
+	
+	return numPasswords;
+	
+}
