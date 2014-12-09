@@ -48,7 +48,7 @@ int checkPasswordSHA1 (void *ctx, char *password, uchar *toBreakHash) {
 	if (sha1_equal(toBreakHash, passwordHash)) {
 		printf("broken the hash! password was %s\n", password);
 		return 1;
-	}	
+	}
 	return 0;
 }
 
@@ -70,7 +70,7 @@ void handleAlarm(int signal) {
 int main (int argc, char **argv) {
 
 	unsigned int passwordSearchLength = 6;
-	char passphrase[]={"zaa9"};
+	char passphrase[]={"zaaa"};
 	char alphabet[] = {"abcdefghiklmnopqrstuvwxyzABCDEFGHIKLMOPQRSTUVXYZ123456789"};
 	
 	needToCheck = calcNumPasswords(strlen(alphabet), passwordSearchLength);
@@ -85,7 +85,10 @@ int main (int argc, char **argv) {
 
 	alarm(1);
 	
+	/* recursive bruteforce type */
 	bruteforcePasswordAll(&sha_context, toBreakHash, checkPasswordSHA1, alphabet, passwordSearchLength);
+	/* iterative version: 
+	bruteforcePasswordAll(&sha_context, toBreakHash, checkPasswordSHA1, alphabet, passwordSearchLength); */
 	
 	return 0;
 }
