@@ -68,7 +68,6 @@ void handleAlarm(int signal) {
 
 
 int main (int argc, char **argv) {
-
 	unsigned int passwordSearchLength = 6;
 	char passphrase[]={"zaaa"};
 	char alphabet[] = {"abcdefghiklmnopqrstuvwxyzABCDEFGHIKLMOPQRSTUVXYZ123456789"};
