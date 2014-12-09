@@ -69,8 +69,8 @@ void handleAlarm(int signal) {
 
 int main (int argc, char **argv) {
 
-	unsigned int passwordSearchLength = 6;
-	char passphrase[]={"zaa9"};
+	unsigned int passwordSearchLength = 10;
+	char passphrase[]={"zzzz"};
 	char alphabet[] = {"abcdefghiklmnopqrstuvwxyzABCDEFGHIKLMOPQRSTUVXYZ123456789"};
 	
 	needToCheck = calcNumPasswords(strlen(alphabet), passwordSearchLength);
