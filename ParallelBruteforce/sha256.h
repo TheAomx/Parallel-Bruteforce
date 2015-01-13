@@ -1,3 +1,10 @@
+/* 
+ * File:   pb_client.h
+ * Author: TBD
+ *      Defines SHA-256 algorithm functions and context.
+ * Created on 13. Januar 2015, 15:17
+ */
+
 #ifndef __SHA256_H
 #define __SHA256_H
 
