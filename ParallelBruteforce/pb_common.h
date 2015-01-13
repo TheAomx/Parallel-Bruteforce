@@ -20,11 +20,11 @@ extern "C" {
         /**
          * Mapping key
          */
-        char alpha;
+        uchar alpha;
         /**
          * Value mapped to <code>alpha</code>
          */
-        unsigned short value;
+        ushort value;
     };
     
     typedef struct AlphaValueMapping AlphaValueMapping;
@@ -37,7 +37,7 @@ extern "C" {
      * @param count The count of elements between input and output.
      * @return <code>result = currentPassword + count</code>
      */
-    char* nextGenerationPassword(char* currentPassword, char* alphabet, unsigned int count);
+    char* nextGenerationPassword(uchar* currentPassword, uchar* alphabet, uint count);
 
     /**
      * Calculates the absolute difference between password1 and password2.
@@ -46,7 +46,7 @@ extern "C" {
      * @param alphabet The alphabet of p1 and p2.
      * @return <code>result = | password1 - password2 |</code>
      */
-    unsigned long passwordDifference(char* password1, char* password2, char* alphabet);
+    unsigned long passwordDifference(uchar* password1, uchar* password2, uchar* alphabet);
 
     /**
      * <p>Creates an <code>AlphaValueMapping</code> for each element in <code>alphabet</code></p>. 
@@ -54,7 +54,7 @@ extern "C" {
      * @param alphabet The input alphabet
      * @return An array of <code>AlphaValueMappings</code> with the same size as <code>alphabet</code>.
      */
-    AlphaValueMapping* assignValues(char* alphabet);
+    AlphaValueMapping* assignValues(uchar* alphabet);
 
     /**
      * Calculates the number of passwords to be checked when calculating any password from length <code>1</code> to <code>maxPasswordLength</code>
@@ -62,7 +62,7 @@ extern "C" {
      * @param maxPasswordLength The maximum password length.
      * @return The number of words over the alphabet with the length <code>1</code> to <code>maxPasswordLength</code>
      */
-    unsigned long calcNumPasswords(unsigned long alphabetLength, unsigned long maxPasswordLength);
+    ulong calcNumPasswords(ulong alphabetLength, ulong maxPasswordLength);
     
 
 #ifdef	__cplusplus

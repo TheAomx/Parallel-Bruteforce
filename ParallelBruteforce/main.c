@@ -1,15 +1,17 @@
-/* 02552 61429
- * File:   main.cpp
+/* 
+ * File:   main.c
  * Author: TBD
  *
  * Created on 13. Januar 2015, 11:10
  */
 
-#include "hashing_algo.h"
+#include "core_headers.h"
 
 
 
 int main(int argc, char** argv) {
+    printf("%i",argc);
+    
     HashAlgorithm *hashAlgo = createHashAlgorithm("SHA256");
     uchar hash[SHA256_SIZE];
     

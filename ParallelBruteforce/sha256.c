@@ -1,6 +1,11 @@
-#include <stdio.h> 
-#include <string.h>
-#include "sha256.h"
+/* 
+ * File:   sha256.c
+ * Author: TBD
+ *
+ * Created on 13. Januar 2015, 18:41
+ */
+
+#include "core_headers.h"
 
 // DBL_INT_ADD treats two unsigned ints a and b as one 64-bit integer and adds c to it
 #define DBL_INT_ADD(a,b,c) if (a > 0xffffffff - (c)) ++b; a += c;

@@ -1,8 +1,10 @@
-#include <string.h>
-
-
-#include "hashing_algo.h"
-#include "sha1.h"
+/* 
+ * File:   hashing_algo.c
+ * Author: TBD
+ *
+ * Created on 13. Januar 2015, 18:41
+ */
+#include "core_headers.h"
 
 void freeHash(HashAlgorithm *algo) {
     free(algo->ctx);

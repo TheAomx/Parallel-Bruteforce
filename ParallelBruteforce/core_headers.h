@@ -16,17 +16,22 @@ extern "C" {
     // Signed variables are for wimps 
 typedef unsigned char uchar;
 typedef unsigned int uint;
+typedef unsigned long ulong;
+typedef unsigned short ushort;
     
     /* System headers */
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "mpi.h"
+#include <stddef.h>
+#include <mpi.h>
     /* Application headers */
 #include "utils.h"
 #include "sha1.h"
 #include "sha256.h"
 #include "bruteforce.h"
+#include "hashing_algo.h"
 #include "pb_common.h"
 #include "pb_client.h"
 #include "pb_server.h"

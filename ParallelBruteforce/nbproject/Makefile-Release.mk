@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/bruteforce.o \
+	${OBJECTDIR}/hashing_algo.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/sha1.o \
 	${OBJECTDIR}/sha256.o \
@@ -70,6 +71,11 @@ ${OBJECTDIR}/bruteforce.o: bruteforce.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/bruteforce.o bruteforce.c
+
+${OBJECTDIR}/hashing_algo.o: hashing_algo.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/hashing_algo.o hashing_algo.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}

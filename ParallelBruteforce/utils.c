@@ -1,8 +1,11 @@
-#include "utils.h"
+/* 
+ * File:   utils.c
+ * Author: TBD
+ *
+ * Created on 13. Januar 2015, 18:41
+ */
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include "core_headers.h"
 
 
 #define BUFFER_SIZE 256

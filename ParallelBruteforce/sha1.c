@@ -1,11 +1,15 @@
+/* 
+ * File:   sha1.c
+ * Author: TBD
+ *
+ * Created on 13. Januar 2015, 18:41
+ */
+
 // Code by: B-Con (http://b-con.us) 
 // Released under the GNU GPL 
 // MD5 Hash Digest implementation (little endian byte order) 
 
-#include <stdio.h> 
-#include <string.h>
-
-#include "sha1.h"
+#include "core_headers.h"
 
 // DBL_INT_ADD treats two unsigned ints a and b as one 64-bit integer and adds c to it
 #define ROTLEFT(a,b) ((a << b) | (a >> (32-b))) 
