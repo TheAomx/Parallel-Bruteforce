@@ -16,7 +16,7 @@ extern "C" {
     /**
      * Simple mapping from a character to an int value. 
      */
-    typedef struct AlphaValueMapping {
+    struct AlphaValueMapping {
         /**
          * Mapping key
          */
@@ -26,6 +26,9 @@ extern "C" {
          */
         unsigned short value;
     };
+    
+    typedef struct AlphaValueMapping AlphaValueMapping;
+    
     /**
      * Calculates the next offset password for generation.
      * The resulting password consists of elements of <code>alphabet</code>

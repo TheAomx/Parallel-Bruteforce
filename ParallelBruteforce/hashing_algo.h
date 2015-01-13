@@ -12,13 +12,33 @@
 extern "C" {
 #endif
 
-void (*hash_print)(unsigned char* hash);
-bool (*hash_equals)(unsigned char hash1[], unsigned char hash2[]);
-void (*hash_init)(void *ctx);
-void (*hash_update)(void *ctx, uchar data[], uint len);
-void (*hash_final)(void *ctx, uchar hash[]);
+#include "core_headers.h"
+    
+enum HashTypes { 
+    SHA1, SHA256
+};
+    
+typedef void (*hash_print_fct)(unsigned char* hash);
+typedef int (*hash_equals_fct)(unsigned char hash1[], unsigned char hash2[]);
+typedef void (*hash_init_fct)(void *ctx);
+typedef void (*hash_update_fct)(void *ctx, uchar data[], uint len);
+typedef void (*hash_final_fct)(void *ctx, uchar hash[]);
 
+struct HashAlgorithm {
+    enum HashTypes hashType;
+    void *ctx;
+    hash_print_fct print;
+    hash_equals_fct equals;
+    hash_init_fct init;
+    hash_update_fct update;
+    hash_final_fct final;
+};
 
+typedef struct HashAlgorithm HashAlgorithm;
+
+HashAlgorithm* createHashAlgorithm(char *hashAlgorithm);
+
+void freeHash(HashAlgorithm *algo);
 
 #ifdef	__cplusplus
 }

@@ -34,6 +34,10 @@ void sha256_print(unsigned char hash[])
 }
 
 
+int sha256_equal(unsigned char hash1[], unsigned char hash2[]) {
+    return memcmp(hash1, hash2, SHA256_SIZE) == 0;
+}
+
 static void sha256_transform(SHA256_CTX *ctx, uchar data[])
 {  
    uint a,b,c,d,e,f,g,h,i,j,t1,t2,m[64];
@@ -75,8 +79,9 @@ static void sha256_transform(SHA256_CTX *ctx, uchar data[])
    ctx->state[7] += h;
 }  
 
-void sha256_init(SHA256_CTX *ctx)
+void sha256_init(void *context)
 {  
+   SHA256_CTX *ctx = (SHA256_CTX*) context;
    ctx->datalen = 0; 
    ctx->bitlen[0] = 0; 
    ctx->bitlen[1] = 0; 
@@ -90,9 +95,10 @@ void sha256_init(SHA256_CTX *ctx)
    ctx->state[7] = 0x5be0cd19;
 }
 
-void sha256_update(SHA256_CTX *ctx, uchar data[], uint len)
+void sha256_update(void *context, uchar data[], uint len)
 {  
    uint i;
+   SHA256_CTX *ctx = (SHA256_CTX*) context;
    
    for (i=0; i < len; ++i) { 
       ctx->data[ctx->datalen] = data[i]; 
@@ -105,9 +111,10 @@ void sha256_update(SHA256_CTX *ctx, uchar data[], uint len)
    }  
 }  
 
-void sha256_final(SHA256_CTX *ctx, uchar hash[])
+void sha256_final(void *context, uchar hash[])
 {  
    uint i; 
+   SHA256_CTX *ctx = (SHA256_CTX*) context;
    
    i = ctx->datalen; 
    

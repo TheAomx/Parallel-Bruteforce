@@ -43,15 +43,3 @@ unsigned long pow_ul (unsigned long base, unsigned long exp) {
 		
 	return t;
 }
-
-unsigned long calcNumPasswords(unsigned long alphabetLength, unsigned long maxPasswordLength) {
-	unsigned long i = 1;
-	unsigned long numPasswords = 0;
-	
-	for (i = 1; i <= maxPasswordLength; i++) {
-		numPasswords += pow_ul(alphabetLength, i);
-	}
-	
-	return numPasswords;
-	
-}

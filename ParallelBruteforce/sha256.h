@@ -21,7 +21,8 @@ typedef struct {
 } SHA256_CTX;
 
 void sha256_print(unsigned char hash[]);
-void sha256_init(SHA256_CTX *ctx);
-void sha256_update(SHA256_CTX *ctx, uchar data[], uint len);
-void sha256_final(SHA256_CTX *ctx, uchar hash[]);
+int sha256_equal(unsigned char hash1[], unsigned char hash2[]);
+void sha256_init(void *context);
+void sha256_update(void *context, uchar data[], uint len);
+void sha256_final(void *context, uchar hash[]);
 #endif

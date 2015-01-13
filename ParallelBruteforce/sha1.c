@@ -88,8 +88,9 @@ static void sha1_transform(SHA1_CTX *ctx, uchar data[])
    ctx->state[4] += e; 
 }  
 
-void sha1_init(SHA1_CTX *ctx) 
+void sha1_init(void *context) 
 {  
+   SHA1_CTX *ctx = (SHA1_CTX*) context;
    ctx->datalen = 0; 
    ctx->bitlen[0] = 0; 
    ctx->bitlen[1] = 0; 
@@ -104,9 +105,10 @@ void sha1_init(SHA1_CTX *ctx)
    ctx->k[3] = 0xca62c1d6; 
 }  
 
-void sha1_update(SHA1_CTX *ctx, uchar data[], uint len) 
+void sha1_update(void *context, uchar data[], uint len) 
 {  
    uint i;
+   SHA1_CTX *ctx = (SHA1_CTX*) context;
    
    for (i=0; i < len; ++i) { 
       ctx->data[ctx->datalen] = data[i]; 
@@ -119,9 +121,10 @@ void sha1_update(SHA1_CTX *ctx, uchar data[], uint len)
    }  
 }  
 
-void sha1_final(SHA1_CTX *ctx, uchar hash[]) 
+void sha1_final(void *context, uchar hash[]) 
 {  
    uint i; 
+   SHA1_CTX *ctx = (SHA1_CTX*) context;
    
    i = ctx->datalen; 
    

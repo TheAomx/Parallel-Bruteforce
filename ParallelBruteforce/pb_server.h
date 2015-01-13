@@ -18,7 +18,7 @@ extern "C" {
     /**
      * Type definition for client configuration information.
      */
-    typedef struct ClientConfig{
+    struct ClientConfig {
         /**
          * The client IP address or host name.
          */
@@ -28,6 +28,8 @@ extern "C" {
          */
         int numTasks;
     };
+    
+    typedef struct ClientConfig ClientConfig;
     
     
      /**
@@ -44,7 +46,7 @@ extern "C" {
     /**
      * Type definition for server meta data.
      */
-    typedef struct ServerContext{
+    struct ServerContext{
         /**
          * The number of clients used by the server.
          */
@@ -74,13 +76,16 @@ extern "C" {
         char* alphabet;
        
     };
+    
+    typedef struct ServerContext ServerContext;
+    
     /**
      * Executes server bootstrap
      * @return An initialized <code>ServerContext</code>.
      */
     ServerContext* initialize();
     
-    void receiveSer
+    //void receiveSer <-- what means this?
     
     
 
