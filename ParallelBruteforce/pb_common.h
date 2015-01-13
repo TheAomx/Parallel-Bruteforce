@@ -8,7 +8,7 @@
 
 #ifndef PLC_COMMON_H
 #define	PLC_COMMON_H
-
+#include "core_headers.h"
 #ifdef	__cplusplus
 extern "C" {
 #endif

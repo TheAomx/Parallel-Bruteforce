@@ -1,6 +1,6 @@
 /* 02552 61429
  * File:   main.cpp
- * Author: Nils Frenking
+ * Author: TBD
  *
  * Created on 13. Januar 2015, 11:10
  */
