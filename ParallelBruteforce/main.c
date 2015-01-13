@@ -1,4 +1,4 @@
-/* 
+/* 02552 61429
  * File:   main.cpp
  * Author: Nils Frenking
  *
