@@ -18,31 +18,31 @@ typedef unsigned char uchar;
 typedef int (*bruteforceCallback) (void *ctx, char *password, uchar *toBreakHash);
 /**
  * 
- * @param ctx
+ * @param ctx The hash generation context (arbitrary data).
  * @param toBreakHash The array of target hashes to search for.
- * @param callback The 
- * @param alphabet
- * @param currentPassphrase
- * @param passwordLength
+ * @param callback The hash generation function to be used.
+ * @param alphabet The password alphabet
+ * @param currentPassphrase 
+ * @param passwordLength 
  * @param currentIndex
  */
 void bruteforcePassword(void *ctx, uchar *toBreakHash, bruteforceCallback callback, char *alphabet, char *currentPassphrase, unsigned int passwordLength, unsigned int currentIndex);
 /**
  * 
- * @param ctx
- * @param toBreakHash
- * @param callback
- * @param alphabet
+ * @param ctx The hash generation context (arbitrary data).
+ * @param toBreakHash The array of target hashes to search for.
+ * @param callback The hash generation function to be used.
+ * @param alphabet The password alphabet
  * @param maxPasswordLength
  * @return 
  */
 int bruteforcePasswordIter(void *ctx, uchar *toBreakHash, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength);
 /**
  * 
- * @param ctx
- * @param toBreakHash
- * @param callback
- * @param alphabet
+ * @param ctx The hash generation context (arbitrary data).
+ * @param toBreakHash The array of target hashes to search for.
+ * @param callback The hash generation function to be used.
+ * @param alphabet The password alphabet
  * @param maxPasswordLength
  */
 void bruteforcePasswordAll(void *ctx, uchar *toBreakHash, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength);
