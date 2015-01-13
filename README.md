@@ -27,3 +27,6 @@ Zeit-/Performance-Messung:
 Weiterführende Ideen:
 
 - lokale parallelisierung der Clients über OpenMP
+
+Ablaufdiagramm
+![Bild](http://i58.tinypic.com/2vjd0rq.png "Ablaufdiagramm")
