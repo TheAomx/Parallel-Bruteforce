@@ -7,10 +7,8 @@
 
 #ifndef __SHA1_H
 #define __SHA1_H
+#include "core_headers.h"
 
-// Signed variables are for wimps 
-typedef unsigned char uchar;
-typedef unsigned int uint;
 
 #define SHA1_SIZE 20
 
