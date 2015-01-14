@@ -23,6 +23,7 @@ typedef int (*hash_equals_fct)(unsigned char hash1[], unsigned char hash2[]);
 typedef void (*hash_init_fct)(void *ctx);
 typedef void (*hash_update_fct)(void *ctx, uchar data[], uint len);
 typedef void (*hash_final_fct)(void *ctx, uchar hash[]);
+typedef int (*hash_len)(void *ctx);
 
 struct HashAlgorithm {
     enum HashTypes hashType;

@@ -38,7 +38,21 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="1">
@@ -58,13 +72,17 @@
       </item>
       <item path="hashing_algo.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="hashing_algo.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="pb_client.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="pb_common.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="pb_common.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="server.h" ex="false" tool="3" flavor2="0">
+      <item path="pb_server.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="sha1.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -107,13 +125,17 @@
       </item>
       <item path="hashing_algo.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="hashing_algo.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="pb_client.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="pb_common.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="pb_common.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="server.h" ex="false" tool="3" flavor2="0">
+      <item path="pb_server.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="sha1.c" ex="false" tool="0" flavor2="0">
       </item>
