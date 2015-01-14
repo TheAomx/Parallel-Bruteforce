@@ -27,6 +27,7 @@ typedef unsigned short ushort;
 #include <stddef.h>
 #include <mpi.h>
     /* Application headers */
+#include "sds.h"
 #include "utils.h"
 #include "sha1.h"
 #include "sha256.h"
