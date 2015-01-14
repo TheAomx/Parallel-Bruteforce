@@ -51,6 +51,7 @@ extern "C" {
     #define DBG_ERR(format, ...) do {} while(0)
 #endif
 
+
     // Signed variables are for wimps 
 typedef unsigned char uchar;
 typedef unsigned int uint;
