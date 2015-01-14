@@ -6,7 +6,10 @@
                    projectFiles="true">
       <itemPath>bruteforce.h</itemPath>
       <itemPath>core_headers.h</itemPath>
+      <itemPath>hashing_algo.h</itemPath>
+      <itemPath>pb_client.h</itemPath>
       <itemPath>pb_common.h</itemPath>
+      <itemPath>pb_server.h</itemPath>
       <itemPath>sds.h</itemPath>
       <itemPath>server.h</itemPath>
       <itemPath>sha1.h</itemPath>
@@ -63,11 +66,17 @@
       </item>
       <item path="hashing_algo.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="hashing_algo.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="pb_client.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="pb_common.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="pb_common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="pb_server.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="sds.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -118,11 +127,17 @@
       </item>
       <item path="hashing_algo.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="hashing_algo.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="pb_client.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="pb_common.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="pb_common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="pb_server.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="sds.c" ex="false" tool="0" flavor2="0">
       </item>

@@ -12,7 +12,7 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
+    
     /**
      * Simple mapping from a character to an int value. 
      */

@@ -21,6 +21,14 @@ extern "C" {
      * @return The next password.
      */
     char* nextPassword(char* current, char* alphabet);
+    
+    struct PasswordHashes {
+        char *hashAlgorithm;
+        unsigned long numHashes;
+        uchar **hashes;
+    };
+    
+    typedef struct PasswordHashes PasswordHashes;
 
 #ifdef	__cplusplus
 }

@@ -49,7 +49,7 @@ HashAlgorithm* createHashAlgorithm(char *hashAlgorithm) {
     }
 }
 
-void updateHash (void *buffer, unsigned int bytesRead, void *ctx) {
+static void updateHash (void *buffer, unsigned int bytesRead, void *ctx) {
     HashAlgorithm *algo = (HashAlgorithm*) ctx;
     algo->update(algo->ctx, (uchar*) buffer, bytesRead);
 }

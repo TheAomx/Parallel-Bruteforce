@@ -40,6 +40,12 @@ HashAlgorithm* createHashAlgorithm(char *hashAlgorithm);
 
 void freeHash(HashAlgorithm *algo);
 
+void getHashFromFile(HashAlgorithm *algo, char *filename, uchar *hash);
+void getHashFromString(HashAlgorithm *algo, char *string, uchar *hash);
+void getHashFromStringIter(HashAlgorithm *algo, char *string, uchar *hash, int numIterations);
+
+
+
 #ifdef	__cplusplus
 }
 #endif

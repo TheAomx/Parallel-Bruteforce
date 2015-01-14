@@ -10,6 +10,7 @@
 #include "core_headers.h"
 
 #if 1
+
 char** readLinesOfFile(MPI_File *in, int *linesFound) {
     MPI_Offset filesize;
     char *fileBuffer;
@@ -27,9 +28,61 @@ char** readLinesOfFile(MPI_File *in, int *linesFound) {
     return splittedString;
 }
 
-void processlines(char **lines, const int nlines, const int rank) {
-    for (int i=0; i<nlines; i++) {
-        printf("[%d] %s\n",rank, lines[i]);
+static inline int isSupportedHashAlgorithm (sds line) {
+    return (strcmp(line,"SHA1") == 0 || strcmp(line,"SHA256") == 0);
+}
+
+PasswordHashes* generatePasswordHashes(MPI_File *in) {
+    int linesFound = 0;
+    sds *lines = readLinesOfFile(in, &linesFound);
+    unsigned long hashesFound = 0;
+    int i;
+    
+    if (linesFound == 0) {
+        DBG_ERR("linesFound == 0");
+        return NULL;
+    }
+    
+    for (i = 1; i < linesFound; i++) {
+        sdstrim(lines[i], " \t");
+        if (strcmp("", lines[i]) != 0) {
+            hashesFound++;
+        }
+    }
+    
+    if (!isSupportedHashAlgorithm(lines[0])) {
+        DBG_ERR("the hash algorithm %s is not supported!", lines[0]);
+        return NULL;
+    }
+    
+    if (hashesFound == 0) {
+        DBG_ERR("hashesFound == 0");
+        return NULL;
+    }
+    
+    PasswordHashes *pwHashes = (PasswordHashes*) malloc(sizeof(PasswordHashes));
+    pwHashes->hashAlgorithm = lines[0];
+    pwHashes->numHashes = hashesFound;
+    pwHashes->hashes = (uchar**) malloc(sizeof(uchar*) * hashesFound);
+    
+    int j = 0;
+    
+    for (i = 1; i < linesFound; i++) {
+        if (strcmp("", lines[i]) != 0) {
+            pwHashes->hashes[j] = lines[i];
+            j++;
+        }
+        else {
+            sdsfree(lines[i]);
+        }
+    }
+    
+    return pwHashes;
+}
+
+void printHashes(PasswordHashes *pwHashes, int rank) {
+    for (int i=0; i<pwHashes->numHashes; i++) {
+        printf("[%d] %s\n",rank, pwHashes->hashes[i]);
     }
 }
 
@@ -61,17 +114,21 @@ int main(int argc, char** argv) {
 	}
 	else
 	{                
-                printf("huhu\n");
-                const int overlap=100;
-                char **lines;
-                int nlines;
-                lines = readLinesOfFile(&fh, &nlines);
-                printf("huhu2\n");
-                processlines(lines, nlines, rank);
-                printf("huhu3\n");
-                
-                sdsfreesplitres(lines, nlines);
-		//int MPI_File_read(fh, void *buf,int count, MPI_CHAR, MPI_Status *status);
+            int i = 0;
+
+            PasswordHashes* pwHashes = generatePasswordHashes(&fh);
+            //printHashes(pwHashes, rank);
+
+            HashAlgorithm* hashAlgo = createHashAlgorithm(pwHashes->hashAlgorithm);
+            uchar hashBuffer[SHA256_SIZE];
+            getHashFromString(hashAlgo, "Julian", hashBuffer);
+            
+            for (i = 0; i < pwHashes->numHashes; i++) {
+                if (hashAlgo->equals(hashBuffer, pwHashes->hashes[i])) {
+                    printf("the hash of Julian was ");
+                    hashAlgo->print(pwHashes->hashes[i]);
+                }
+            }
 	}
 
 	MPI_Finalize();
