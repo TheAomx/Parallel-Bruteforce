@@ -15,13 +15,13 @@ int main(int argc, char** argv) {
     HashAlgorithm *hashAlgo = createHashAlgorithm("SHA256");
     uchar hash[SHA256_SIZE];
     
-    /*oder auch: 
+    /*oder auch:
     HashAlgorithm *hashAlgo = createHashAlgorithm("SHA1");
     uchar hash[SHA1_SIZE];*/
     
     getHashFromFile(hashAlgo, "main.c", &hash);
-   
-    hashAlgo->print(&hash);
+
+    hashAlgo->print(hash);
     printf("\n");
   
     freeHash(hashAlgo);
