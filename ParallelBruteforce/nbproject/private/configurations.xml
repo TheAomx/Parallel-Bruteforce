@@ -25,8 +25,10 @@
       <runprofile version="9">
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>sh'${OUTPUT_PATH}'</runcommandpicklistitem>
+          <runcommandpicklistitem>sh -c "mpirun -np 10 '${OUTPUT_PATH}'"</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <runcommand>sh -c "mpirun -np 10 '${OUTPUT_PATH}'"</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>

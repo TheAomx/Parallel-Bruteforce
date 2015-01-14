@@ -14,12 +14,15 @@
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
+      <itemPath>testHashes.txt</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>bruteforce.c</itemPath>
+      <itemPath>hashing_algo.c</itemPath>
       <itemPath>main.c</itemPath>
+      <itemPath>pb_common.c</itemPath>
       <itemPath>sha1.c</itemPath>
       <itemPath>sha256.c</itemPath>
       <itemPath>utils.c</itemPath>
@@ -45,6 +48,9 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <cTool>
+          <standard>3</standard>
+        </cTool>
       </compileType>
       <item path="bruteforce.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -53,6 +59,8 @@
       <item path="hashing_algo.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="pb_common.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="pb_common.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -65,6 +73,8 @@
       <item path="sha256.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="sha256.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="testHashes.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="utils.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -99,6 +109,8 @@
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="pb_common.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="pb_common.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="server.h" ex="false" tool="3" flavor2="0">
@@ -110,6 +122,8 @@
       <item path="sha256.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="sha256.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="testHashes.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="utils.c" ex="false" tool="0" flavor2="0">
       </item>

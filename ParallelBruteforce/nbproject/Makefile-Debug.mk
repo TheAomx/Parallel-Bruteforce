@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/bruteforce.o \
 	${OBJECTDIR}/hashing_algo.o \
 	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/pb_common.o \
 	${OBJECTDIR}/sha1.o \
 	${OBJECTDIR}/sha256.o \
 	${OBJECTDIR}/utils.o
@@ -70,32 +71,37 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/parallelbruteforce: ${OBJECTFILES}
 ${OBJECTDIR}/bruteforce.o: bruteforce.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/bruteforce.o bruteforce.c
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/bruteforce.o bruteforce.c
 
 ${OBJECTDIR}/hashing_algo.o: hashing_algo.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/hashing_algo.o hashing_algo.c
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/hashing_algo.o hashing_algo.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+
+${OBJECTDIR}/pb_common.o: pb_common.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pb_common.o pb_common.c
 
 ${OBJECTDIR}/sha1.o: sha1.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1.o sha1.c
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1.o sha1.c
 
 ${OBJECTDIR}/sha256.o: sha256.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha256.o sha256.c
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha256.o sha256.c
 
 ${OBJECTDIR}/utils.o: utils.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/utils.o utils.c
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/utils.o utils.c
 
 # Subprojects
 .build-subprojects:
