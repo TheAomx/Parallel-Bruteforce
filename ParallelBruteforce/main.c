@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
     MPI_Comm_size( MPI_COMM_WORLD, &nTasks );
     MPI_Comm_rank( MPI_COMM_WORLD, &rank );
     MPI_File fh;
-    int ret = MPI_File_open(MPI_COMM_WORLD, "tbsha1.txt", MPI_MODE_RDONLY, MPI_INFO_NULL,&fh);
+    int ret = MPI_File_open(MPI_COMM_WORLD, "hashes.txt", MPI_MODE_RDONLY, MPI_INFO_NULL,&fh);
     if(ret < 0) {
         printf("MPI_File_open failed");
         exit(1);
