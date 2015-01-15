@@ -6,7 +6,7 @@
  */
 #include "core_headers.h"
 
-void freeHash(HashAlgorithm *algo) {
+void freeHashAlgo(HashAlgorithm *algo) {
     free(algo->ctx);
     free(algo);
 }
@@ -16,7 +16,8 @@ static HashAlgorithm* createSHA1() {
     SHA1_CTX *sha_context = (SHA1_CTX*) malloc(sizeof(SHA1_CTX));
     sha1->hashType = SHA1;
     sha1->ctx = (void*) sha_context;
-    sha1->print = sha1_print;
+    sha1->hashSize = SHA1_SIZE;
+    sha1->toString = sha1_toString;
     sha1->equals = sha1_equal;
     sha1->init = sha1_init;
     sha1->update = sha1_update;
@@ -29,7 +30,8 @@ static HashAlgorithm* createSHA256() {
     SHA256_CTX *sha256_context = (SHA256_CTX*) malloc(sizeof(SHA256_CTX));
     sha256->hashType = SHA256;
     sha256->ctx = (void*) sha256_context;
-    sha256->print = sha256_print;
+    sha256->hashSize = SHA256_SIZE; 
+    sha256->toString = sha256_toString;
     sha256->equals = sha256_equal;
     sha256->init = sha256_init;
     sha256->update = sha256_update;
@@ -71,4 +73,35 @@ void getHashFromStringIter(HashAlgorithm *algo, char *string, uchar *hash, int n
 
 void getHashFromString(HashAlgorithm *algo, char *string, uchar *hash) {
     getHashFromStringIter(algo, string, hash, 1);
+}
+
+static uchar hexCharToBin(char c) {
+    if (c >= '0' && c <='9') {
+        return c - '0';
+    }
+    else if (c >= 'a' && c <= 'f') {
+        return c - 'a' + 10;
+    }
+    else if (c >= 'A' && c <= 'F') {
+        return c - 'A' + 10;
+    }
+    else {
+        return 0;
+    }
+}
+
+static uchar hexToBin(char c1, char c2) {
+    uchar temp = 0;
+    temp = hexCharToBin(c2);
+    temp |= hexCharToBin(c1) << 4;
+    return temp;
+}
+
+uchar* convertHashStringToBinary(HashAlgorithm *algo, sds hashString) {
+    int i, j;
+    uchar *hashBinary = (uchar*) malloc(sizeof(uchar) * algo->hashSize);
+    for (i = 0, j = 0; i < algo->hashSize; i++, j+=2) {
+        hashBinary[i] = hexToBin(hashString[j], hashString[j+1]) ;
+    }
+    return hashBinary;
 }

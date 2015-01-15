@@ -8,6 +8,9 @@
 #ifndef PB_CLIENT_H
 #define	PB_CLIENT_H
 
+#include "hashing_algo.h"
+
+
 #ifdef	__cplusplus
 extern "C" {
 #endif
@@ -23,12 +26,16 @@ extern "C" {
     char* nextPassword(char* current, char* alphabet);
     
     struct PasswordHashes {
-        char *hashAlgorithm;
+        HashAlgorithm *algo;
         unsigned long numHashes;
         uchar **hashes;
     };
     
     typedef struct PasswordHashes PasswordHashes;
+    
+    void printHashes(PasswordHashes *pwHashes, int rank);
+    PasswordHashes* generatePasswordHashes(MPI_File *in);
+    void freePasswordHashes(PasswordHashes *pwHashes);
 
 #ifdef	__cplusplus
 }

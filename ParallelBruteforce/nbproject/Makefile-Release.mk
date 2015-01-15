@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/bruteforce.o \
 	${OBJECTDIR}/hashing_algo.o \
 	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/pb_client.o \
 	${OBJECTDIR}/pb_common.o \
 	${OBJECTDIR}/sds.o \
 	${OBJECTDIR}/sha1.o \
@@ -83,6 +84,11 @@ ${OBJECTDIR}/main.o: main.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+
+${OBJECTDIR}/pb_client.o: pb_client.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pb_client.o pb_client.c
 
 ${OBJECTDIR}/pb_common.o: pb_common.c 
 	${MKDIR} -p ${OBJECTDIR}

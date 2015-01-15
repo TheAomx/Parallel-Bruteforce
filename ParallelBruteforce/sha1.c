@@ -15,12 +15,16 @@
 #define ROTLEFT(a,b) ((a << b) | (a >> (32-b))) 
 #define DBL_INT_ADD(a,b,c) if (a > 0xffffffff - c) ++b; a += c; 
 
-void sha1_print(unsigned char hash[]) 
+char toStringBuffer[SHA1_SIZE*2+1];
+
+char* sha1_toString(unsigned char hash[]) 
 {   
-	int idx; 
-	for (idx=0; idx < SHA1_SIZE; idx++) {
-		printf("%02x",hash[idx]);
-	}
+   int idx;
+   for (idx=0; idx < SHA1_SIZE; idx++) {
+      sprintf(toStringBuffer + idx*2, "%02x",hash[idx]);
+   }
+   toStringBuffer[SHA1_SIZE*2] = (char) 0;
+   return toStringBuffer;
 }
 
 int sha1_equal(unsigned char hash1[], unsigned char hash2[]) {

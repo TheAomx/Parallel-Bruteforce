@@ -20,7 +20,7 @@ typedef struct {
    uint state[8];
 } SHA256_CTX;
 
-void sha256_print(unsigned char hash[]);
+char* sha256_toString(unsigned char hash[]);
 int sha256_equal(unsigned char hash1[], unsigned char hash2[]);
 void sha256_init(void *context);
 void sha256_update(void *context, uchar data[], uint len);
