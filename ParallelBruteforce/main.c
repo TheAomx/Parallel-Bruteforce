@@ -44,7 +44,7 @@ PasswordHashes* generatePasswordHashes(MPI_File *in) {
     }
     
     for (i = 1; i < linesFound; i++) {
-        sdstrim(lines[i], " \t");
+        sdstrim(lines[i], " \t"); 
         if (strcmp("", lines[i]) != 0) {
             hashesFound++;
         }
@@ -86,6 +86,37 @@ void printHashes(PasswordHashes *pwHashes, int rank) {
     }
 }
 
+uchar hexCharToBin(char c) {
+    if (c >= '0' && c <='9') {
+        return c - '0';
+    }
+    else if (c >= 'a' && c <= 'f') {
+        return c - 'a' + 10;
+    }
+    else if (c >= 'A' && c <= 'F') {
+        return c - 'A' + 10;
+    }
+    else {
+        return 0;
+    }
+}
+
+uchar hexToBin(char c1, char c2) {
+    uchar temp = 0;
+    temp = hexCharToBin(c2);
+    temp |= hexCharToBin(c1) << 4;
+    return temp;
+}
+
+void convertHash(sds hashString, uchar *hashBinary) {
+    uchar *hashBin = hashBinary;
+    int i, j;
+    uchar temp;
+    for (i = 0, j = 0; i < SHA256_SIZE; i++, j+=2) {
+        hashBin[i] = hexToBin(hashString[j], hashString[j+1]) ;
+    }
+}
+
 int main(int argc, char** argv) {
     int maxNum;
     int nTasks, rank;
@@ -117,16 +148,24 @@ int main(int argc, char** argv) {
             int i = 0;
 
             PasswordHashes* pwHashes = generatePasswordHashes(&fh);
-            //printHashes(pwHashes, rank);
+            printHashes(pwHashes, rank);
 
             HashAlgorithm* hashAlgo = createHashAlgorithm(pwHashes->hashAlgorithm);
             uchar hashBuffer[SHA256_SIZE];
+            uchar convertedHash[SHA256_SIZE];
             getHashFromString(hashAlgo, "Julian", hashBuffer);
             
+//            printf("searching for hash of ");
+//            hashAlgo->print(hashBuffer);
+//            printf("\n");
+            printf("before check!\n");
             for (i = 0; i < pwHashes->numHashes; i++) {
-                if (hashAlgo->equals(hashBuffer, pwHashes->hashes[i])) {
+                convertHash(pwHashes->hashes[i], convertedHash);
+//                hashAlgo->print(convertedHash);
+//                printf("\n");
+                if (hashAlgo->equals(hashBuffer, convertedHash)) {
                     printf("the hash of Julian was ");
-                    hashAlgo->print(pwHashes->hashes[i]);
+                    hashAlgo->print(convertedHash);
                 }
             }
 	}
@@ -145,15 +184,15 @@ int main(int argc, char** argv) {
     uchar hash[SHA1_SIZE];*/
     
    //getHashFromFile(hashAlgo, "main.c", &hash);
-    getHashFromString(hashAlgo,"Robin", &hash);
+    getHashFromString(hashAlgo,"Robin", hash);
     hashAlgo->print(hash);
     printf("\n");
     
-    getHashFromString(hashAlgo,"Julian", &hash);
+    getHashFromString(hashAlgo,"Julian", hash);
     hashAlgo->print(hash);
     printf("\n");
     
-    getHashFromString(hashAlgo,"Nils", &hash);
+    getHashFromString(hashAlgo,"Nils", hash);
     hashAlgo->print(hash);
     printf("\n");
   
