@@ -15,7 +15,7 @@ typedef unsigned char uchar;
  * Function pointer definition to be used as a generic function interface for hash generation functions.
  * Enables easy hashing algorithm replacement.
  */
-typedef int (*bruteforceCallback) (void *ctx, char *password, uchar *toBreakHash);
+typedef int (*bruteforceCallback) (void *ctx, char *password);
 /**
  * 
  * @param ctx The hash generation context (arbitrary data).
@@ -26,7 +26,7 @@ typedef int (*bruteforceCallback) (void *ctx, char *password, uchar *toBreakHash
  * @param passwordLength 
  * @param currentIndex
  */
-void bruteforcePassword(void *ctx, uchar *toBreakHash, bruteforceCallback callback, char *alphabet, char *currentPassphrase, unsigned int passwordLength, unsigned int currentIndex);
+void bruteforcePassword(void *ctx, bruteforceCallback callback, char *alphabet, char *currentPassphrase, unsigned int passwordLength, unsigned int currentIndex);
 /**
  * 
  * @param ctx The hash generation context (arbitrary data).
@@ -36,7 +36,7 @@ void bruteforcePassword(void *ctx, uchar *toBreakHash, bruteforceCallback callba
  * @param maxPasswordLength
  * @return 
  */
-int bruteforcePasswordIter(void *ctx, uchar *toBreakHash, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength);
+int bruteforcePasswordIter(void *ctx, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength);
 /**
  * 
  * @param ctx The hash generation context (arbitrary data).
@@ -45,7 +45,7 @@ int bruteforcePasswordIter(void *ctx, uchar *toBreakHash, bruteforceCallback cal
  * @param alphabet The password alphabet
  * @param maxPasswordLength
  */
-void bruteforcePasswordAll(void *ctx, uchar *toBreakHash, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength);
+void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength);
 
 
 #endif

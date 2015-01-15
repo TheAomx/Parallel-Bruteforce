@@ -11,6 +11,20 @@
 
 #if 1
 
+int checkPassword (void *ctx, char *password) {
+    int i;
+    PasswordHashes *pwHashes = (PasswordHashes*) ctx;
+    
+    getHashFromString(pwHashes->algo, password, pwHashes->hashBuffer);
+
+    for (i = 0; i < pwHashes->numHashes; i++) {
+        if (pwHashes->algo->equals(pwHashes->hashBuffer, pwHashes->hashes[i])) {
+            printf("the hash of %s was %s \n", password, pwHashes->algo->toString(pwHashes->hashes[i]));
+        }
+    }
+    return 0;
+}
+
 int main(int argc, char** argv) {
     int maxNum;
     int nTasks, rank;
@@ -18,7 +32,7 @@ int main(int argc, char** argv) {
     MPI_Comm_size( MPI_COMM_WORLD, &nTasks );
     MPI_Comm_rank( MPI_COMM_WORLD, &rank );
     MPI_File fh;
-    int ret = MPI_File_open(MPI_COMM_WORLD, "hashes.txt", MPI_MODE_RDONLY, MPI_INFO_NULL,&fh);
+    int ret = MPI_File_open(MPI_COMM_WORLD, "tbsha1.txt", MPI_MODE_RDONLY, MPI_INFO_NULL,&fh);
     if(ret < 0) {
         printf("MPI_File_open failed");
         exit(1);
@@ -40,18 +54,14 @@ int main(int argc, char** argv) {
 	else
 	{                
             int i = 0;
+            char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXYZ123456789"};
+            unsigned int passwordSearchLength = 6;
+            
             
             PasswordHashes* pwHashes = generatePasswordHashes(&fh);
             printHashes(pwHashes, rank);
-
-            uchar hashBuffer[pwHashes->algo->hashSize];
-            getHashFromString(pwHashes->algo, "Julian", hashBuffer);
             
-            for (i = 0; i < pwHashes->numHashes; i++) {
-                if (pwHashes->algo->equals(hashBuffer, pwHashes->hashes[i])) {
-                    printf("the hash of Julian was %s \n", pwHashes->algo->toString(pwHashes->hashes[i]));
-                }
-            }
+            bruteforcePasswordAll(pwHashes, checkPassword, alphabet, passwordSearchLength);
             
             freePasswordHashes(pwHashes);
 	}
@@ -62,16 +72,16 @@ int main(int argc, char** argv) {
 
 #if 0
 int main(int argc, char** argv) {
-    HashAlgorithm *hashAlgo = createHashAlgorithm("SHA1");
+    HashAlgorithm *hashAlgo = createHashAlgorithm("SHA256");
     uchar hash[hashAlgo->hashSize];
     
     /*oder auch:
     HashAlgorithm *hashAlgo = createHashAlgorithm("SHA1");
     uchar hash[SHA1_SIZE];*/
     
-   getHashFromFile(hashAlgo, "main.c", hash);
-   printf("%s\n", hashAlgo->toString(hash));
-    /*
+//   getHashFromFile(hashAlgo, "main.c", hash);
+//   printf("%s\n", hashAlgo->toString(hash));
+ 
     getHashFromString(hashAlgo,"Robin", hash);
     printf("%s\n", hashAlgo->toString(hash));
     
@@ -79,9 +89,9 @@ int main(int argc, char** argv) {
     printf("%s\n", hashAlgo->toString(hash));
     
     getHashFromString(hashAlgo,"Nils", hash);
-    printf("%s\n", hashAlgo->toString(hash));*/
+    printf("%s\n", hashAlgo->toString(hash));
   
-    freeHash(hashAlgo);
+    freeHashAlgo(hashAlgo);
     
     return 0;
 }

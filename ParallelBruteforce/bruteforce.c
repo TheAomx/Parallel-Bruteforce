@@ -7,7 +7,7 @@
 
 #include "core_headers.h"
 
-int bruteforcePasswordIter(void *ctx, uchar *toBreakHash, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength) {
+int bruteforcePasswordIter(void *ctx, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength) {
     const size_t charset_max = strlen(alphabet);
     char permutation[maxPasswordLength + 1];
     int charset_array[maxPasswordLength];
@@ -22,7 +22,7 @@ int bruteforcePasswordIter(void *ctx, uchar *toBreakHash, bruteforceCallback cal
         for (i = 0; i <= current_len; i++)
             permutation[i] = alphabet[charset_array[current_len - i]];
 
-        if (callback((void*) ctx, permutation, toBreakHash))
+        if (callback((void*) ctx, permutation))
             return 0;
 
         charset_array[current_byte]++;
@@ -44,7 +44,7 @@ static inline int isLastLine(unsigned int passwordLength, unsigned int currentIn
 	return passwordLength == (currentIndex+1);
 }
 
-void bruteforcePassword(void *ctx, uchar *toBreakHash, bruteforceCallback callback, char *alphabet, char *currentPassphrase, unsigned int passwordLength, unsigned int currentIndex) {
+void bruteforcePassword(void *ctx, bruteforceCallback callback, char *alphabet, char *currentPassphrase, unsigned int passwordLength, unsigned int currentIndex) {
 	
 	int i=0;	
 	for (i = 0; i < strlen(alphabet); i++) {
@@ -53,18 +53,18 @@ void bruteforcePassword(void *ctx, uchar *toBreakHash, bruteforceCallback callba
 		/* if it isnt the last line in the password...*/
 		if (!isLastLine(passwordLength, currentIndex)) {
 			/* we'll have to do a recursive call... */
-			bruteforcePassword(ctx, toBreakHash, callback, alphabet, currentPassphrase, passwordLength, currentIndex+1);
+			bruteforcePassword(ctx, callback, alphabet, currentPassphrase, passwordLength, currentIndex+1);
 		}
 		else {
 			/*if it is the last line in the password, we can check the hash codes...*/
-			if (callback((void*) ctx, currentPassphrase, toBreakHash)) {
+			if (callback((void*) ctx, currentPassphrase)) {
 				exit(0);
 			}
 		}
 	}
 }
 
-void bruteforcePasswordAll(void *ctx, uchar *toBreakHash, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength) {
+void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength) {
 	int pwLen;
 	
 	char passwordBuffer[maxPasswordLength+1]; 
@@ -72,6 +72,6 @@ void bruteforcePasswordAll(void *ctx, uchar *toBreakHash, bruteforceCallback cal
 	memset(passwordBuffer, 0, sizeof(passwordBuffer));
 	
 	for (pwLen = 1; pwLen <= maxPasswordLength; pwLen++) {
-		bruteforcePassword(ctx, toBreakHash, callback, alphabet, passwordBuffer, pwLen, 0);
+		bruteforcePassword(ctx, callback, alphabet, passwordBuffer, pwLen, 0);
 	}
 }

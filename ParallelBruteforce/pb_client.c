@@ -7,7 +7,10 @@ void freePasswordHashes(PasswordHashes *pwHashes) {
         free(pwHashes->hashes[i]);
     }
     
+    free(pwHashes->hashBuffer);
+    
     freeHashAlgo(pwHashes->algo);
+    free(pwHashes);
 }
 
 void printHashes(PasswordHashes *pwHashes, int rank) {
@@ -65,6 +68,7 @@ PasswordHashes* generatePasswordHashes(MPI_File *in) {
     pwHashes->numHashes = hashesFound;
     pwHashes->hashes = (uchar**) malloc(sizeof(uchar*) * hashesFound);
     pwHashes->algo = createHashAlgorithm(lines[0]);
+    pwHashes->hashBuffer = (uchar*) malloc(sizeof(char) * pwHashes->algo->hashSize);
     
     int j = 0;
     
