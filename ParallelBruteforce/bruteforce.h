@@ -45,7 +45,7 @@ int bruteforcePasswordIter(void *ctx, bruteforceCallback callback, char *alphabe
  * @param alphabet The password alphabet
  * @param maxPasswordLength
  */
-void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength);
+void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength, int rank, int nTasks);
 
 
 #endif

@@ -19,7 +19,7 @@ int checkPassword (void *ctx, char *password) {
 
     for (i = 0; i < pwHashes->numHashes; i++) {
         if (pwHashes->algo->equals(pwHashes->hashBuffer, pwHashes->hashes[i])) {
-            printf("the hash of %s was %s \n", password, pwHashes->algo->toString(pwHashes->hashes[i]));
+            printf("The hash of %s was %s \n", password, pwHashes->algo->toString(pwHashes->hashes[i]));
         }
     }
     return 0;
@@ -27,7 +27,7 @@ int checkPassword (void *ctx, char *password) {
 
 int main(int argc, char** argv) {
     int maxNum;
-    int nTasks, rank;
+    int nTasks, rank, alphaPos = 0;
     MPI_Init( NULL, NULL );
     MPI_Comm_size( MPI_COMM_WORLD, &nTasks );
     MPI_Comm_rank( MPI_COMM_WORLD, &rank );
@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
         printf("MPI_File_open failed");
         exit(1);
     }
+    PasswordHashes* pwHashes = generatePasswordHashes(&fh);
     if (rank == 0)
 	{
 		// The master thread will need to receive all computations from all other threads.
@@ -46,7 +47,7 @@ int main(int argc, char** argv) {
 		// We need to go and receive the data from all other threads.
 		// The arbitrary tag we choose is 1, for now.
                 
-                
+                printHashes(pwHashes, rank);
                 
                 //MPI_Bcast(&fh,1,, 0,MPI_COMM_WORLD);
                 
@@ -54,14 +55,11 @@ int main(int argc, char** argv) {
 	else
 	{                
             int i = 0;
-            char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXYZ123456789"};
-            unsigned int passwordSearchLength = 6;
+            char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"};
+            unsigned int passwordSearchLength = 4;              
             
             
-            PasswordHashes* pwHashes = generatePasswordHashes(&fh);
-            printHashes(pwHashes, rank);
-            
-            bruteforcePasswordAll(pwHashes, checkPassword, alphabet, passwordSearchLength);
+            bruteforcePasswordAll(pwHashes, checkPassword, alphabet, passwordSearchLength, rank, nTasks);
             
             freePasswordHashes(pwHashes);
 	}
