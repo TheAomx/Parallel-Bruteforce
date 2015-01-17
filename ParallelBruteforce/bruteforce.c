@@ -41,47 +41,47 @@ int bruteforcePasswordIter(void *ctx, bruteforceCallback callback, char *alphabe
     return 1;
 }
 static inline int isLastLine(unsigned int passwordLength, unsigned int currentIndex) {
-	return passwordLength == (currentIndex+1);
+    return passwordLength == (currentIndex+1);
 }
 
 void bruteforcePassword(void *ctx, bruteforceCallback callback, char *alphabet, char *currentPassphrase, unsigned int passwordLength, unsigned int currentIndex) {
 	
-	int i=0;
-        #pragma omp parallel for 
-	for (i = 0; i < strlen(alphabet); i++) {
-		currentPassphrase[currentIndex] = alphabet[i];
+    int i=0;
+    #pragma omp parallel for 
+    for (i = 0; i < strlen(alphabet); i++) {
+        currentPassphrase[currentIndex] = alphabet[i];
 		
-		/* if it isnt the last line in the password...*/
-		if (!isLastLine(passwordLength, currentIndex)) {
-			/* we'll have to do a recursive call... */
-			bruteforcePassword(ctx, callback, alphabet, currentPassphrase, passwordLength, currentIndex+1);
-		}
-		else {
-			/*if it is the last line in the password, we can check the hash codes...*/
-			if (callback((void*) ctx, currentPassphrase)) {
-				exit(0);
-			}
-		}
-	}
+        /* if it isnt the last line in the password...*/
+        if (!isLastLine(passwordLength, currentIndex)) {
+            /* we'll have to do a recursive call... */
+            bruteforcePassword(ctx, callback, alphabet, currentPassphrase, passwordLength, currentIndex+1);
+        }
+        else {
+            /*if it is the last line in the password, we can check the hash codes...*/
+            if (callback((void*) ctx, currentPassphrase)) {
+                exit(0);
+            }
+        }
+    }
 }
 
 void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength, int rank, int nTasks) {
-	int pwLen;
-        int searchStart = 1;
+    int pwLen;
+    int searchStart = 1;
 	
-	char passwordBuffer[maxPasswordLength+1]; 
+    char passwordBuffer[maxPasswordLength+1]; 
 	
-	memset(passwordBuffer, 0, sizeof(passwordBuffer));       
+    memset(passwordBuffer, 0, sizeof(passwordBuffer));       
         
-        int i = 0;
-	for(i = (rank-1); i < strlen(alphabet); i += (nTasks-1)) {
+    int i = 0;
+
+    for(pwLen = 2; pwLen <= maxPasswordLength; pwLen++) {
+        for(i = (rank-1); i < strlen(alphabet); i += (nTasks-1)) {
             passwordBuffer[0] = alphabet[i];
             printf("[%d]Testing %s....\n", rank, &passwordBuffer[0]);
-            for(pwLen = 2; pwLen <= maxPasswordLength; pwLen++) {
-                
-		bruteforcePassword(ctx, callback, alphabet, passwordBuffer, pwLen, searchStart);
-            }
+            bruteforcePassword(ctx, callback, alphabet, passwordBuffer, pwLen, searchStart);
         }
+    }
         
         
 

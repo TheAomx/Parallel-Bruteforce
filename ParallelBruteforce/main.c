@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 	{                
             int i = 0;
             char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"};
-            unsigned int passwordSearchLength = 4;              
+            unsigned int passwordSearchLength = 6;              
             
             
             bruteforcePasswordAll(pwHashes, checkPassword, alphabet, passwordSearchLength, rank, nTasks);
