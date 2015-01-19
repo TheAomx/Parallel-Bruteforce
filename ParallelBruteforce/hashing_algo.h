@@ -15,7 +15,7 @@ extern "C" {
 #include "core_headers.h"
     
 enum HashTypes { 
-    SHA1, SHA256
+    SHA1, SHA256, MD5
 };
     
 typedef char* (*hash_toString_fct)(unsigned char* hash);

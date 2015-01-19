@@ -9,7 +9,7 @@
 
 #include "core_headers.h"
 
-#if 1
+#if 0
 
 int checkPassword (void *ctx, char *password) {
     int i;
@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
     MPI_Comm_size( MPI_COMM_WORLD, &nTasks );
     MPI_Comm_rank( MPI_COMM_WORLD, &rank );
     MPI_File fh;
-    int ret = MPI_File_open(MPI_COMM_WORLD, "hashes.txt", MPI_MODE_RDONLY, MPI_INFO_NULL,&fh);
+    int ret = MPI_File_open(MPI_COMM_WORLD, "tbsha1.txt", MPI_MODE_RDONLY, MPI_INFO_NULL,&fh);
     if(ret < 0) {
         printf("MPI_File_open failed");
         exit(1);
@@ -68,18 +68,18 @@ int main(int argc, char** argv) {
 }
 #endif
 
-#if 0
+#if 1
 int main(int argc, char** argv) {
-    HashAlgorithm *hashAlgo = createHashAlgorithm("SHA256");
+    HashAlgorithm *hashAlgo = createHashAlgorithm("MD5");
     uchar hash[hashAlgo->hashSize];
     
     /*oder auch:
     HashAlgorithm *hashAlgo = createHashAlgorithm("SHA1");
     uchar hash[SHA1_SIZE];*/
     
-//   getHashFromFile(hashAlgo, "main.c", hash);
-//   printf("%s\n", hashAlgo->toString(hash));
- 
+    getHashFromFile(hashAlgo, "main.c", hash);
+    printf("%s\n", hashAlgo->toString(hash));
+ /*
     getHashFromString(hashAlgo,"Robin", hash);
     printf("%s\n", hashAlgo->toString(hash));
     
@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
     printf("%s\n", hashAlgo->toString(hash));
     
     getHashFromString(hashAlgo,"Nils", hash);
-    printf("%s\n", hashAlgo->toString(hash));
+    printf("%s\n", hashAlgo->toString(hash));*/
   
     freeHashAlgo(hashAlgo);
     

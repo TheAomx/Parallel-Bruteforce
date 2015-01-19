@@ -39,12 +39,29 @@ static HashAlgorithm* createSHA256() {
     return sha256;
 }
 
+static HashAlgorithm* createMD5() {
+    HashAlgorithm *md5 = (HashAlgorithm*) malloc(sizeof(HashAlgorithm));
+    MD5_CTX *md5_context = (MD5_CTX*) malloc(sizeof(MD5_CTX));
+    md5->hashType = MD5;
+    md5->ctx = (void*) md5_context;
+    md5->hashSize = MD5_SIZE; 
+    md5->toString = md5_toString;
+    md5->equals = md5_equal;
+    md5->init = md5_init;
+    md5->update = md5_update;
+    md5->final = md5_final;
+    return md5;
+}
+
 HashAlgorithm* createHashAlgorithm(char *hashAlgorithm) {
     if (!strcmp("SHA1", hashAlgorithm)) {
         return createSHA1();
     }
     else if(!strcmp("SHA256", hashAlgorithm)) {
         return createSHA256();
+    }
+    else if(!strcmp("MD5", hashAlgorithm)) {
+        return createMD5();
     }
     else {
         return NULL;
