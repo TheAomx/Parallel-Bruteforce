@@ -28,5 +28,8 @@ Weiterführende Ideen:
 
 - lokale parallelisierung der Clients über OpenMP
 
-Ablaufdiagramm
+Nützliche Links:
+- http://www.plutospin.com/files/OpenMP_reference.pdf
+
+Ablaufdiagramm:
 ![Bild](http://i58.tinypic.com/2vjd0rq.png "Ablaufdiagramm")
