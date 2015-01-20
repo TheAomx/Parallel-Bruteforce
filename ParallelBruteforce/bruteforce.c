@@ -92,16 +92,16 @@ void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabe
     int pwLen;
     int searchStart = 1;
 
-        
+    PasswordHashes *pwHashes = (PasswordHashes*) ctx;
     int i = 0, j = 0;
-    int numThreads = getNumThreads();
+    int numThreads = pwHashes->numThreads;
 
     for(pwLen = 2; pwLen <= maxPasswordLength; pwLen++) {
         for(i = (rank-1); i < strlen(alphabet); i += (nTasks-1)) {
             for (j = 0; j < numThreads; j++) {
             	passphraseBuffer[j][0] = alphabet[i];
 	    }
-            printf("[%d]Testing %s....\n", rank, passphraseBuffer[0]);
+            //printf("[%d]Testing %s....\n", rank, passphraseBuffer[0]);
             bruteforcePassword(ctx, callback, alphabet, passphraseBuffer, pwLen, searchStart);
         }
     }

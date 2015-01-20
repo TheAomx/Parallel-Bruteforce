@@ -13,17 +13,26 @@
 
 int checkPassword (void *ctx, char *password) {
     int i;
+    static unsigned long pwCounter = 0;
     PasswordHashes *pwHashes = (PasswordHashes*) ctx;
 
     int threadID = getThreadID();
     uchar* hashBuffer = pwHashes->hashBuffer[threadID];
     HashAlgorithm *algo = pwHashes->algo[threadID];
     
+    pwCounter++;
+    
+    if((pwCounter % 1000000) == 0) {
+        printf("[%d] %s\n", threadID, password);
+        fflush(stdout);
+    }
+    
     getHashFromString(algo, password, hashBuffer);
 
     for (i = 0; i < pwHashes->numHashes; i++) {
         if (algo->equals(hashBuffer, pwHashes->hashes[i])) {
             printf("The hash of %s was %s \n", password, algo->toString(pwHashes->hashes[i]));
+            fflush(stdout);
         }
     }
 

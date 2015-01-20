@@ -9,7 +9,7 @@ void freePasswordHashes(PasswordHashes *pwHashes) {
     
     for(i = 0; i < pwHashes->numThreads; i++) {
         free(pwHashes->hashBuffer[i]);
-        free(pwHashes->algo[i]);
+        freeHashAlgo(pwHashes->algo[i]);
     }
 
     free(pwHashes);
@@ -46,6 +46,11 @@ PasswordHashes* generatePasswordHashes(MPI_File *in, unsigned int numThreads) {
     
     if (linesFound == 0) {
         DBG_ERR("linesFound == 0");
+        return NULL;
+    }
+    
+    if (numThreads == 0) {
+        DBG_ERR("numThreads == 0");
         return NULL;
     }
     
