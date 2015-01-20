@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
             
             int numThreads = omp_get_num_procs();
 	   
-	    printf("child process with %d threads!\n");
+	    printf("child process with %d threads!\n", numThreads);
 	
 	    pwHashes->hashBuffer = (uchar**) malloc(sizeof(uchar*) * numThreads);
 	    for (i = 0; i < numThreads; i++) {

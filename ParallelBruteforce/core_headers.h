@@ -72,6 +72,7 @@ typedef unsigned short ushort;
 #include "sha1.h"
 #include "sha256.h"
 #include "md5.h"
+#include "sha1_prop.h"
 #include "bruteforce.h"
 #include "hashing_algo.h"
 #include "pb_common.h"
