@@ -43,6 +43,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/pb_common.o \
 	${OBJECTDIR}/sds.o \
 	${OBJECTDIR}/sha1.o \
+	${OBJECTDIR}/sha1_splashtop_impl.o \
 	${OBJECTDIR}/sha256.o \
 	${OBJECTDIR}/utils.o
 
@@ -110,6 +111,11 @@ ${OBJECTDIR}/sha1.o: sha1.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1.o sha1.c
+
+${OBJECTDIR}/sha1_splashtop_impl.o: sha1_splashtop_impl.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1_splashtop_impl.o sha1_splashtop_impl.c
 
 ${OBJECTDIR}/sha256.o: sha256.c 
 	${MKDIR} -p ${OBJECTDIR}
