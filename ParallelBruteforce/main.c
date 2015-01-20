@@ -9,16 +9,18 @@
 
 #include "core_headers.h"
 
-#if 0
+#if 1
 
 int checkPassword (void *ctx, char *password) {
     int i;
     PasswordHashes *pwHashes = (PasswordHashes*) ctx;
     
+     /* TODO: For every thread with OpenMP there must be a seperate pwHashes->hashBuffer */
     getHashFromString(pwHashes->algo, password, pwHashes->hashBuffer);
 
     for (i = 0; i < pwHashes->numHashes; i++) {
         if (pwHashes->algo->equals(pwHashes->hashBuffer, pwHashes->hashes[i])) {
+	    /* TODO: For every thread with OpenMP there must be a seperate toStringBuffer in the functions of the specific hash functions like sha1 */
             printf("The hash of %s was %s \n", password, pwHashes->algo->toString(pwHashes->hashes[i]));
         }
     }
@@ -28,10 +30,14 @@ int checkPassword (void *ctx, char *password) {
 int main(int argc, char** argv) {
     int maxNum;
     int nTasks, rank, alphaPos = 0;
-    MPI_Init( NULL, NULL );
+    if( MPI_Init(&argc, &argv) != MPI_SUCCESS ){
+        printf("MPI_init failed\n");
+	exit(-1);
+    }
     MPI_Comm_size( MPI_COMM_WORLD, &nTasks );
     MPI_Comm_rank( MPI_COMM_WORLD, &rank );
     MPI_File fh;
+    DBG_OK("before MPI_File_open");
     int ret = MPI_File_open(MPI_COMM_WORLD, "tbsha1.txt", MPI_MODE_RDONLY, MPI_INFO_NULL,&fh);
     if(ret < 0) {
         printf("MPI_File_open failed");
@@ -58,17 +64,15 @@ int main(int argc, char** argv) {
             char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"};
             unsigned int passwordSearchLength = 6;              
             
-            
             bruteforcePasswordAll(pwHashes, checkPassword, alphabet, passwordSearchLength, rank, nTasks);
-            
-            freePasswordHashes(pwHashes);
 	}
+	freePasswordHashes(pwHashes);
 
 	MPI_Finalize();
 }
 #endif
 
-#if 1
+#if 0
 int main(int argc, char** argv) {
     HashAlgorithm *hashAlgo = createHashAlgorithm("MD5");
     uchar hash[hashAlgo->hashSize];

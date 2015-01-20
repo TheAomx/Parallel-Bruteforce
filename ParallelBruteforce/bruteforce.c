@@ -69,6 +69,7 @@ void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabe
     int pwLen;
     int searchStart = 1;
 	
+    /* TODO: For every thread with OpenMP there must be a seperate passwordBuffer */
     char passwordBuffer[maxPasswordLength+1]; 
 	
     memset(passwordBuffer, 0, sizeof(passwordBuffer));       
