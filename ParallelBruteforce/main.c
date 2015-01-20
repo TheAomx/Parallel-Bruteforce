@@ -7,6 +7,7 @@
 
 #include <mpi.h>
 
+
 #include "core_headers.h"
 
 #if 1
@@ -14,13 +15,14 @@
 int checkPassword (void *ctx, char *password) {
     int i;
     PasswordHashes *pwHashes = (PasswordHashes*) ctx;
+	
+    int threadID = omp_get_thread_num();
+    uchar* hashBuffer = pwHashes->hashBuffer[threadID];
     
-     /* TODO: For every thread with OpenMP there must be a seperate pwHashes->hashBuffer */
-    getHashFromString(pwHashes->algo, password, pwHashes->hashBuffer);
+    getHashFromString(pwHashes->algo, password, hashBuffer);
 
     for (i = 0; i < pwHashes->numHashes; i++) {
-        if (pwHashes->algo->equals(pwHashes->hashBuffer, pwHashes->hashes[i])) {
-	    /* TODO: For every thread with OpenMP there must be a seperate toStringBuffer in the functions of the specific hash functions like sha1 */
+        if (pwHashes->algo->equals(hashBuffer, pwHashes->hashes[i])) {
             printf("The hash of %s was %s \n", password, pwHashes->algo->toString(pwHashes->hashes[i]));
         }
     }
@@ -38,7 +40,7 @@ int main(int argc, char** argv) {
     MPI_Comm_rank( MPI_COMM_WORLD, &rank );
     MPI_File fh;
     DBG_OK("before MPI_File_open");
-    int ret = MPI_File_open(MPI_COMM_WORLD, "tbsha1.txt", MPI_MODE_RDONLY, MPI_INFO_NULL,&fh);
+    int ret = MPI_File_open(MPI_COMM_WORLD, "hashes.txt", MPI_MODE_RDONLY, MPI_INFO_NULL,&fh);
     if(ret < 0) {
         printf("MPI_File_open failed");
         exit(1);
@@ -64,7 +66,24 @@ int main(int argc, char** argv) {
             char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"};
             unsigned int passwordSearchLength = 6;              
             
-            bruteforcePasswordAll(pwHashes, checkPassword, alphabet, passwordSearchLength, rank, nTasks);
+            int numThreads = omp_get_num_procs();
+	   
+	    printf("child process with %d threads!\n");
+	
+	    pwHashes->hashBuffer = (uchar**) malloc(sizeof(uchar*) * numThreads);
+	    for (i = 0; i < numThreads; i++) {
+		pwHashes->hashBuffer[i] = (uchar*) malloc(sizeof(uchar) * pwHashes->algo->hashSize);
+	    }
+
+	    char **passphraseBuffer = (char**) malloc(sizeof(char*) * numThreads);
+	    for (i = 0; i < numThreads; i++) {
+		passphraseBuffer[i] = (char*) malloc(sizeof(char) * passwordSearchLength);
+		memset(passphraseBuffer[i], 0, sizeof(passphraseBuffer[i]));
+	    }
+	
+	    
+
+            bruteforcePasswordAll(pwHashes, checkPassword, alphabet, passphraseBuffer, passwordSearchLength, rank, nTasks);
 	}
 	freePasswordHashes(pwHashes);
 

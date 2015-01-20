@@ -28,7 +28,7 @@ extern "C" {
     struct PasswordHashes {
         HashAlgorithm *algo;
         unsigned long numHashes;
-        uchar *hashBuffer;
+        uchar **hashBuffer;
         uchar **hashes;
     };
     

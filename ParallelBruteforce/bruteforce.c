@@ -44,17 +44,16 @@ static inline int isLastLine(unsigned int passwordLength, unsigned int currentIn
     return passwordLength == (currentIndex+1);
 }
 
-void bruteforcePassword(void *ctx, bruteforceCallback callback, char *alphabet, char *currentPassphrase, unsigned int passwordLength, unsigned int currentIndex) {
+static void bruteforcePasswordSimple(void *ctx, bruteforceCallback callback, char *alphabet, char *currentPassphrase, unsigned int passwordLength, unsigned int currentIndex) {
 	
     int i=0;
-    #pragma omp parallel for 
-    for (i = 0; i < strlen(alphabet); i++) {
+    for (i = 0; i < strlen(alphabet); i++) {	
         currentPassphrase[currentIndex] = alphabet[i];
 		
         /* if it isnt the last line in the password...*/
         if (!isLastLine(passwordLength, currentIndex)) {
             /* we'll have to do a recursive call... */
-            bruteforcePassword(ctx, callback, alphabet, currentPassphrase, passwordLength, currentIndex+1);
+            bruteforcePasswordSimple(ctx, callback, alphabet, currentPassphrase, passwordLength, currentIndex+1);
         }
         else {
             /*if it is the last line in the password, we can check the hash codes...*/
@@ -65,22 +64,46 @@ void bruteforcePassword(void *ctx, bruteforceCallback callback, char *alphabet, 
     }
 }
 
-void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength, int rank, int nTasks) {
+void bruteforcePassword(void *ctx, bruteforceCallback callback, char *alphabet, char **passphraseBuffer, unsigned int passwordLength, unsigned int currentIndex) {
+	
+    int i=0;
+    #pragma omp parallel for 
+    for (i = 0; i < strlen(alphabet); i++) {	
+	int threadID = omp_get_thread_num();
+	char *currentPassphrase = passphraseBuffer[threadID];
+        currentPassphrase[currentIndex] = alphabet[i];
+        /* if it isnt the last line in the password...*/
+        if (!isLastLine(passwordLength, currentIndex)) {
+            /* we'll have to do a recursive call... */
+            bruteforcePasswordSimple(ctx, callback, alphabet, currentPassphrase, passwordLength, currentIndex+1);
+        }
+        else {
+            /*if it is the last line in the password, we can check the hash codes...*/
+            if (callback((void*) ctx, currentPassphrase)) {
+                exit(0);
+            }
+        }
+    }
+}
+
+void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, char **passphraseBuffer, unsigned int maxPasswordLength, int rank, int nTasks) {
     int pwLen;
     int searchStart = 1;
-	
-    /* TODO: For every thread with OpenMP there must be a seperate passwordBuffer */
-    char passwordBuffer[maxPasswordLength+1]; 
-	
-    memset(passwordBuffer, 0, sizeof(passwordBuffer));       
+
         
-    int i = 0;
+    int i = 0, j = 0;
+
+    int numThreads = omp_get_num_procs();
+    DBG_OK("numThread in bpa = %d", numThreads);
+
 
     for(pwLen = 2; pwLen <= maxPasswordLength; pwLen++) {
         for(i = (rank-1); i < strlen(alphabet); i += (nTasks-1)) {
-            passwordBuffer[0] = alphabet[i];
-            printf("[%d]Testing %s....\n", rank, &passwordBuffer[0]);
-            bruteforcePassword(ctx, callback, alphabet, passwordBuffer, pwLen, searchStart);
+	    for (j = 0; j < numThreads; j++) {
+            	passphraseBuffer[j][0] = alphabet[i];
+	    }
+            printf("[%d]Testing %s....\n", rank, &passphraseBuffer[0][0]);
+            bruteforcePassword(ctx, callback, alphabet, passphraseBuffer, pwLen, searchStart);
         }
     }
         

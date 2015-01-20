@@ -65,6 +65,7 @@ typedef unsigned short ushort;
 #include <unistd.h>
 #include <stddef.h>
 #include <mpi.h>
+#include <omp.h>
     /* Application headers */
 #include "sds.h"
 #include "utils.h"

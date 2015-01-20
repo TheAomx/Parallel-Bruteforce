@@ -10,7 +10,6 @@
 #ifndef BRUTEFORCE_H
 #define BRUTEFORCE_H
 
-typedef unsigned char uchar;
 /**
  * Function pointer definition to be used as a generic function interface for hash generation functions.
  * Enables easy hashing algorithm replacement.
@@ -26,7 +25,7 @@ typedef int (*bruteforceCallback) (void *ctx, char *password);
  * @param passwordLength 
  * @param currentIndex
  */
-void bruteforcePassword(void *ctx, bruteforceCallback callback, char *alphabet, char *currentPassphrase, unsigned int passwordLength, unsigned int currentIndex);
+void bruteforcePassword(void *ctx, bruteforceCallback callback, char *alphabet, char **passphraseBuffer, unsigned int passwordLength, unsigned int currentIndex);
 /**
  * 
  * @param ctx The hash generation context (arbitrary data).
@@ -45,7 +44,7 @@ int bruteforcePasswordIter(void *ctx, bruteforceCallback callback, char *alphabe
  * @param alphabet The password alphabet
  * @param maxPasswordLength
  */
-void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength, int rank, int nTasks);
+void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, char **passphraseBuffer, unsigned int maxPasswordLength, int rank, int nTasks);
 
 
 #endif

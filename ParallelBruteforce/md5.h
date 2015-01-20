@@ -16,10 +16,8 @@ extern "C" {
 
 /*************************** HEADER FILES ***************************/
 #include <stddef.h>
-
+#include "core_headers.h"
 /**************************** DATA TYPES ****************************/
-typedef unsigned char uchar;             // 8-bit byte
-typedef unsigned int  uint;             // 32-bit word, change to "long" for 16-bit machines
 
 typedef struct {
    uchar data[64];
