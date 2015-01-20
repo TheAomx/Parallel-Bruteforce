@@ -45,11 +45,10 @@ static inline int isLastLine(unsigned int passwordLength, unsigned int currentIn
 }
 
 static void bruteforcePasswordSimple(void *ctx, bruteforceCallback callback, char *alphabet, char *currentPassphrase, unsigned int passwordLength, unsigned int currentIndex) {
-	
-    int i=0;
-    for (i = 0; i < strlen(alphabet); i++) {	
+    //int i=0;
+    for (int i = 0; i < strlen(alphabet); i++) {	
         currentPassphrase[currentIndex] = alphabet[i];
-		
+
         /* if it isnt the last line in the password...*/
         if (!isLastLine(passwordLength, currentIndex)) {
             /* we'll have to do a recursive call... */
@@ -65,12 +64,15 @@ static void bruteforcePasswordSimple(void *ctx, bruteforceCallback callback, cha
 }
 
 void bruteforcePassword(void *ctx, bruteforceCallback callback, char *alphabet, char **passphraseBuffer, unsigned int passwordLength, unsigned int currentIndex) {
-	
-    int i=0;
-    #pragma omp parallel for 
-    for (i = 0; i < strlen(alphabet); i++) {	
-	int threadID = omp_get_thread_num();
+    //int i=0;
+#pragma omp parallel for 
+    for (int i = 0; i < strlen(alphabet); i++) {
+
+	int threadID = getThreadID();
 	char *currentPassphrase = passphraseBuffer[threadID];
+
+
+        
         currentPassphrase[currentIndex] = alphabet[i];
         /* if it isnt the last line in the password...*/
         if (!isLastLine(passwordLength, currentIndex)) {
@@ -92,17 +94,14 @@ void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabe
 
         
     int i = 0, j = 0;
-
-    int numThreads = omp_get_num_procs();
-    DBG_OK("numThread in bpa = %d", numThreads);
-
+    int numThreads = getNumThreads();
 
     for(pwLen = 2; pwLen <= maxPasswordLength; pwLen++) {
         for(i = (rank-1); i < strlen(alphabet); i += (nTasks-1)) {
-	    for (j = 0; j < numThreads; j++) {
+            for (j = 0; j < numThreads; j++) {
             	passphraseBuffer[j][0] = alphabet[i];
 	    }
-            printf("[%d]Testing %s....\n", rank, &passphraseBuffer[0][0]);
+            printf("[%d]Testing %s....\n", rank, passphraseBuffer[0]);
             bruteforcePassword(ctx, callback, alphabet, passphraseBuffer, pwLen, searchStart);
         }
     }

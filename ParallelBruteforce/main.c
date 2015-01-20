@@ -7,7 +7,6 @@
 
 #include <mpi.h>
 
-
 #include "core_headers.h"
 
 #if 1
@@ -15,17 +14,19 @@
 int checkPassword (void *ctx, char *password) {
     int i;
     PasswordHashes *pwHashes = (PasswordHashes*) ctx;
-	
-    int threadID = omp_get_thread_num();
+
+    int threadID = getThreadID();
     uchar* hashBuffer = pwHashes->hashBuffer[threadID];
+    HashAlgorithm *algo = pwHashes->algo[threadID];
     
-    getHashFromString(pwHashes->algo, password, hashBuffer);
+    getHashFromString(algo, password, hashBuffer);
 
     for (i = 0; i < pwHashes->numHashes; i++) {
-        if (pwHashes->algo->equals(hashBuffer, pwHashes->hashes[i])) {
-            printf("The hash of %s was %s \n", password, pwHashes->algo->toString(pwHashes->hashes[i]));
+        if (algo->equals(hashBuffer, pwHashes->hashes[i])) {
+            printf("The hash of %s was %s \n", password, algo->toString(pwHashes->hashes[i]));
         }
     }
+
     return 0;
 }
 
@@ -39,13 +40,12 @@ int main(int argc, char** argv) {
     MPI_Comm_size( MPI_COMM_WORLD, &nTasks );
     MPI_Comm_rank( MPI_COMM_WORLD, &rank );
     MPI_File fh;
-    DBG_OK("before MPI_File_open");
     int ret = MPI_File_open(MPI_COMM_WORLD, "hashes.txt", MPI_MODE_RDONLY, MPI_INFO_NULL,&fh);
     if(ret < 0) {
         printf("MPI_File_open failed");
         exit(1);
     }
-    PasswordHashes* pwHashes = generatePasswordHashes(&fh);
+    PasswordHashes *pwHashes;
     if (rank == 0)
 	{
 		// The master thread will need to receive all computations from all other threads.
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
 		// MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status)
 		// We need to go and receive the data from all other threads.
 		// The arbitrary tag we choose is 1, for now.
-                
+                pwHashes = generatePasswordHashes(&fh, 1);
                 printHashes(pwHashes, rank);
                 
                 //MPI_Bcast(&fh,1,, 0,MPI_COMM_WORLD);
@@ -65,23 +65,19 @@ int main(int argc, char** argv) {
             int i = 0;
             char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"};
             unsigned int passwordSearchLength = 6;              
+
             
-            int numThreads = omp_get_num_procs();
-	   
+            int numThreads = getNumCores();
+            setNumThreads(numThreads);
+
+            pwHashes = generatePasswordHashes(&fh, numThreads);
 	    printf("child process with %d threads!\n", numThreads);
-	
-	    pwHashes->hashBuffer = (uchar**) malloc(sizeof(uchar*) * numThreads);
-	    for (i = 0; i < numThreads; i++) {
-		pwHashes->hashBuffer[i] = (uchar*) malloc(sizeof(uchar) * pwHashes->algo->hashSize);
-	    }
 
 	    char **passphraseBuffer = (char**) malloc(sizeof(char*) * numThreads);
 	    for (i = 0; i < numThreads; i++) {
-		passphraseBuffer[i] = (char*) malloc(sizeof(char) * passwordSearchLength);
+		passphraseBuffer[i] = (char*) malloc(sizeof(char) * (passwordSearchLength+1));
 		memset(passphraseBuffer[i], 0, sizeof(passphraseBuffer[i]));
 	    }
-	
-	    
 
             bruteforcePasswordAll(pwHashes, checkPassword, alphabet, passphraseBuffer, passwordSearchLength, rank, nTasks);
 	}

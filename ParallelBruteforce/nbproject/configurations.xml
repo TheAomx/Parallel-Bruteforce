@@ -8,6 +8,7 @@
       <itemPath>core_headers.h</itemPath>
       <itemPath>hashing_algo.h</itemPath>
       <itemPath>md5.h</itemPath>
+      <itemPath>openmp.h</itemPath>
       <itemPath>pb_client.h</itemPath>
       <itemPath>pb_common.h</itemPath>
       <itemPath>pb_server.h</itemPath>
@@ -30,6 +31,7 @@
       <itemPath>hashing_algo.c</itemPath>
       <itemPath>main.c</itemPath>
       <itemPath>md5.c</itemPath>
+      <itemPath>openmp.c</itemPath>
       <itemPath>pb_client.c</itemPath>
       <itemPath>pb_common.c</itemPath>
       <itemPath>sds.c</itemPath>
@@ -79,6 +81,10 @@
       <item path="md5.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="md5.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="openmp.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="openmp.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="pb_client.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -150,6 +156,10 @@
       <item path="md5.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="md5.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="openmp.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="openmp.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="pb_client.c" ex="false" tool="0" flavor2="0">
       </item>

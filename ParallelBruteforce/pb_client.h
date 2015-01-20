@@ -26,8 +26,9 @@ extern "C" {
     char* nextPassword(char* current, char* alphabet);
     
     struct PasswordHashes {
-        HashAlgorithm *algo;
+        HashAlgorithm **algo;
         unsigned long numHashes;
+        unsigned int numThreads;
         uchar **hashBuffer;
         uchar **hashes;
     };
@@ -35,7 +36,7 @@ extern "C" {
     typedef struct PasswordHashes PasswordHashes;
     
     void printHashes(PasswordHashes *pwHashes, int rank);
-    PasswordHashes* generatePasswordHashes(MPI_File *in);
+    PasswordHashes* generatePasswordHashes(MPI_File *in, unsigned int numThreads);
     void freePasswordHashes(PasswordHashes *pwHashes);
 
 #ifdef	__cplusplus

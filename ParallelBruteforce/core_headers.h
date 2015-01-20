@@ -68,6 +68,7 @@ typedef unsigned short ushort;
 #include <omp.h>
     /* Application headers */
 #include "sds.h"
+#include "openmp.h"
 #include "utils.h"
 #include "sha1.h"
 #include "sha256.h"

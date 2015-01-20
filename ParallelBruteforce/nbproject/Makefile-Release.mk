@@ -39,6 +39,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/hashing_algo.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/md5.o \
+	${OBJECTDIR}/openmp.o \
 	${OBJECTDIR}/pb_client.o \
 	${OBJECTDIR}/pb_common.o \
 	${OBJECTDIR}/sds.o \
@@ -91,6 +92,11 @@ ${OBJECTDIR}/md5.o: md5.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/md5.o md5.c
+
+${OBJECTDIR}/openmp.o: openmp.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/openmp.o openmp.c
 
 ${OBJECTDIR}/pb_client.o: pb_client.c 
 	${MKDIR} -p ${OBJECTDIR}

@@ -7,15 +7,17 @@ void freePasswordHashes(PasswordHashes *pwHashes) {
         free(pwHashes->hashes[i]);
     }
     
-    free(pwHashes->hashBuffer);
-    
-    freeHashAlgo(pwHashes->algo);
+    for(i = 0; i < pwHashes->numThreads; i++) {
+        free(pwHashes->hashBuffer[i]);
+        free(pwHashes->algo[i]);
+    }
+
     free(pwHashes);
 }
 
 void printHashes(PasswordHashes *pwHashes, int rank) {
     for (int i=0; i<pwHashes->numHashes; i++) {
-        printf("[%d] %s\n",rank, pwHashes->algo->toString(pwHashes->hashes[i]));
+        printf("[%d] %s\n",rank, pwHashes->algo[0]->toString(pwHashes->hashes[i]));
     }
 }
 
@@ -36,7 +38,7 @@ static char** readLinesOfFile(MPI_File *in, int *linesFound) {
     return splittedString;
 }
 
-PasswordHashes* generatePasswordHashes(MPI_File *in) {
+PasswordHashes* generatePasswordHashes(MPI_File *in, unsigned int numThreads) {
     int linesFound = 0;
     sds *lines = readLinesOfFile(in, &linesFound);
     unsigned long hashesFound = 0;
@@ -67,13 +69,23 @@ PasswordHashes* generatePasswordHashes(MPI_File *in) {
     PasswordHashes *pwHashes = (PasswordHashes*) malloc(sizeof(PasswordHashes));
     pwHashes->numHashes = hashesFound;
     pwHashes->hashes = (uchar**) malloc(sizeof(uchar*) * hashesFound);
-    pwHashes->algo = createHashAlgorithm(lines[0]);
+    pwHashes->numThreads = numThreads;
+
+    pwHashes->algo = (HashAlgorithm**) malloc(sizeof(HashAlgorithm*) * numThreads);
+    for (i = 0; i < numThreads; i++) {
+        pwHashes->algo[i] = createHashAlgorithm(lines[0]);
+    }
+
+    pwHashes->hashBuffer = (uchar**) malloc(sizeof(uchar*) * numThreads);
+    for (i = 0; i < numThreads; i++) {
+        pwHashes->hashBuffer[i] = (uchar*) malloc(sizeof(uchar) * pwHashes->algo[0]->hashSize);
+    }
     
     int j = 0;
     
     for (i = 1; i < linesFound; i++) {
         if (strcmp("", lines[i]) != 0) {
-            uchar *binaryHash = convertHashStringToBinary(pwHashes->algo, lines[i]);
+            uchar *binaryHash = convertHashStringToBinary(pwHashes->algo[0], lines[i]);
             pwHashes->hashes[j] = binaryHash;
             j++;
         }
