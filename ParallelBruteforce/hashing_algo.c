@@ -25,6 +25,20 @@ static HashAlgorithm* createSHA1() {
     return sha1;
 }
 
+static HashAlgorithm* createSHA1Prop() {
+    HashAlgorithm *sha1 = (HashAlgorithm*) malloc(sizeof(HashAlgorithm));
+    SHA1_CTX *sha_context = (SHA1_CTX*) malloc(sizeof(SHA1_CTX));
+    sha1->hashType = SHA1;
+    sha1->ctx = (void*) sha_context;
+    sha1->hashSize = SHA1_SIZE;
+    sha1->toString = sha1_toString;
+    sha1->equals = sha1_equal_prop;
+    sha1->init = sha1_init_prop;
+    sha1->update = sha1_update_prop;
+    sha1->final = sha1_final_prop;
+    return sha1;
+}
+
 static HashAlgorithm* createSHA256() {
     HashAlgorithm *sha256 = (HashAlgorithm*) malloc(sizeof(HashAlgorithm));
     SHA256_CTX *sha256_context = (SHA256_CTX*) malloc(sizeof(SHA256_CTX));
@@ -55,6 +69,9 @@ static HashAlgorithm* createMD5() {
 
 HashAlgorithm* createHashAlgorithm(char *hashAlgorithm) {
     if (!strcmp("SHA1", hashAlgorithm)) {
+        return createSHA1();
+    }
+    else if (!strcmp("SHA1_PROP", hashAlgorithm)) {
         return createSHA1();
     }
     else if(!strcmp("SHA256", hashAlgorithm)) {

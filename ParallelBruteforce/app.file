@@ -1,0 +1,4 @@
+#-host user@remotehost --preload-binary -np 1 run_date
+#-host localhost -np 1 run_date 
+-host ertai@192.168.1.120 --preload-binary -np 3 parallelbruteforce
+-host localhost -np 2 parallelbruteforce
