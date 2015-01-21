@@ -72,7 +72,7 @@ HashAlgorithm* createHashAlgorithm(char *hashAlgorithm) {
         return createSHA1();
     }
     else if (!strcmp("SHA1_PROP", hashAlgorithm)) {
-        return createSHA1();
+        return createSHA1Prop();
     }
     else if(!strcmp("SHA256", hashAlgorithm)) {
         return createSHA256();
