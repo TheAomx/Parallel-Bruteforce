@@ -14,25 +14,26 @@ extern "C" {
 
 #define MD5_SIZE   16
 
-/*************************** HEADER FILES ***************************/
+    /*************************** HEADER FILES ***************************/
 #include <stddef.h>
 #include "core_headers.h"
-/**************************** DATA TYPES ****************************/
 
-typedef struct {
-   uchar data[64];
-   uint datalen;
-   unsigned long long bitlen;
-   uint state[4];
-} MD5_CTX;
+    /**************************** DATA TYPES ****************************/
+
+    typedef struct {
+        uchar data[64];
+        uint datalen;
+        unsigned long long bitlen;
+        uint state[4];
+    } MD5_CTX;
 
 
 
-char* md5_toString(unsigned char hash[]);
-int md5_equal(unsigned char hash1[], unsigned char hash2[]);
-void md5_init(void *context);
-void md5_update(void *context, uchar data[], uint len);
-void md5_final(void *context, uchar hash[]);
+    char* md5_toString(unsigned char hash[]);
+    int md5_equal(unsigned char hash1[], unsigned char hash2[]);
+    void md5_init(void *context);
+    void md5_update(void *context, uchar data[], uint len);
+    void md5_final(void *context, uchar hash[]);
 
 #endif
 

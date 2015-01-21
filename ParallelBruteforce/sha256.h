@@ -11,10 +11,10 @@
 #define SHA256_SIZE 32
 
 typedef struct {
-   uchar data[64];
-   uint datalen;
-   uint bitlen[2];
-   uint state[8];
+    uchar data[64];
+    uint datalen;
+    uint bitlen[2];
+    uint state[8];
 } SHA256_CTX;
 
 char* sha256_toString(unsigned char hash[]);

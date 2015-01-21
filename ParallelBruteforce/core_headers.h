@@ -12,10 +12,11 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-    
-#define DEBUG 1
 
-/* ansi color codes used at the dbg macros for coloured output. */
+#define DEBUG 1
+#define MAX_PASSWORD 100
+
+    /* ansi color codes used at the dbg macros for coloured output. */
 
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[31m"
@@ -26,38 +27,38 @@ extern "C" {
 #define KCYN  "\x1B[36m"
 #define KWHT  "\x1B[37m"
 
-/* define DBG-macros for debugging purposes if DEBUG is defined...*/
+    /* define DBG-macros for debugging purposes if DEBUG is defined...*/
 
 #ifdef DEBUG
-    #define DBG_MSG(color, stream, format, ...) do {\
+#define DBG_MSG(color, stream, format, ...) do {\
                 fprintf(stream, "%sDBG:%s \"", color, KNRM);\
                 fprintf(stream, format, ##__VA_ARGS__);\
                 fprintf(stream, "\" function: %s file: %s line: %d\n",(char*) __func__, (char*)__FILE__, __LINE__);} while(0)
 
-    #define DBG_OK(format, ...) do {\
+#define DBG_OK(format, ...) do {\
                             DBG_MSG(KGRN, stdout, format, ##__VA_ARGS__);\
                 } while(0)
-    #define DBG_WARN(format, ...) do {\
+#define DBG_WARN(format, ...) do {\
                             DBG_MSG(KYEL, stderr, format, ##__VA_ARGS__);\
                 } while(0)
-    #define DBG_ERR(format, ...) do {\
+#define DBG_ERR(format, ...) do {\
                     DBG_MSG(KRED, stderr, format, ##__VA_ARGS__);\
                     exit(EXIT_FAILURE);\
                     } while(0)
 #else
-    #define DBG_MSG(color, stream, format, ...) do {} while(0)
-    #define DBG_OK(format, ...) do {} while(0)
-    #define DBG_WARN(format, ...) do {} while(0)
-    #define DBG_ERR(format, ...) do {} while(0)
+#define DBG_MSG(color, stream, format, ...) do {} while(0)
+#define DBG_OK(format, ...) do {} while(0)
+#define DBG_WARN(format, ...) do {} while(0)
+#define DBG_ERR(format, ...) do {} while(0)
 #endif
 
 
     // Signed variables are for wimps 
-typedef unsigned char uchar;
-typedef unsigned int uint;
-typedef unsigned long ulong;
-typedef unsigned short ushort;
-    
+    typedef unsigned char uchar;
+    typedef unsigned int uint;
+    typedef unsigned long ulong;
+    typedef unsigned short ushort;
+
     /* System headers */
 #include <stdlib.h>
 #include <string.h>
@@ -77,9 +78,10 @@ typedef unsigned short ushort;
 #include "sha1_prop.h"
 #include "bruteforce.h"
 #include "hashing_algo.h"
-#include "pb_common.h"
-#include "pb_client.h"
 #include "pb_server.h"
+#include "pb_client.h"
+
+
 
 
 

@@ -12,11 +12,11 @@
 extern "C" {
 #endif
 
-int getThreadID();
-int getNumThreads();
-int getNumCores();
+    int getThreadID();
+    int getNumThreads();
+    int getNumCores();
 
-void setNumThreads(int numThreads);
+    void setNumThreads(int numThreads);
 
 
 #ifdef	__cplusplus

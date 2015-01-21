@@ -224,12 +224,12 @@ sha1hash_prop(uchar *in, uint len, uint ver, uchar *out) {
 }
 
 int sha1_equal_prop(uchar hash1[], uchar hash2[]) {
-return memcmp(hash1, hash2, SHA1_SIZE) == 0;
-	/*int i = 0;
-	for (i = 0; i < SHA1_SIZE; i++) {
-		if (hash1[i] != hash2[i]) {
-			return 0;
-		}
-	}
-	return 1;*/
+    return memcmp(hash1, hash2, SHA1_SIZE) == 0;
+    /*int i = 0;
+    for (i = 0; i < SHA1_SIZE; i++) {
+            if (hash1[i] != hash2[i]) {
+                    return 0;
+            }
+    }
+    return 1;*/
 }
