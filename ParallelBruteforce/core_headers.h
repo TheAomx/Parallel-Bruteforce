@@ -64,6 +64,7 @@ typedef unsigned short ushort;
 #include <stdio.h>
 #include <unistd.h>
 #include <stddef.h>
+#include <sys/time.h>
 #include <mpi.h>
 #include <omp.h>
     /* Application headers */

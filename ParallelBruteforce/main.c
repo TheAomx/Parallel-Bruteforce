@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 	{                
             int i = 0;
             char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"};
-            unsigned int passwordSearchLength = 6;              
+            unsigned int passwordSearchLength = 4;              
 
             
             int numThreads = getNumCores();
@@ -87,8 +87,15 @@ int main(int argc, char** argv) {
 		passphraseBuffer[i] = (char*) malloc(sizeof(char) * (passwordSearchLength+1));
 		memset(passphraseBuffer[i], 0, sizeof(passphraseBuffer[i]));
 	    }
+            
+            struct timeval timeBefore, timeAfter;
+            
+            gettimeofday(&timeBefore, NULL);
 
             bruteforcePasswordAll(pwHashes, checkPassword, alphabet, passphraseBuffer, passwordSearchLength, rank, nTasks);
+            gettimeofday(&timeAfter, NULL);
+            
+            printf("needed %d secs %d usecs\n", (timeAfter.tv_sec - timeBefore.tv_sec), (timeAfter.tv_usec - timeBefore.tv_usec));
 	}
 	freePasswordHashes(pwHashes);
 

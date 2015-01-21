@@ -39,7 +39,7 @@ struct HashAlgorithm {
 typedef struct HashAlgorithm HashAlgorithm;
 
 static inline int isSupportedHashAlgorithm (char *line) {
-    return (strcmp(line,"SHA1") == 0 || strcmp(line,"SHA256") == 0 || strcmp(line,"MD5") == 0);
+    return (strcmp(line,"SHA1") == 0 || strcmp(line,"SHA256") == 0 ||  strcmp(line,"SHA1_PROP") == 0 || strcmp(line,"MD5") == 0);
 }
 
 HashAlgorithm* createHashAlgorithm(char *hashAlgorithm);
