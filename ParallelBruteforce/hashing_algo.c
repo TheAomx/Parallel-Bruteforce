@@ -12,8 +12,8 @@ void freeHashAlgo(HashAlgorithm *algo) {
 }
 
 static HashAlgorithm* createSHA1() {
-    HashAlgorithm *sha1 = (HashAlgorithm*) malloc(sizeof(HashAlgorithm));
-    SHA1_CTX *sha_context = (SHA1_CTX*) malloc(sizeof(SHA1_CTX));
+    HashAlgorithm *sha1 = (HashAlgorithm*) malloc(sizeof (HashAlgorithm));
+    SHA1_CTX *sha_context = (SHA1_CTX*) malloc(sizeof (SHA1_CTX));
     sha1->hashType = SHA1;
     sha1->ctx = (void*) sha_context;
     sha1->hashSize = SHA1_SIZE;
@@ -26,8 +26,8 @@ static HashAlgorithm* createSHA1() {
 }
 
 static HashAlgorithm* createSHA1Prop() {
-    HashAlgorithm *sha1 = (HashAlgorithm*) malloc(sizeof(HashAlgorithm));
-    SHA1_CTX *sha_context = (SHA1_CTX*) malloc(sizeof(SHA1_CTX));
+    HashAlgorithm *sha1 = (HashAlgorithm*) malloc(sizeof (HashAlgorithm));
+    SHA1_CTX *sha_context = (SHA1_CTX*) malloc(sizeof (SHA1_CTX));
     sha1->hashType = SHA1;
     sha1->ctx = (void*) sha_context;
     sha1->hashSize = SHA1_SIZE;
@@ -40,11 +40,11 @@ static HashAlgorithm* createSHA1Prop() {
 }
 
 static HashAlgorithm* createSHA256() {
-    HashAlgorithm *sha256 = (HashAlgorithm*) malloc(sizeof(HashAlgorithm));
-    SHA256_CTX *sha256_context = (SHA256_CTX*) malloc(sizeof(SHA256_CTX));
+    HashAlgorithm *sha256 = (HashAlgorithm*) malloc(sizeof (HashAlgorithm));
+    SHA256_CTX *sha256_context = (SHA256_CTX*) malloc(sizeof (SHA256_CTX));
     sha256->hashType = SHA256;
     sha256->ctx = (void*) sha256_context;
-    sha256->hashSize = SHA256_SIZE; 
+    sha256->hashSize = SHA256_SIZE;
     sha256->toString = sha256_toString;
     sha256->equals = sha256_equal;
     sha256->init = sha256_init;
@@ -54,11 +54,11 @@ static HashAlgorithm* createSHA256() {
 }
 
 static HashAlgorithm* createMD5() {
-    HashAlgorithm *md5 = (HashAlgorithm*) malloc(sizeof(HashAlgorithm));
-    MD5_CTX *md5_context = (MD5_CTX*) malloc(sizeof(MD5_CTX));
+    HashAlgorithm *md5 = (HashAlgorithm*) malloc(sizeof (HashAlgorithm));
+    MD5_CTX *md5_context = (MD5_CTX*) malloc(sizeof (MD5_CTX));
     md5->hashType = MD5;
     md5->ctx = (void*) md5_context;
-    md5->hashSize = MD5_SIZE; 
+    md5->hashSize = MD5_SIZE;
     md5->toString = md5_toString;
     md5->equals = md5_equal;
     md5->init = md5_init;
@@ -70,22 +70,18 @@ static HashAlgorithm* createMD5() {
 HashAlgorithm* createHashAlgorithm(char *hashAlgorithm) {
     if (!strcmp("SHA1", hashAlgorithm)) {
         return createSHA1();
-    }
-    else if (!strcmp("SHA1_PROP", hashAlgorithm)) {
+    } else if (!strcmp("SHA1_PROP", hashAlgorithm)) {
         return createSHA1();
-    }
-    else if(!strcmp("SHA256", hashAlgorithm)) {
+    } else if (!strcmp("SHA256", hashAlgorithm)) {
         return createSHA256();
-    }
-    else if(!strcmp("MD5", hashAlgorithm)) {
+    } else if (!strcmp("MD5", hashAlgorithm)) {
         return createMD5();
-    }
-    else {
+    } else {
         return NULL;
     }
 }
 
-static void updateHash (void *buffer, unsigned int bytesRead, void *ctx) {
+static void updateHash(void *buffer, unsigned int bytesRead, void *ctx) {
     HashAlgorithm *algo = (HashAlgorithm*) ctx;
     algo->update(algo->ctx, (uchar*) buffer, bytesRead);
 }
@@ -97,7 +93,7 @@ void getHashFromFile(HashAlgorithm *algo, char *filename, uchar *hash) {
 }
 
 void getHashFromStringIter(HashAlgorithm *algo, char *string, uchar *hash, int numIterations) {
-    int i = 0;	
+    int i = 0;
     algo->init(algo->ctx);
     for (i = 0; i < numIterations; i++) {
         algo->update(algo->ctx, (uchar*) string, strlen(string));
@@ -110,16 +106,13 @@ void getHashFromString(HashAlgorithm *algo, char *string, uchar *hash) {
 }
 
 static uchar hexCharToBin(char c) {
-    if (c >= '0' && c <='9') {
+    if (c >= '0' && c <= '9') {
         return c - '0';
-    }
-    else if (c >= 'a' && c <= 'f') {
+    } else if (c >= 'a' && c <= 'f') {
         return c - 'a' + 10;
-    }
-    else if (c >= 'A' && c <= 'F') {
+    } else if (c >= 'A' && c <= 'F') {
         return c - 'A' + 10;
-    }
-    else {
+    } else {
         return 0;
     }
 }
@@ -133,9 +126,9 @@ static uchar hexToBin(char c1, char c2) {
 
 uchar* convertHashStringToBinary(HashAlgorithm *algo, sds hashString) {
     int i, j;
-    uchar *hashBinary = (uchar*) malloc(sizeof(uchar) * algo->hashSize);
-    for (i = 0, j = 0; i < algo->hashSize; i++, j+=2) {
-        hashBinary[i] = hexToBin(hashString[j], hashString[j+1]) ;
+    uchar *hashBinary = (uchar*) malloc(sizeof (uchar) * algo->hashSize);
+    for (i = 0, j = 0; i < algo->hashSize; i++, j += 2) {
+        hashBinary[i] = hexToBin(hashString[j], hashString[j + 1]);
     }
     return hashBinary;
 }

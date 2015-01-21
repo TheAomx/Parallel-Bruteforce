@@ -10,10 +10,8 @@
       <itemPath>md5.h</itemPath>
       <itemPath>openmp.h</itemPath>
       <itemPath>pb_client.h</itemPath>
-      <itemPath>pb_common.h</itemPath>
       <itemPath>pb_server.h</itemPath>
       <itemPath>sds.h</itemPath>
-      <itemPath>server.h</itemPath>
       <itemPath>sha1.h</itemPath>
       <itemPath>sha1_prop.h</itemPath>
       <itemPath>sha256.h</itemPath>
@@ -33,10 +31,10 @@
       <itemPath>md5.c</itemPath>
       <itemPath>openmp.c</itemPath>
       <itemPath>pb_client.c</itemPath>
-      <itemPath>pb_common.c</itemPath>
+      <itemPath>pb_server.c</itemPath>
       <itemPath>sds.c</itemPath>
       <itemPath>sha1.c</itemPath>
-      <itemPath>sha1_splashtop_impl.c</itemPath>
+      <itemPath>sha1_prop.c</itemPath>
       <itemPath>sha256.c</itemPath>
       <itemPath>utils.c</itemPath>
     </logicalFolder>
@@ -90,9 +88,7 @@
       </item>
       <item path="pb_client.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="pb_common.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="pb_common.h" ex="false" tool="3" flavor2="0">
+      <item path="pb_server.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="pb_server.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -100,15 +96,13 @@
       </item>
       <item path="sds.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="server.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="sha1.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="sha1.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="sha1_prop.h" ex="false" tool="3" flavor2="0">
+      <item path="sha1_prop.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="sha1_splashtop_impl.c" ex="false" tool="0" flavor2="0">
+      <item path="sha1_prop.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="sha256.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -165,9 +159,7 @@
       </item>
       <item path="pb_client.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="pb_common.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="pb_common.h" ex="false" tool="3" flavor2="0">
+      <item path="pb_server.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="pb_server.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -175,15 +167,13 @@
       </item>
       <item path="sds.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="server.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="sha1.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="sha1.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="sha1_prop.h" ex="false" tool="3" flavor2="0">
+      <item path="sha1_prop.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="sha1_splashtop_impl.c" ex="false" tool="0" flavor2="0">
+      <item path="sha1_prop.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="sha256.c" ex="false" tool="0" flavor2="0">
       </item>

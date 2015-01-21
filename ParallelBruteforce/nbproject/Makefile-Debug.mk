@@ -41,10 +41,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/md5.o \
 	${OBJECTDIR}/openmp.o \
 	${OBJECTDIR}/pb_client.o \
-	${OBJECTDIR}/pb_common.o \
+	${OBJECTDIR}/pb_server.o \
 	${OBJECTDIR}/sds.o \
 	${OBJECTDIR}/sha1.o \
-	${OBJECTDIR}/sha1_splashtop_impl.o \
+	${OBJECTDIR}/sha1_prop.o \
 	${OBJECTDIR}/sha256.o \
 	${OBJECTDIR}/utils.o
 
@@ -103,10 +103,10 @@ ${OBJECTDIR}/pb_client.o: pb_client.c
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pb_client.o pb_client.c
 
-${OBJECTDIR}/pb_common.o: pb_common.c 
+${OBJECTDIR}/pb_server.o: pb_server.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pb_common.o pb_common.c
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pb_server.o pb_server.c
 
 ${OBJECTDIR}/sds.o: sds.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -118,10 +118,10 @@ ${OBJECTDIR}/sha1.o: sha1.c
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1.o sha1.c
 
-${OBJECTDIR}/sha1_splashtop_impl.o: sha1_splashtop_impl.c 
+${OBJECTDIR}/sha1_prop.o: sha1_prop.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1_splashtop_impl.o sha1_splashtop_impl.c
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1_prop.o sha1_prop.c
 
 ${OBJECTDIR}/sha256.o: sha256.c 
 	${MKDIR} -p ${OBJECTDIR}

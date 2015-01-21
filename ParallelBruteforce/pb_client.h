@@ -24,7 +24,7 @@ extern "C" {
      * @return The next password.
      */
     char* nextPassword(char* current, char* alphabet);
-    
+
     struct PasswordHashes {
         HashAlgorithm **algo;
         unsigned long numHashes;
@@ -32,9 +32,9 @@ extern "C" {
         uchar **hashBuffer;
         uchar **hashes;
     };
-    
+
     typedef struct PasswordHashes PasswordHashes;
-    
+
     void printHashes(PasswordHashes *pwHashes, int rank);
     PasswordHashes* generatePasswordHashes(MPI_File *in, unsigned int numThreads);
     void freePasswordHashes(PasswordHashes *pwHashes);

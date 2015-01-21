@@ -45,12 +45,12 @@ struct sdshdr {
 };
 
 static inline size_t sdslen(const sds s) {
-    struct sdshdr *sh = (void*)(s-sizeof *sh);
+    struct sdshdr *sh = (void*) (s - sizeof *sh);
     return sh->len;
 }
 
 static inline size_t sdsavail(const sds s) {
-    struct sdshdr *sh = (void*)(s-sizeof *sh);
+    struct sdshdr *sh = (void*) (s - sizeof *sh);
     return sh->free;
 }
 
@@ -71,7 +71,7 @@ sds sdscpy(sds s, const char *t);
 sds sdscatvprintf(sds s, const char *fmt, va_list ap);
 #ifdef __GNUC__
 sds sdscatprintf(sds s, const char *fmt, ...)
-    __attribute__((format(printf, 2, 3)));
+__attribute__((format(printf, 2, 3)));
 #else
 sds sdscatprintf(sds s, const char *fmt, ...);
 #endif
