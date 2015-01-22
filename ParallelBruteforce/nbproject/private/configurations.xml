@@ -32,8 +32,9 @@
           <runcommandpicklistitem>sh -c "mpirun -np10 '${OUTPUT_PATH}'"</runcommandpicklistitem>
           <runcommandpicklistitem>sh -c "mpirun -np 10 '${OUTPUT_PATH}'"</runcommandpicklistitem>
           <runcommandpicklistitem>sh -c "mpirun -np 2 '${OUTPUT_PATH}'"</runcommandpicklistitem>
+          <runcommandpicklistitem>sh -c "mpirun -np 4 '${OUTPUT_PATH}'"</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>sh -c "mpirun -np 2 '${OUTPUT_PATH}'"</runcommand>
+        <runcommand>sh -c "mpirun -np 4 '${OUTPUT_PATH}'"</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>

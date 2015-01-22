@@ -59,6 +59,8 @@ int main(int argc, char** argv) {
         // The master thread will need to receive all computations from all other threads.
         MPI_Status status;
         size_t maxPwSize = sizeof (char)*MAX_PASSWORD;
+        
+        /*Password counting, converting ...*/
         char* startPass = (char*) malloc(maxPwSize);
         memset(startPass, '\0', maxPwSize);
         startPass[0] = 'a';
@@ -66,25 +68,36 @@ int main(int argc, char** argv) {
 
         char* tmp = (char*) malloc(maxPwSize);
         memset(tmp, '\0', maxPwSize);
-        for (ulong i = 0; i < 15000000; i++) {
-
-            nextPass(startPass, tmp);
-            
-//                DBG_OK("Counting pws: %s(%ld) -> %s(%ld), index: %ld -> ", startPass, toNumberIndefaultAlphabet(startPass), tmp, toNumberIndefaultAlphabet(tmp), i);
-
-            
-            strcpy(startPass, tmp);
-
-        }
-        DBG_OK("Number of passwords between: %s and %s = %ld", "a", tmp, getPasswordDiff("a", tmp));
-        free(tmp);
-        free(startPass);
+//        for (ulong i = 0; i < 500; i++) {
+//
+//            nextPass(startPass, tmp);
+//
+//                            DBG_OK("Counting pws: %s(%ld) -> %s(%ld), index: %ld -> ", startPass, toNumberIndefaultAlphabet(startPass), tmp, toNumberIndefaultAlphabet(tmp), i);
+//
+//
+//            strcpy(startPass, tmp);
+//
+//        }
+//        DBG_OK("Number of passwords between: %s and %s = %ld", "a", tmp, getPasswordDiff("a", tmp));
+//        free(tmp);
+//        free(startPass);
         startPass = "a\0";
         tmp = (char*) malloc(maxPwSize);
         memset(tmp, '\0', maxPwSize);
-        getPasswordAtRelativeOffset(startPass,tmp,15000000);
-        DBG_OK("%d elements after %s comes %s", 15000000, startPass,tmp );
+        getPasswordAtRelativeOffset(startPass, 15000000, tmp);
+        DBG_OK("%d elements after %s comes %s", 15000000, startPass, tmp);
+        memset(tmp, '\0', maxPwSize);
+            getPasswordAtRelativeOffset("a", 62, tmp);
+            DBG_OK("%d elements after %s comes %s, div von %s zu %s is %ld", 62, "a", tmp,"a","aa",getPasswordDiff("a", "aa"));
+        /*Client Task Initialization*/
+        ServerContext* context = initializeWithPW(nTasks-1,"a","000");
         
+        getPasswordAtRelativeOffset("000",80745,tmp);
+        DBG_OK("%d elements after %s comes %s div %ld", 80745, "000", tmp,getPasswordDiff("000", "009"));
+        
+        
+        printServerContext(context);
+
         // MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status)
         // We need to go and receive the data from all other threads.
         // The arbitrary tag we choose is 1, for now.
