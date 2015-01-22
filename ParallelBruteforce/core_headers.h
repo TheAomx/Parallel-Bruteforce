@@ -71,6 +71,7 @@ extern "C" {
     /* Application headers */
 #include "sds.h"
 #include "openmp.h"
+#include "password_algo.h"
 #include "utils.h"
 #include "sha1.h"
 #include "sha256.h"
@@ -78,6 +79,7 @@ extern "C" {
 #include "sha1_prop.h"
 #include "bruteforce.h"
 #include "hashing_algo.h"
+
 #include "pb_server.h"
 #include "pb_client.h"
 

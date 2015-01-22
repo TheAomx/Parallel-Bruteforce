@@ -60,21 +60,15 @@ int main(int argc, char** argv) {
         MPI_Status status;
         size_t maxPwSize = sizeof (char)*MAX_PASSWORD;
 
-        /*Password counting, converting ...*/
-        char* startPass = (char*) malloc(maxPwSize);
-        memset(startPass, '\0', maxPwSize);
-        startPass[0] = 'a';
-        startPass[1] = '\0';
-
-        char* tmp = (char*) malloc(maxPwSize);
-        memset(tmp, '\0', maxPwSize);
-        tmp = (char*) malloc(maxPwSize);
-        memset(tmp, '\0', maxPwSize);
        
-        /*Client Task Initialization*/
+        /*
+         * Calculate and initialize server side information about the job. 
+         * The created context also holds the information about the work, each 
+         * client will do.
+         */
         ServerContext* context = initializeWithPW(nTasks - 1, "a", "000000");
 
-        getPasswordAtRelativeOffset("a", 50, tmp);
+        
         printServerContext(context);
         
         // MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status)

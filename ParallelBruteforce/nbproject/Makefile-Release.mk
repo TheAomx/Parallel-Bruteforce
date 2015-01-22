@@ -40,6 +40,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/md5.o \
 	${OBJECTDIR}/openmp.o \
+	${OBJECTDIR}/password_algo.o \
 	${OBJECTDIR}/pb_client.o \
 	${OBJECTDIR}/pb_server.o \
 	${OBJECTDIR}/sds.o \
@@ -97,6 +98,11 @@ ${OBJECTDIR}/openmp.o: openmp.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/openmp.o openmp.c
+
+${OBJECTDIR}/password_algo.o: password_algo.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/password_algo.o password_algo.c
 
 ${OBJECTDIR}/pb_client.o: pb_client.c 
 	${MKDIR} -p ${OBJECTDIR}
