@@ -19,7 +19,7 @@ extern "C" {
         DEFAULT
     };
     
-  
+    typedef enum PwGenAlgoType PwGenAlgoType;
     
     typedef void (*PasswordCountCallback)(char* in, char* out);
     typedef ulong (*PasswordAbsDiffCallback)(char* pw1, char* pw2);
@@ -29,6 +29,7 @@ extern "C" {
     
     
     struct passwordGenerationContext{
+        PwGenAlgoType type;
         char* alphabet;
         PasswordCountCallback nextPassword;
         PasswordAbsDiffCallback passwordDiff;
@@ -43,7 +44,6 @@ extern "C" {
         char* startPass;
         char* endPass;
         ulong numPass;
-        PasswordGenerationContext* passwordGenerationContext;
     };
 
     typedef struct clientTask  ClientTask;
@@ -67,10 +67,7 @@ extern "C" {
         
         ClientTask* tasks;
         
-        /**
-         * The password generation context used as the context 
-         */
-        PasswordGenerationContext* passwordGenerationContext;
+        PwGenAlgoType type;
 
         long numPasswords;
 
@@ -123,6 +120,9 @@ extern "C" {
     void getPasswordAt(ulong passwordIndex, char* result);
     
     void printServerContext(ServerContext* ctx);
+    
+    PasswordGenerationContext* createPasswordGenerationContextByType(PwGenAlgoType type);
+    PasswordGenerationContext* createPasswordGenerationContextByName(char* typeName);
 
 #ifdef	__cplusplus
 }

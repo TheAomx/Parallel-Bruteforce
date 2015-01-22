@@ -51,10 +51,11 @@ static int getValue(Mapping* mappings, char key) {
 }
 
 static char getKey(Mapping* mappings, int val) {
-    char result = '\0'; /* Default value... */
+    char result; /* Default value... */
     int len = strlen(alphabet);
     for (int j = 0; j < len; j++) {
         if (mappings[j].val == val) {
+            //            DBG_OK("Found mapping of value: %d to key: %c",val,mappings[j].c);
             result = mappings[j].c;
             break;
         }
@@ -94,21 +95,23 @@ static Mapping getMax(Mapping* mappings) {
 static void convert(ulong number, int alphabetLen, Mapping* mapping, int* outLen, char* out) {
     char rem;
     int i = 0;
-    int remNum;
-    while (number != 0) {
-        remNum = number % alphabetLen;
+    uint alphaLen = alphabetLen;
+    ulong numTmp = number;
+    uint remNum;
+    while (numTmp != (ulong) 0) {
+        remNum = numTmp % alphaLen;
 
         rem = getKey(mapping, remNum);
 
-        number /= alphabetLen;
-
+        numTmp /= alphaLen;
         out[i] = rem;
         i++;
         *outLen = i;
     }
-    out[*outLen] = '\0';
-    reverse(out);
 
+    out[*outLen] = '\0';
+
+    reverse(out);
 }
 
 static void toString(ulong number, Mapping* mapping, char* out) {
@@ -127,12 +130,11 @@ static void toString(ulong number, Mapping* mapping, char* out) {
     } else {
         int outLen = 0;
         convert(number, alphabetLen, map, &outLen, out);
-
-
     }
 
 }
 //FIXME: The toString methods don't give the correct strings...
+
 static void toStringWithMinLen(ulong number, Mapping* mapping, int minLen, char* out) {
     Mapping *map = mapping;
     char nullChar = '\0';
@@ -146,7 +148,9 @@ static void toStringWithMinLen(ulong number, Mapping* mapping, int minLen, char*
         out[minLen] = '\0';
 
     } else {
+
         toString(number, map, out);
+        //        DBG_OK("Converted num %ld to %s", number, out);
         int outlen = strlen(out);
         if (outlen < minLen) {
             int lenDif = minLen - outlen;
@@ -158,7 +162,7 @@ static void toStringWithMinLen(ulong number, Mapping* mapping, int minLen, char*
                 out[i] = nullChar;
             }
             strncpy((out + (lenDif)), tmp, outlen);
-            out[minLen + 1] = '\0';
+            out[minLen] = '\0';
             free(tmp);
 
 
@@ -174,14 +178,14 @@ static void toStringWithMinLen(ulong number, Mapping* mapping, int minLen, char*
  * @return 
  */
 static ulong numberOffset(int numberLen) {
-    int alphabetLen = strlen(alphabet);
+    int len = alphabetLength;
     ulong result = 0;
     if (numberLen == 1)
         return result;
 
 
     for (int i = numberLen - 1; i > 0; i--) {
-        result += pow_ul(((ulong) alphabetLen), ((ulong) i));
+        result += pow_ul(((ulong) len), ((ulong) i));
     }
     return result;
 }
@@ -199,7 +203,6 @@ static ulong numberOffset(int numberLen) {
 static ulong toNumber(char* string, Mapping* mapping) {
     int alphabetLen = alphabetLength;
     int inputLen = strlen(string);
-
     Mapping *map = mapping;
 
 
@@ -272,7 +275,7 @@ static long long getNumPasswords(char* start, char* end) {
     ulong startValue = toNumber(start, map);
     ulong endValue = toNumber(end, map);
     ulong result;
-    DBG_OK("Start: %ld, End: %ld", startValue, endValue);
+    //    DBG_OK("Start: %ld, End: %ld", startValue, endValue);
 
     if (endValue > startValue)
         result = endValue - startValue;
@@ -282,65 +285,74 @@ static long long getNumPasswords(char* start, char* end) {
     return result;
 }
 
-static void createClientTasks(int numTasks, long numPasswords, char* startPW, char* endPw, ClientTask* out, PasswordGenerationContext* pwdGenCopySource) {
+static void createClientTasks(int numTasks, long numPasswords, char* startPW, char* endPw, ClientTask* out, PwGenAlgoType pwGenAlgoType) {
     int isDivider = ((numPasswords % numTasks) == 0) ? 1 : 0;
     ulong passwordsPerTask = numPasswords / numTasks;
-    DBG_OK("Calculated: Each one of the %d mpi-tasks has to generate %ld to search all %ld passwords from %s to %s", numTasks, passwordsPerTask, numPasswords, startPW, endPw);
-    if (isDivider == 1) {
-        DBG_OK("Is Divider!!");
-    }
+    //    DBG_OK("Calculated: Each one of the %d mpi-tasks has to generate %ld to search all %ld passwords from %s to %s", numTasks, passwordsPerTask, numPasswords, startPW, endPw);
+    //    if (isDivider == 1) {
+    //        DBG_OK("Number of tasks divides the number of passwords to be generated -> any task will have to generate the exact same amount of passwords (and hashes)");
+    //    }
 
     ulong currentOffset = toNumberIndefaultAlphabet(startPW);
 
+    /*Calculate the number of tasks which are all calculating the same amount of work.*/
     int fullLengthTasks = (isDivider == 1) ? (numTasks) : (numTasks - 1);
-    
-    DBG_OK("Full tasks: %d", fullLengthTasks);
+
+    /*Initialize the first 'fullLengthTasks' tasks with an equal amount of work...*/
     for (int i = 0; i < fullLengthTasks; i++) {
+        /*Temp Pointers for start and end*/
         char* tempPwd;
-    char* tempPwd2;
+        char* tempPwd2;
         tempPwd = (char*) malloc(sizeof (char)*MAX_PASSWORD);
         tempPwd2 = (char*) malloc(sizeof (char)*MAX_PASSWORD);
         memset(tempPwd, '\0', sizeof (char)*MAX_PASSWORD);
         memset(tempPwd2, '\0', sizeof (char)*MAX_PASSWORD);
-        out[i].pwAlgoType = DEFAULT;
-        
-        getPasswordAt(currentOffset, tempPwd);
-        DBG_OK("Start is: %s", tempPwd);
-        getPasswordAt(passwordsPerTask + currentOffset, tempPwd2);
 
+        /**/
+
+        getPasswordAt(currentOffset, tempPwd);
+        getPasswordAt(passwordsPerTask + currentOffset, tempPwd2);
         currentOffset += passwordsPerTask;
         out[i].startPass = tempPwd;
-
         out[i].endPass = tempPwd2;
         out[i].numPass = passwordsPerTask;
-        out[i].passwordGenerationContext = (PasswordGenerationContext*) malloc(sizeof (pwdGenCopySource));
-        memcpy(out[i].passwordGenerationContext, pwdGenCopySource, sizeof (pwdGenCopySource));
-
+        out[i].pwAlgoType = pwGenAlgoType;
 
     }
+    /* If the number of passwords could not be divided into equal parts, the last client has to do a bit more work than others
+     * The amount of work to do for this task can be defined as follows:  work_this <= (work_others*2)-1 or exact work_this = work_all - (work_others*num_others)
+     */
+
     if (isDivider == 0) {
+        /*Temp Pointers for start and end*/
         char* tempPwd;
-    char* tempPwd2;
+        char* tempPwd2;
         tempPwd = (char*) malloc(sizeof (char)*MAX_PASSWORD);
         tempPwd2 = (char*) malloc(sizeof (char)*MAX_PASSWORD);
         memset(tempPwd, '\0', sizeof (char)*MAX_PASSWORD);
         memset(tempPwd2, '\0', sizeof (char)*MAX_PASSWORD);
-        int index = (numTasks-1);
-        out[index].pwAlgoType = DEFAULT;
-        
-        getPasswordAt(currentOffset, tempPwd);
-        
-        getPasswordAt(passwordsPerTask + currentOffset, tempPwd2);
-DBG_OK("Start is: %s, end: %s", tempPwd, tempPwd2);
-        currentOffset += passwordsPerTask;
-        out[index].startPass = tempPwd;
 
+        int index = (numTasks - 1);
+        ulong numPwd = numPasswords - (passwordsPerTask * (numTasks - 1));
+        out[index].pwAlgoType = DEFAULT;
+        getPasswordAt(currentOffset, tempPwd);
+        getPasswordAt(numPwd + currentOffset, tempPwd2);
+        out[index].startPass = tempPwd;
         out[index].endPass = tempPwd2;
-        out[index].numPass = passwordsPerTask;
-        out[index].passwordGenerationContext = (PasswordGenerationContext*) malloc(sizeof (pwdGenCopySource));
-        memcpy(out[index].passwordGenerationContext, pwdGenCopySource, sizeof (pwdGenCopySource));
+        out[index].numPass = numPwd;
+        out[index].pwAlgoType = pwGenAlgoType;
+
     }
 
+}
+
+static void initServerContext(char* start, char* end, int numWorkers,ulong numPasswords, ServerContext* out, PwGenAlgoType pwGenAlgo){
+    out->startPassword = start;
+    out->endPassword = end;
+    out->numClients = numWorkers;
+    out->numPasswords = numPasswords;
+    out->tasks = (ClientTask*) malloc(sizeof (ClientTask) * numWorkers);
+    createClientTasks(numWorkers, numPasswords, start, end, out->tasks, DEFAULT);
 }
 
 ServerContext* initializeWithPW(int numWorkers, char* startPW, char* endPW) {
@@ -349,28 +361,9 @@ ServerContext* initializeWithPW(int numWorkers, char* startPW, char* endPW) {
     }
     ulong numPWD = getPasswordDiff(startPW, endPW);
 
-    DBG_OK("Number of passwords to be calculated: %ld", numPWD);
+
     ServerContext* result = (ServerContext*) malloc(sizeof (ServerContext));
-    result->startPassword = startPW;
-    result->endPassword = endPW;
-    result->numClients = numWorkers;
-    result->numPasswords = numPWD;
-
-
-    /*Initialize the password generation context which holds the alphabet and handles to methods for counting, converting and subtraction */
-    PasswordGenerationContext* pwgenCtx = (PasswordGenerationContext*) malloc(sizeof (PasswordGenerationContext));
-    pwgenCtx->alphabet = (char*) malloc(sizeof (char)*alphabetLength);
-    memset(pwgenCtx->alphabet, '\0', sizeof (char)*alphabetLength);
-    strncpy(pwgenCtx->alphabet, alphabet, sizeof (char)*alphabetLength);
-    pwgenCtx->nextPassword = nextPass;
-    pwgenCtx->passwordDiff = getPasswordDiff;
-    pwgenCtx->valueOf = toNumberIndefaultAlphabet;
-    result->passwordGenerationContext = pwgenCtx;
-
-    result->tasks = (ClientTask*) malloc(sizeof (ClientTask) * numWorkers);
-    createClientTasks(numWorkers, numPWD, startPW, endPW, result->tasks, pwgenCtx);
-
-
+    initServerContext(startPW,endPW,numWorkers,numPWD,result,DEFAULT);
     return result;
 
 }
@@ -385,29 +378,10 @@ ServerContext* initializeWithLenght(int numWorkers, char* startPW, ulong numPass
     getPasswordAt(startValue + numPasswords, tmp);
     ulong numPWD = numPasswords;
 
-    DBG_OK("Number of passwords to be calculated: %ld", numPWD);
+   
     ServerContext* result = (ServerContext*) malloc(sizeof (ServerContext));
-    result->startPassword = startPW;
-
-    result->endPassword = tmp;
-
-
-    result->numClients = numWorkers;
-    result->numPasswords = numPWD;
-
-
-    /*Initialize the password generation context which holds the alphabet and handles to methods for counting, converting and subtraction */
-    PasswordGenerationContext* pwgenCtx = (PasswordGenerationContext*) malloc(sizeof (PasswordGenerationContext));
-    pwgenCtx->alphabet = (char*) malloc(sizeof (char)*alphabetLength);
-    memset(pwgenCtx->alphabet, '\0', sizeof (char)*alphabetLength);
-    strncpy(pwgenCtx->alphabet, alphabet, sizeof (char)*alphabetLength);
-    pwgenCtx->nextPassword = nextPass;
-    pwgenCtx->passwordDiff = getPasswordDiff;
-    pwgenCtx->valueOf = toNumberIndefaultAlphabet;
-    result->passwordGenerationContext = pwgenCtx;
-
-    result->tasks = (ClientTask*) malloc(sizeof (ClientTask) * numWorkers);
-    createClientTasks(numWorkers, numPWD, startPW, tmp, result->tasks, pwgenCtx);
+    initServerContext(startPW,tmp,numWorkers,numPWD,result,DEFAULT);
+    
 
 
 
@@ -456,6 +430,17 @@ void getPasswordAtRelativeOffset(char* offsetPw, ulong targetDifference, char* r
 
 }
 
+static ulong getOffsetForLen(int pwLength) {
+    if (pwLength == 1)
+        return 0;
+    ulong alphabetLen = alphabetLength;
+    ulong result = 0;
+    for (ulong i = 1; i < pwLength; i++) {
+        result += pow_ul(alphabetLen, i);
+    }
+    return result;
+}
+
 void getPasswordAt(ulong passwordIndex, char* result) {
     if (alphabetLength == 0) {
         alphabetLength = strlen(alphabet);
@@ -463,38 +448,53 @@ void getPasswordAt(ulong passwordIndex, char* result) {
     Mapping *map = NULL;
     getMapping(alphabet, &map);
     long resultingIndex = passwordIndex;
+    if (passwordIndex < 0) {
+
+        toStringWithMinLen(0, map, 1, result);
+        return;
+    }
+
     if (resultingIndex > 0) {
         int i = 0;
-        long tmp = 0;
+        ulong tmp = 0;
         int pos = 1;
-        while ((resultingIndex - tmp) > 0) {
-            tmp += pow_ul(alphabetLength, pos);
+        while (1) {
+//            DBG_OK("Target index: %ld, current offset, %ld for len %d", resultingIndex, getOffsetForLen(pos), pos);
+            if (getOffsetForLen(pos)>(resultingIndex)) {
+                if (pos > 0 && getOffsetForLen(pos - 1) <= (resultingIndex))
+                    pos--;
+                break;
+            }
             pos++;
         }
-        pos--;
-        if (pos > 0) {
-            tmp -= pow_ul(alphabetLength, pos);
-        }
 
-        tmp = resultingIndex - tmp;
-        char gotresult = 0;
-        while (numberOffset(i) <= resultingIndex) {
-            if (numberOffset(i) == resultingIndex) {
-                toStringWithMinLen(0, map, pos + 1, result);
-                 DBG_OK("PW at %ld -> %s", passwordIndex, result);
-                gotresult = 1;
-                break;
-            } else
-                i++;
+        tmp = (resultingIndex) - getOffsetForLen(pos);
 
-        }
-        if (gotresult == 0) {
+
+
+        if (resultingIndex > 0 && tmp <= 0 && pos > 0) {
+            if (resultingIndex == getOffsetForLen(pos)) {
+                tmp = 0;
+                toStringWithMinLen(tmp, map, pos, result);
+                //                DBG_OK("Null value %ld -> '%s' for length %d", tmp, result, pos);
+            } else {
+                //                DBG_OK("Number before overflow %ld, %ld, %d", resultingIndex, getOffsetForLen(pos), pos);
+                pos--;
+                tmp = (getOffsetForLen(pos + 1) - getOffsetForLen(pos)) - 1;
+                //                DBG_OK("Calculating with value %ld for len %d", tmp, pos);
+                toStringWithMinLen(tmp, map, pos, result);
+            }
+        } else {
+            //            DBG_OK("Receive value of %ld with length %d", tmp, pos);
             toStringWithMinLen(tmp, map, pos, result);
-             DBG_OK("PW at %ld -> %s", passwordIndex, result);
+
         }
+
+        //        DBG_OK("PW at %ld -> %s with %d digits", resultingIndex, result, pos);
+
     } else {
         result[0] = getKey(map, 0);
-         DBG_OK("PW at %ld -> %s", passwordIndex, result);
+        //         DBG_OK("PW at %ld -> %s", passwordIndex, result);
     }
 
     free(map);
@@ -502,17 +502,54 @@ void getPasswordAt(ulong passwordIndex, char* result) {
 }
 
 static void printClientTask(ClientTask task) {
-    DBG_OK("Client task configuration:\r\nStart: %s, end: %s, count: %ld", task.startPass, task.endPass, task.numPass);
+    printf("      Client task configuration:\n         Start: %s, end: %s, count: %ld\n", task.startPass, task.endPass, task.numPass);
 }
 
 void printServerContext(ServerContext* ctx) {
-    DBG_OK("Server context with %d clients", ctx->numClients);
-    DBG_OK("Operation is to check %ld passwords. ->min %ld passwords per client", ctx->numPasswords, ctx->tasks[0].numPass);
-    DBG_OK("Start password is: %s, end is: %s", ctx->startPassword, ctx->endPassword);
+    printf("Server context with %d clients\n", ctx->numClients);
+    printf("   Operation is to check %ld passwords. Each client will have to generate at least %ld passwords\n", ctx->numPasswords, ctx->tasks[0].numPass);
+    printf("      Start password is: %s, end is: %s\n", ctx->startPassword, ctx->endPassword);
 
-    DBG_OK("Client configurations:");
+    printf("   Client configurations:\n");
     for (int i = 0; i < ctx->numClients; i++) {
         printClientTask(ctx->tasks[i]);
     }
-    DBG_OK("The used alphabet is: %s", ctx->passwordGenerationContext->alphabet);
+    fflush(stdout);
+}
+
+static PasswordGenerationContext* createDefaultContext() {
+    PasswordGenerationContext* result = NULL;
+    result = (PasswordGenerationContext*) malloc(sizeof (PasswordGenerationContext));
+    result->alphabet = (char*) malloc(sizeof (char)*alphabetLength);
+    memset(result->alphabet, '\0', sizeof (char)*alphabetLength);
+    strncpy(result->alphabet, alphabet, sizeof (char)*alphabetLength);
+    result->nextPassword = nextPass;
+    result->passwordDiff = getPasswordDiff;
+    result->valueOf = toNumberIndefaultAlphabet;
+    result->type = DEFAULT;
+    return result;
+}
+
+PasswordGenerationContext* createPasswordGenerationContextByType(PwGenAlgoType type) {
+    PasswordGenerationContext* result = NULL;
+    switch (type) {
+        case DEFAULT:
+            result = createDefaultContext();
+            break;
+        default:
+            DBG_OK("Error unknown type of password generation algorithm defined.");
+            exit(EXIT_FAILURE);
+    }
+    return result;
+}
+
+PasswordGenerationContext* createPasswordGenerationContextByName(char* typeName) {
+    PasswordGenerationContext* result = NULL;
+    if (strcmp(typeName, "DEFAULT") == 0 || strcmp(typeName, "default") == 0) {
+        result = createDefaultContext();
+    } else {
+        DBG_OK("Error unknown type ('%s') of password generation algorithm defined.", typeName);
+        exit(EXIT_FAILURE);
+    }
+    return result;
 }
