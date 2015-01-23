@@ -125,6 +125,10 @@ void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCall
 
     strncpy(tmpPwd, taskInfo->startPassword, len);
 
+    PasswordHashes *pwHashes = (PasswordHashes*) ctx;
+    int numThreads = pwHashes->numThreads;
+
+
    
     //DBG_OK("           %s(%ld)      ->      %s(%ld)    :%ld   ", tmpPwd,(pwGenType->valueOf(tmpPwd)),tmpPwd2,(pwGenType->valueOf(tmpPwd2)),i);
     ulong count = context->passwordDiff(taskInfo->startPassword,taskInfo->endPassword);
@@ -144,8 +148,8 @@ void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCall
          
         
         if ((i % 1000000) == 0) {
-            ulong needToCheck = (count/4);
-            ulong checkedPws = (i+offset) - threadID * needToCheck;
+            ulong needToCheck = (count/numThreads);
+            ulong checkedPws = i - threadID * needToCheck;
             double percentFinished = (double) checkedPws / (double) needToCheck;
             percentFinished *= 100;
             printf("[%d] %.2f%% %s\n", threadID, percentFinished , currentPassphrase);
