@@ -12,7 +12,8 @@
 extern "C" {
 #endif
 
-    #define MAX_PASSWORD 100
+#define MAX_PASSWORD 100
+
     struct mapping {
         char c;
         int val;
@@ -47,7 +48,7 @@ extern "C" {
      * Structure holding required data and function for executing generic kind of Password generation and calculation.
      */
     struct passwordGenerationContext {
-        PwGenAlgoType type;
+        int type;
         char* alphabet;
         PasswordCountCallback nextPassword;
         PasswordAbsDiffCallback passwordDiff;
@@ -58,6 +59,15 @@ extern "C" {
     };
     typedef struct passwordGenerationContext PasswordGenerationContext;
 
+    /**
+     * Client side structure used for password generation.
+     */
+    struct PasswordGenTask {
+        char* startPassword;
+        char* endPassword;
+        PasswordGenerationContext* generationContext;
+    };
+    typedef struct PasswordGenTask PasswordGenTask;
 
     /**
      * Counts up a given password using the default alphabet.
@@ -105,7 +115,7 @@ extern "C" {
      * @param type The type of algorithm (collection) to retrieve.
      * @return An allocated and initialized PasswordGenerationContext of the supplied type.
      */
-    PasswordGenerationContext* createPasswordGenerationContextByType(PwGenAlgoType type);
+    PasswordGenerationContext* createPasswordGenerationContextByType(int type);
     /**
      * Creates a new Password generation context of the given type name.
      * @param type The name of the type of algorithm (collection) to retrieve.
@@ -113,6 +123,8 @@ extern "C" {
      */
     PasswordGenerationContext* createPasswordGenerationContextByName(char* typeName);
 
+
+    PasswordGenTask* createClientTask(int pwGenAlgoType, char* start, char* end);
 #ifdef	__cplusplus
 }
 #endif

@@ -62,7 +62,7 @@ extern "C" {
         /*
          * The type of password generation algorithm to be used by the clients.
          */
-        PwGenAlgoType type;
+        int type;
         /*
          * The overall number of passwords to be generated during the process runtime.
          */

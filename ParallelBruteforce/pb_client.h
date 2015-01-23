@@ -16,14 +16,6 @@ extern "C" {
 #endif
 
 
-    /**
-     * Computes the next password.
-     * 'Next' means the next number which results when interpreting the current password as a number of base #alphabet and incrementing by 1. (current+1) 
-     * @param current The current password.
-     * @param alphabet The alphabet
-     * @return The next password.
-     */
-    char* nextPassword(char* current, char* alphabet);
 
     struct PasswordHashes {
         HashAlgorithm **algo;
@@ -32,13 +24,19 @@ extern "C" {
         uchar **hashBuffer;
         uchar **hashes;
     };
-
     typedef struct PasswordHashes PasswordHashes;
+   
+    
+    
 
     void printHashes(PasswordHashes *pwHashes, int rank);
     PasswordHashes* generatePasswordHashes(MPI_File *in, unsigned int numThreads);
+    
+    
     void freePasswordHashes(PasswordHashes *pwHashes);
 
+    
+    
 #ifdef	__cplusplus
 }
 #endif

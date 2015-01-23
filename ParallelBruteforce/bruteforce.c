@@ -88,6 +88,7 @@ void bruteforcePassword(void *ctx, bruteforceCallback callback, char *alphabet, 
 }
 
 void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, char **passphraseBuffer, unsigned int maxPasswordLength, int rank, int nTasks) {
+
     int pwLen;
     int searchStart = 1;
 
@@ -107,4 +108,33 @@ void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabe
 
 
 
+}
+
+void countPasswords(void *ctx, bruteforceCallback callback,char* start, ulong count){
+    
+}
+
+void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCallback callback, char **passphraseBuffer) {
+    PasswordGenerationContext* context = taskInfo->generationContext;
+    int len = strlen(taskInfo->startPassword);
+    char* tmpPwd = (char*) malloc(sizeof (char)*MAX_PASSWORD);
+    char* tmpPwd2 = (char*) malloc(sizeof (char)*MAX_PASSWORD);
+
+    memset(tmpPwd, '\0', sizeof (char)*MAX_PASSWORD);
+    memset(tmpPwd2, '\0', sizeof (char)*MAX_PASSWORD);
+
+    strncpy(tmpPwd, taskInfo->startPassword, len);
+
+   
+    //DBG_OK("           %s(%ld)      ->      %s(%ld)    :%ld   ", tmpPwd,(pwGenType->valueOf(tmpPwd)),tmpPwd2,(pwGenType->valueOf(tmpPwd2)),i);
+    ulong count = context->passwordDiff(taskInfo->startPassword,taskInfo->endPassword);
+    DBG_OK("Generating %ld passwords from %s to %s.", count,taskInfo->startPassword,taskInfo->endPassword);
+    //FIXME: Splitting work into peaces and do a parallel region with countPasswords.
+    
+    for (ulong i = 0; i <= count; i++) {    
+        context->nextPassword(tmpPwd, tmpPwd2);
+        
+        strncpy(tmpPwd, tmpPwd2, MAX_PASSWORD);
+         
+    }
 }

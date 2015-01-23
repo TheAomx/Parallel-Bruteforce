@@ -46,5 +46,7 @@ int bruteforcePasswordIter(void *ctx, bruteforceCallback callback, char *alphabe
  */
 void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, char **passphraseBuffer, unsigned int maxPasswordLength, int rank, int nTasks);
 
+void bruteforcePasswordTask(PasswordGenTask* taskInfo,void *ctx, bruteforceCallback callback, char **passphraseBuffer);
+
 
 #endif

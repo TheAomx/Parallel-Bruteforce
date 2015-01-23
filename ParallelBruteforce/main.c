@@ -171,6 +171,9 @@ int main(int argc, char** argv) {
         
         DBG_OK("Received data from server. Hash filename: %s\n          start: %s, end: %s, pwAlgoType:%d", hashFileName, startPass, endPass, pwAlgoValue);
         
+        PasswordGenTask* clientTaskInfo = createClientTask(pwAlgoValue,startPass,endPass);
+        
+        
         //        int i = 0;
         //        char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"};
         //        unsigned int passwordSearchLength = 4;

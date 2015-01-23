@@ -355,7 +355,7 @@ static PasswordGenerationContext* createDefaultContext() {
     return result;
 }
 
-PasswordGenerationContext* createPasswordGenerationContextByType(PwGenAlgoType type) {
+PasswordGenerationContext* createPasswordGenerationContextByType(int type) {
     PasswordGenerationContext* result = NULL;
     switch (type) {
         case DEFAULT:

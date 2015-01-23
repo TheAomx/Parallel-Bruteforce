@@ -15,6 +15,16 @@ void freePasswordHashes(PasswordHashes *pwHashes) {
     free(pwHashes);
 }
 
+PasswordGenTask* createClientTask(int pwGenAlgoType, char* start, char* end) {
+    PasswordGenTask* result = NULL;
+    PasswordGenerationContext* genContext = createPasswordGenerationContextByType(pwGenAlgoType);
+    result=(PasswordGenTask*)malloc(sizeof(PasswordGenTask));
+    result->startPassword=start;
+    result->endPassword=end;
+    result->generationContext=genContext;
+    return result;
+};
+
 void printHashes(PasswordHashes *pwHashes, int rank) {
     for (int i = 0; i < pwHashes->numHashes; i++) {
         printf("[%d] %s\n", rank, pwHashes->algo[0]->toString(pwHashes->hashes[i]));
