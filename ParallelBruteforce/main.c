@@ -13,19 +13,11 @@
 
 int checkPassword(void *ctx, char *password) {
     int i;
-    static unsigned long pwCounter = 0;
     PasswordHashes *pwHashes = (PasswordHashes*) ctx;
 
     int threadID = getThreadID();
     uchar* hashBuffer = pwHashes->hashBuffer[threadID];
     HashAlgorithm *algo = pwHashes->algo[threadID];
-
-    pwCounter++;
-
-    if ((pwCounter % 1000000) == 0) {
-        printf("[%d] %s\n", threadID, password);
-        fflush(stdout);
-    }
 
     getHashFromString(algo, password, hashBuffer);
 
@@ -49,7 +41,8 @@ int main(int argc, char** argv) {
     MPI_Comm_size(MPI_COMM_WORLD, &nTasks);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_File fh;
-    int ret = MPI_File_open(MPI_COMM_WORLD, "hashes.txt", MPI_MODE_RDONLY, MPI_INFO_NULL, &fh);
+    char *hashFile = "hashes.txt";
+    int ret = MPI_File_open(MPI_COMM_WORLD, hashFile, MPI_MODE_RDONLY, MPI_INFO_NULL, &fh);
     if (ret < 0) {
         printf("MPI_File_open failed");
         exit(EXIT_FAILURE);
@@ -66,7 +59,7 @@ int main(int argc, char** argv) {
          * The created context also holds the information about the work, each 
          * client will do.
          */
-        ServerContext* context = initializeWithPW("hashes.txt", nTasks - 1, "a", "000000");
+        ServerContext* context = initializeWithPW(hashFile, nTasks - 1, "a", "000000");
 
         printServerContext(context);
 
@@ -123,7 +116,7 @@ int main(int argc, char** argv) {
         // We need to go and receive the data from all other threads.
         // The arbitrary tag we choose is 1, for now.
         pwHashes = generatePasswordHashes(&fh, 1);
-        printHashes(pwHashes, rank);
+        //printHashes(pwHashes, rank);
         DBG_OK("Sent all data to clients ... now going to infinite loop (tbd)");
 
         //MPI_Bcast(&fh,1,, 0,MPI_COMM_WORLD);
@@ -166,8 +159,6 @@ int main(int argc, char** argv) {
         MPI_Recv(&pwAlgoValue, 1, MPI_INT, 0, 5, MPI_COMM_WORLD, &status);
 
         MPI_Barrier(MPI_COMM_WORLD);
-        
-        
         
         DBG_OK("Received data from server. Hash filename: %s\n          start: %s, end: %s, pwAlgoType:%d", hashFileName, startPass, endPass, pwAlgoValue);
         

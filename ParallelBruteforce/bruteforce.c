@@ -129,6 +129,7 @@ void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCall
     //DBG_OK("           %s(%ld)      ->      %s(%ld)    :%ld   ", tmpPwd,(pwGenType->valueOf(tmpPwd)),tmpPwd2,(pwGenType->valueOf(tmpPwd2)),i);
     ulong count = context->passwordDiff(taskInfo->startPassword,taskInfo->endPassword);
     DBG_OK("Generating %ld passwords from %s to %s.", count,taskInfo->startPassword,taskInfo->endPassword);
+    DBG_OK("need to check %lu passwords!", count);
     //FIXME: Splitting work into peaces and do a parallel region with countPasswords.
 
     ulong offset = context->valueOf(taskInfo->startPassword);
@@ -141,5 +142,15 @@ void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCall
         context->passwordAt(i+offset, currentPassphrase);
         callback((void*) ctx, currentPassphrase);
          
+        
+        if ((i % 1000000) == 0) {
+            ulong needToCheck = (count/4);
+            ulong checkedPws = i - threadID * needToCheck;
+            double percentFinished = (double) checkedPws / (double) needToCheck;
+            percentFinished *= 100;
+            printf("[%d] %.2f%% %s\n", threadID, percentFinished , currentPassphrase);
+            fflush(stdout);
+        }
+
     }
 }
