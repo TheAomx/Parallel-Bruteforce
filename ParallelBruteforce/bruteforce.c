@@ -145,7 +145,7 @@ void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCall
         
         if ((i % 1000000) == 0) {
             ulong needToCheck = (count/4);
-            ulong checkedPws = i - threadID * needToCheck;
+            ulong checkedPws = (i+offset) - threadID * needToCheck;
             double percentFinished = (double) checkedPws / (double) needToCheck;
             percentFinished *= 100;
             printf("[%d] %.2f%% %s\n", threadID, percentFinished , currentPassphrase);
