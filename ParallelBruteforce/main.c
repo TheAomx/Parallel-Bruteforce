@@ -174,32 +174,25 @@ int main(int argc, char** argv) {
         PasswordGenTask* clientTaskInfo = createClientTask(pwAlgoValue,startPass,endPass);
         
         
-        //        int i = 0;
-        //        char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"};
-        //        unsigned int passwordSearchLength = 4;
-        //
-        //
-        //        int numThreads = getNumCores();
-        //        setNumThreads(numThreads);
-        //
-        //        pwHashes = generatePasswordHashes(&fh, numThreads);
-        //        printf("child process with %d threads!\n", numThreads);
-        //
-        //        char **passphraseBuffer = (char**) malloc(sizeof (char*) * numThreads);
-        //        for (i = 0; i < numThreads; i++) {
-        //            passphraseBuffer[i] = (char*) malloc(sizeof (char) * (passwordSearchLength + 1));
-        //            memset(passphraseBuffer[i], 0, sizeof (passphraseBuffer[i]));
-        //        }
-        //
-        //        struct timeval timeBefore, timeAfter;
-        //
-        //        gettimeofday(&timeBefore, NULL);
-        //
-        //        bruteforcePasswordAll(pwHashes, checkPassword, alphabet, passphraseBuffer, passwordSearchLength, rank, nTasks);
-        //        gettimeofday(&timeAfter, NULL);
-        //
-        //        printf("needed %ld secs %ld usecs\n", (ulong) (timeAfter.tv_sec - timeBefore.tv_sec), (ulong) (timeAfter.tv_usec - timeBefore.tv_usec));
-    }
+        int i = 0;
+        int numThreads = getNumCores();
+        setNumThreads(numThreads);
+        pwHashes = generatePasswordHashes(&fh, numThreads);
+        printf("child process with %d threads!\n", numThreads);
+
+        char **passphraseBuffer = (char**) malloc(sizeof (char*) * numThreads);
+        for (i = 0; i < numThreads; i++) {
+            passphraseBuffer[i] = (char*) malloc(sizeof (char) * (MAX_PASSWORD + 1));
+            memset(passphraseBuffer[i], 0, sizeof (passphraseBuffer[i]));
+        }
+
+        struct timeval timeBefore, timeAfter;
+        gettimeofday(&timeBefore, NULL);
+
+        bruteforcePasswordTask(clientTaskInfo, pwHashes, checkPassword,passphraseBuffer);
+        gettimeofday(&timeAfter, NULL);
+        printf("needed %ld secs %ld usecs\n", (ulong) (timeAfter.tv_sec - timeBefore.tv_sec), (ulong) (timeAfter.tv_usec - timeBefore.tv_usec));
+}
     
 
     MPI_Finalize();

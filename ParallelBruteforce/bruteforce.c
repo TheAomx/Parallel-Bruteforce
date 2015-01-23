@@ -130,11 +130,16 @@ void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCall
     ulong count = context->passwordDiff(taskInfo->startPassword,taskInfo->endPassword);
     DBG_OK("Generating %ld passwords from %s to %s.", count,taskInfo->startPassword,taskInfo->endPassword);
     //FIXME: Splitting work into peaces and do a parallel region with countPasswords.
-    
-    for (ulong i = 0; i <= count; i++) {    
-        context->nextPassword(tmpPwd, tmpPwd2);
-        
-        strncpy(tmpPwd, tmpPwd2, MAX_PASSWORD);
+
+    ulong offset = context->valueOf(taskInfo->startPassword);
+
+#pragma omp parallel for
+    for (ulong i=0; i <= count; i++) {    
+        int threadID = getThreadID();
+        char *currentPassphrase = passphraseBuffer[threadID];
+
+        context->passwordAt(i+offset, currentPassphrase);
+        callback((void*) ctx, currentPassphrase);
          
     }
 }

@@ -7,7 +7,7 @@
 #include "core_headers.h"
 
 
-static char defaultAlphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890\0"};
+static char defaultAlphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"};
 static int alphabetLength = 0;
 
 static void reverse(char s[]) {
