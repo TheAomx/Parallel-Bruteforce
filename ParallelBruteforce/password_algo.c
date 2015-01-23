@@ -1,3 +1,9 @@
+/* 
+ * File:   password_algo.c
+ * Author: TDB
+ *
+ * Created on 22. Januar 2015, 21:11
+ */
 #include "core_headers.h"
 
 
@@ -57,7 +63,6 @@ static char getKey(Mapping* mappings, int val) {
     }
     return result;
 }
-
 
 static Mapping getMax(Mapping* mappings) {
     Mapping result;
@@ -211,6 +216,7 @@ ulong toNumberIndefaultAlphabet(char* string) {
 
 
 }
+
 /**
  * Determines if the given number is the highest value for a password of this length.
  * This is done by checking that each digit of <code>in</code> is the one element 
@@ -247,7 +253,6 @@ static void countUp(char* in, char* outPtr, int inputLen) {
     }
     free(map);
 }
-
 
 void nextPass(char* in, char* outPass) {
     if (alphabetLength == 0) {

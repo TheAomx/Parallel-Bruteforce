@@ -11,8 +11,8 @@ static void initClientTask(ClientTask* outTask, long numPasswords, char* startPW
 static void createClientTasks(int numTasks, long numPasswords, char* startPW, char* endPw, ClientTask* out, PwGenAlgoType pwGenAlgoType) {
     int isDivider = ((numPasswords % numTasks) == 0) ? 1 : 0;
     ulong passwordsPerTask = numPasswords / numTasks;
-   ulong currentOffset = toNumberIndefaultAlphabet(startPW);
-   
+    ulong currentOffset = toNumberIndefaultAlphabet(startPW);
+
     /*Calculate the number of tasks which are all calculating the same amount of work.*/
     int fullLengthTasks = (isDivider == 1) ? (numTasks) : (numTasks - 1);
     char* tempPwd;
@@ -28,9 +28,9 @@ static void createClientTasks(int numTasks, long numPasswords, char* startPW, ch
 
         getPasswordAt(currentOffset, tempPwd);
         getPasswordAt(passwordsPerTask + currentOffset, tempPwd2);
-        
+
         currentOffset += passwordsPerTask;
-        
+
         initClientTask((out + i), passwordsPerTask, tempPwd, tempPwd2, pwGenAlgoType);
     }
     /* If the number of passwords could not be divided into equal parts, the last client has to do a bit more work than others.
@@ -48,28 +48,30 @@ static void createClientTasks(int numTasks, long numPasswords, char* startPW, ch
         ulong numPwd = numPasswords - (passwordsPerTask * (numTasks - 1));
         getPasswordAt(currentOffset, tempPwd);
         getPasswordAt(numPwd + currentOffset, tempPwd2);
-        initClientTask((out+index),numPwd,tempPwd,tempPwd2,pwGenAlgoType);
+        initClientTask((out + index), numPwd, tempPwd, tempPwd2, pwGenAlgoType);
     }
 }
 
-static void initServerContext(char* start, char* end, int numWorkers, ulong numPasswords, ServerContext* out, PwGenAlgoType pwGenAlgo) {
+static void initServerContext(char* hashesFileName, char* start, char* end, int numWorkers, ulong numPasswords, ServerContext* out, PwGenAlgoType pwGenAlgo) {
     out->startPassword = start;
     out->endPassword = end;
     out->numClients = numWorkers;
     out->numPasswords = numPasswords;
-    out->type=DEFAULT;
+    out->type = DEFAULT;
+    out->hashesFileName = hashesFileName;
     out->tasks = (ClientTask*) malloc(sizeof (ClientTask) * numWorkers);
+    
     createClientTasks(numWorkers, numPasswords, start, end, out->tasks, DEFAULT);
 }
 
-ServerContext* initializeWithPW(int numWorkers, char* startPW, char* endPW) {
+ServerContext* initializeWithPW(char* hashesFileName, int numWorkers, char* startPW, char* endPW) {
     ulong numPWD = getPasswordDiff(startPW, endPW);
     ServerContext* result = (ServerContext*) malloc(sizeof (ServerContext));
-    initServerContext(startPW, endPW, numWorkers, numPWD, result, DEFAULT);
+    initServerContext(hashesFileName, startPW, endPW, numWorkers, numPWD, result, DEFAULT);
     return result;
 }
 
-ServerContext* initializeWithLenght(int numWorkers, char* startPW, ulong numPasswords) {
+ServerContext* initializeWithLenght(char* hashesFileName, int numWorkers, char* startPW, ulong numPasswords) {
 
     ulong startValue = toNumberIndefaultAlphabet(startPW);
     char* tmp = (char*) malloc(sizeof (char)*MAX_PASSWORD);
@@ -77,7 +79,7 @@ ServerContext* initializeWithLenght(int numWorkers, char* startPW, ulong numPass
     getPasswordAt(startValue + numPasswords, tmp);
     ulong numPWD = numPasswords;
     ServerContext* result = (ServerContext*) malloc(sizeof (ServerContext));
-    initServerContext(startPW, tmp, numWorkers, numPWD, result, DEFAULT);
+    initServerContext(hashesFileName, startPW, tmp, numWorkers, numPWD, result, DEFAULT);
     return result;
 }
 
@@ -94,5 +96,6 @@ void printServerContext(ServerContext* ctx) {
         printClientTask(ctx->tasks[i]);
     }
     printf("   Each client will use %s algorithm to generate new passwords.\n\n", PW_GEN_TYPE_TO_STRING(ctx->type));
+    printf("   Target hashes are pulled from file with name %s.\n\n", ctx->hashesFileName);
     fflush(stdout);
 }

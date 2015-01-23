@@ -14,7 +14,7 @@ extern "C" {
 #endif
 
 #define DEBUG 1
-#define MAX_PASSWORD 100
+#define MAX_FILENAME_LEN 130
 
     /* ansi color codes used at the dbg macros for coloured output. */
 

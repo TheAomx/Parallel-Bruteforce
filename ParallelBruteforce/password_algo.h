@@ -1,6 +1,6 @@
 /* 
  * File:   password_algo.h
- * Author: ertai
+ * Author: TDB
  *
  * Created on 22. Januar 2015, 21:11
  */
@@ -12,6 +12,7 @@
 extern "C" {
 #endif
 
+    #define MAX_PASSWORD 100
     struct mapping {
         char c;
         int val;

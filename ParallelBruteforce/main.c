@@ -58,57 +58,149 @@ int main(int argc, char** argv) {
     if (rank == 0) {
         // The master thread will need to receive all computations from all other threads.
         MPI_Status status;
-        size_t maxPwSize = sizeof (char)*MAX_PASSWORD;
 
-       
+
+
         /*
          * Calculate and initialize server side information about the job. 
          * The created context also holds the information about the work, each 
          * client will do.
          */
-        ServerContext* context = initializeWithPW(nTasks - 1, "a", "000000");
+        ServerContext* context = initializeWithPW("hashes.txt", nTasks - 1, "a", "000000");
 
-        
         printServerContext(context);
-        
+
+
+
+        /* Send the hash file name to the clients first. Tag parameter -> 0*/
+        DBG_OK("Sending hash file name: %s to all clients", context->hashesFileName);
+        int len = strlen(context->hashesFileName);
+        MPI_Bcast(&len, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+        MPI_Bcast(context->hashesFileName, len, MPI_CHAR, 0, MPI_COMM_WORLD);
+
+        int passwordLengthValues[nTasks-1];
+        /*Wait until all clients received the data.*/
+        MPI_Barrier(MPI_COMM_WORLD);
+        DBG_OK("Sending startPass");
+        /* Send the start password. Tag parameter -> 1*/
+        for (int i = 1; i < nTasks; i++) {
+            ClientTask currentTask = context->tasks[i-1];
+
+            passwordLengthValues[i - 1] = strlen(currentTask.startPass);
+            
+            MPI_Send(&passwordLengthValues[i - 1], 1, MPI_INT, i, 1, MPI_COMM_WORLD);
+
+            MPI_Send(currentTask.startPass, passwordLengthValues[i - 1], MPI_CHAR, i, 2, MPI_COMM_WORLD);
+        }
+
+        /*Wait until all clients received the data.*/
+        MPI_Barrier(MPI_COMM_WORLD);
+        DBG_OK("Sending endPass");
+        /* Send the end password. Tag parameter -> 2*/
+        for (int i = 1; i < nTasks; i++) {
+            ClientTask currentTask = context->tasks[i-1];
+            passwordLengthValues[i - 1] = strlen(currentTask.endPass);
+            MPI_Send(&passwordLengthValues[i - 1], 1, MPI_INT, i, 3, MPI_COMM_WORLD);
+
+            MPI_Send(currentTask.endPass, passwordLengthValues[i - 1], MPI_CHAR, i, 4, MPI_COMM_WORLD);
+        }
+
+        /*Wait until all clients received the data.*/
+        MPI_Barrier(MPI_COMM_WORLD);
+        DBG_OK("Sending algo id");
+        /* Send the password generation algorithm identifier. Tag parameter -> 3*/
+        for (int i = 1; i < nTasks; i++) {
+            ClientTask currentTask = context->tasks[i-1];
+            MPI_Send(&(currentTask.pwAlgoType), 1, MPI_INT, i, 5, MPI_COMM_WORLD);
+        }
+
+        /*Wait until all clients received the data.*/
+        MPI_Barrier(MPI_COMM_WORLD);
+
+
         // MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status)
         // We need to go and receive the data from all other threads.
         // The arbitrary tag we choose is 1, for now.
         pwHashes = generatePasswordHashes(&fh, 1);
         printHashes(pwHashes, rank);
+        DBG_OK("Sent all data to clients ... now going to infinite loop (tbd)");
 
         //MPI_Bcast(&fh,1,, 0,MPI_COMM_WORLD);
+       
+         for (int i = nTasks-1; i <= 0; i) {
+             free((context->tasks+i));
+            
+        }
+        free(context);
 
     } else {
-        int i = 0;
-        char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"};
-        unsigned int passwordSearchLength = 4;
+        MPI_Status status;
 
+        int startPwLen, endPwLen, hashFileNameLen, pwAlgoValue;
 
-        int numThreads = getNumCores();
-        setNumThreads(numThreads);
+        char* hashFileName = (char*) malloc(sizeof (char)*MAX_FILENAME_LEN);
+        char* endPass = (char*) malloc(sizeof (char)*MAX_PASSWORD);
+        char* startPass = (char*) malloc(sizeof (char)*MAX_PASSWORD);
+        memset(hashFileName, '\0', sizeof (char)*MAX_FILENAME_LEN);
+        memset(endPass, '\0', sizeof (char)*MAX_PASSWORD);
+        memset(startPass, '\0', sizeof (char)*MAX_PASSWORD);
 
-        pwHashes = generatePasswordHashes(&fh, numThreads);
-        printf("child process with %d threads!\n", numThreads);
+    
 
-        char **passphraseBuffer = (char**) malloc(sizeof (char*) * numThreads);
-        for (i = 0; i < numThreads; i++) {
-            passphraseBuffer[i] = (char*) malloc(sizeof (char) * (passwordSearchLength + 1));
-            memset(passphraseBuffer[i], 0, sizeof (passphraseBuffer[i]));
-        }
+        MPI_Bcast(&hashFileNameLen, 1, MPI_INT, 0, MPI_COMM_WORLD);
+        MPI_Bcast(hashFileName, hashFileNameLen, MPI_CHAR, 0, MPI_COMM_WORLD);
 
-        struct timeval timeBefore, timeAfter;
+        MPI_Barrier(MPI_COMM_WORLD);
 
-        gettimeofday(&timeBefore, NULL);
+        MPI_Recv(&startPwLen, 1, MPI_INT, 0, 1, MPI_COMM_WORLD, &status);
+        MPI_Recv(startPass, startPwLen, MPI_CHAR, 0, 2, MPI_COMM_WORLD, &status);
 
-        bruteforcePasswordAll(pwHashes, checkPassword, alphabet, passphraseBuffer, passwordSearchLength, rank, nTasks);
-        gettimeofday(&timeAfter, NULL);
+        MPI_Barrier(MPI_COMM_WORLD);
 
-        printf("needed %ld secs %ld usecs\n", (ulong) (timeAfter.tv_sec - timeBefore.tv_sec), (ulong) (timeAfter.tv_usec - timeBefore.tv_usec));
+        MPI_Recv(&endPwLen, 1, MPI_INT, 0, 3, MPI_COMM_WORLD, &status);
+        MPI_Recv(endPass, endPwLen, MPI_CHAR, 0, 4, MPI_COMM_WORLD, &status);
+
+        MPI_Barrier(MPI_COMM_WORLD);
+
+        MPI_Recv(&pwAlgoValue, 1, MPI_INT, 0, 5, MPI_COMM_WORLD, &status);
+
+        MPI_Barrier(MPI_COMM_WORLD);
+        
+        
+        
+        DBG_OK("Received data from server. Hash filename: %s\n          start: %s, end: %s, pwAlgoType:%d", hashFileName, startPass, endPass, pwAlgoValue);
+        
+        //        int i = 0;
+        //        char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"};
+        //        unsigned int passwordSearchLength = 4;
+        //
+        //
+        //        int numThreads = getNumCores();
+        //        setNumThreads(numThreads);
+        //
+        //        pwHashes = generatePasswordHashes(&fh, numThreads);
+        //        printf("child process with %d threads!\n", numThreads);
+        //
+        //        char **passphraseBuffer = (char**) malloc(sizeof (char*) * numThreads);
+        //        for (i = 0; i < numThreads; i++) {
+        //            passphraseBuffer[i] = (char*) malloc(sizeof (char) * (passwordSearchLength + 1));
+        //            memset(passphraseBuffer[i], 0, sizeof (passphraseBuffer[i]));
+        //        }
+        //
+        //        struct timeval timeBefore, timeAfter;
+        //
+        //        gettimeofday(&timeBefore, NULL);
+        //
+        //        bruteforcePasswordAll(pwHashes, checkPassword, alphabet, passphraseBuffer, passwordSearchLength, rank, nTasks);
+        //        gettimeofday(&timeAfter, NULL);
+        //
+        //        printf("needed %ld secs %ld usecs\n", (ulong) (timeAfter.tv_sec - timeBefore.tv_sec), (ulong) (timeAfter.tv_usec - timeBefore.tv_usec));
     }
-    freePasswordHashes(pwHashes);
+    
 
     MPI_Finalize();
+    return 0;
 }
 #endif
 
@@ -138,4 +230,23 @@ int main(int argc, char** argv) {
 
     return 0;
 }
+#endif
+
+#if 0
+//        PasswordGenerationContext* pwGenType = createPasswordGenerationContextByType(context->type);
+//        int len = strlen(context->tasks->startPass);
+//        char* tmpPwd = (char*)malloc(sizeof(char)*MAX_PASSWORD);
+//        
+//        memset(tmpPwd,'\0',sizeof(char)*MAX_PASSWORD);
+//        strncpy(tmpPwd,context->tasks->startPass,len);
+//        char* tmpPwd2 = (char*)malloc(sizeof(char)*MAX_PASSWORD);
+//        memset(tmpPwd2,'\0',sizeof(char)*MAX_PASSWORD);
+//        DBG_OK("Counting the first 10000000 pws first client task.");
+//        
+//        for(ulong i=0; i<=10000000;i++){
+//            pwGenType->nextPassword(tmpPwd,tmpPwd2);
+//            //DBG_OK("           %s(%ld)      ->      %s(%ld)    :%ld   ", tmpPwd,(pwGenType->valueOf(tmpPwd)),tmpPwd2,(pwGenType->valueOf(tmpPwd2)),i);
+//            strncpy(tmpPwd,tmpPwd2,MAX_PASSWORD);
+//        }
+//        DBG_OK("Counting the first 10000000 pws first client task. finish ");
 #endif
