@@ -95,7 +95,7 @@ void printServerContext(ServerContext* ctx) {
     for (int i = 0; i < ctx->numClients; i++) {
         printClientTask(ctx->tasks[i]);
     }
-    printf("   Each client will use %s algorithm to generate new passwords.\n\n", PW_GEN_TYPE_TO_STRING(ctx->type));
+    printf("   Each client will use %s algorithm to generate new passwords.\n", PW_GEN_TYPE_TO_STRING(ctx->type));
     printf("   Target hashes are pulled from file with name %s.\n\n", ctx->hashesFileName);
     fflush(stdout);
 }

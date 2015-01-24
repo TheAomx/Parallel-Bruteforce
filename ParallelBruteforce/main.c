@@ -39,6 +39,15 @@ int main(int argc, char** argv) {
         exit(EXIT_FAILURE);
     }
     MPI_Comm_size(MPI_COMM_WORLD, &nTasks);
+    
+    if(nTasks<=1){
+        DBG_WARN("The MPI-Communicator contains only one (or less) tasks.");
+        DBG_WARN("Disturbed brute force attack cannot be executed with the defined number (%d) of tasks.",nTasks);
+        DBG_WARN("Consider setting up more MPI-Processors.");
+        MPI_Finalize();
+        exit(EXIT_FAILURE);
+    }
+    
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_File fh;
     char *hashFile = "hashes.txt";
