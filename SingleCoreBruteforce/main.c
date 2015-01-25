@@ -28,7 +28,7 @@ int rand_range(int low, int high) {
 	return  (rand() % high + low);
 }
 
-int checkPasswordSHA1 (void *ctx, char *password, uchar *toBreakHash) {
+int checkPassword (void *ctx, char *password, uchar *toBreakHash) {
 	static uchar passwordHash[SHA256_SIZE];
 	
 	HashAlgorithm *algo = (HashAlgorithm*) ctx;
@@ -97,7 +97,7 @@ int main (int argc, char **argv) {
 	alarm(1);
 	
 	/* recursive bruteforce type */
-	bruteforcePasswordAll(algo, toBreakHash, checkPasswordSHA1, alphabet, passwordSearchLength);
+	bruteforcePasswordAll(algo, toBreakHash, checkPassword, alphabet, passwordSearchLength);
 	/* iterative version: 
 	bruteforcePasswordAll(&sha_context, toBreakHash, checkPasswordSHA1, alphabet, passwordSearchLength); */
 	

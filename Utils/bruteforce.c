@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <omp.h>
 
 #include "bruteforce.h"
 
@@ -54,9 +55,15 @@ void bruteforcePassword(void *ctx, uchar *toBreakHash, bruteforceCallback callba
 		}
 		else {
 			/*if it is the last line in the password, we can check the hash codes...*/
+#ifdef PROFILING
+			long double testTime = (long double) omp_get_wtime()*1000000.0;
+#endif
 			if (callback((void*) ctx, currentPassphrase, toBreakHash)) {
 				exit(0);
 			}
+#ifdef PROFILING
+			printf("callback time: %Lf usec.\n", ((long double) omp_get_wtime()*1000000.0) - testTime);
+#endif
 		}
 	}
 }
