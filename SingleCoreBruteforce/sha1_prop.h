@@ -58,7 +58,6 @@
  */
 #define SPH_SIZE_sha1   160
 #define SHA1_PROP_SIZE 20
-#define SPH_64 1
 
 /**
  * This structure is a context for SHA-1 computations: it contains the
