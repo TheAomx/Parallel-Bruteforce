@@ -29,41 +29,24 @@ typedef int (*bruteforceCallbackObserved) (void *ctx, char *password, hashFoundC
  */
 typedef int (*bruteforceCallback) (void *ctx, char *password);
 
-
-
 /**
- * 
- * @param ctx The hash generation context (arbitrary data).
- * @param toBreakHash The array of target hashes to search for.
- * @param callback The hash generation function to be used.
- * @param alphabet The password alphabet
- * @param currentPassphrase 
- * @param passwordLength 
- * @param currentIndex
+ * Performs a brute force operation from the information provided by the information supplied by <code>taskInfo</code>. 
+ * It will use the supplied brute force callback (<code>callback</code>) for hash generation.
+ * @param taskInfo The information of the task to be perform.
+ * @param ctx 
+ * @param callback
+ * @param passphraseBuffer
  */
-void bruteforcePassword(void *ctx, bruteforceCallback callback, char *alphabet, char **passphraseBuffer, unsigned int passwordLength, unsigned int currentIndex);
-/**
- * 
- * @param ctx The hash generation context (arbitrary data).
- * @param toBreakHash The array of target hashes to search for.
- * @param callback The hash generation function to be used.
- * @param alphabet The password alphabet
- * @param maxPasswordLength
- * @return 
- */
-int bruteforcePasswordIter(void *ctx, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength);
-/**
- * 
- * @param ctx The hash generation context (arbitrary data).
- * @param toBreakHash The array of target hashes to search for.
- * @param callback The hash generation function to be used.
- * @param alphabet The password alphabet
- * @param maxPasswordLength
- */
-void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, char **passphraseBuffer, unsigned int maxPasswordLength, int rank, int nTasks);
-
 void bruteforcePasswordTask(PasswordGenTask* taskInfo,void *ctx, bruteforceCallback callback, char **passphraseBuffer);
 
+/**
+ * 
+ * @param taskInfo
+ * @param ctx
+ * @param callback
+ * @param onHashFound
+ * @param passphraseBuffer
+ */
 void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo,void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer);
 
 
