@@ -10,11 +10,27 @@
 #ifndef BRUTEFORCE_H
 #define BRUTEFORCE_H
 
+#include "core_headers.h"
+
+/*
+ * Simple callback to be used with bruteforcePasswordTask function.
+ */
+typedef void (*hashFoundCallback)(char* password, char* hash);
+
+/**
+ * Function pointer definition to be used as a generic function interface for hash generation functions.
+ * Enables easy hashing algorithm replacement.
+ */
+typedef int (*bruteforceCallbackObserved) (void *ctx, char *password, hashFoundCallback onHashFound);
+
 /**
  * Function pointer definition to be used as a generic function interface for hash generation functions.
  * Enables easy hashing algorithm replacement.
  */
 typedef int (*bruteforceCallback) (void *ctx, char *password);
+
+
+
 /**
  * 
  * @param ctx The hash generation context (arbitrary data).
@@ -47,6 +63,10 @@ int bruteforcePasswordIter(void *ctx, bruteforceCallback callback, char *alphabe
 void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, char **passphraseBuffer, unsigned int maxPasswordLength, int rank, int nTasks);
 
 void bruteforcePasswordTask(PasswordGenTask* taskInfo,void *ctx, bruteforceCallback callback, char **passphraseBuffer);
+
+void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo,void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer);
+
+
 
 
 #endif

@@ -31,3 +31,4 @@ void setNumThreads(int numThreads) {
     omp_set_num_threads(numThreads);
 #endif
 }
+

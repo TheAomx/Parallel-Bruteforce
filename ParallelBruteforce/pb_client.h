@@ -8,7 +8,7 @@
 #ifndef PB_CLIENT_H
 #define	PB_CLIENT_H
 
-#include "hashing_algo.h"
+#include "core_headers.h"
 
 
 #ifdef	__cplusplus

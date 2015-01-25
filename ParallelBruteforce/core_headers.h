@@ -66,6 +66,7 @@ extern "C" {
 #include <unistd.h>
 #include <stddef.h>
 #include <sys/time.h>
+    #include <time.h>
 #include <mpi.h>
 #include <omp.h>
     /* Application headers */
@@ -77,8 +78,9 @@ extern "C" {
 #include "sha256.h"
 #include "md5.h"
 #include "sha1_prop.h"
-#include "bruteforce.h"
 #include "hashing_algo.h"
+#include "bruteforce.h"
+
 
 #include "pb_server.h"
 #include "pb_client.h"
