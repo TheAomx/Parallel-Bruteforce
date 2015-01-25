@@ -39,10 +39,10 @@ static HashAlgorithm* createSHA1() {
 
 static HashAlgorithm* createSHA1Prop() {
     HashAlgorithm *sha1 = (HashAlgorithm*) malloc(sizeof (HashAlgorithm));
-    SHA1_CTX *sha_context = (SHA1_CTX*) malloc(sizeof (SHA1_CTX));
+    sph_sha1_context *sha_context = (sph_sha1_context*) malloc(sizeof (sph_sha1_context));
     sha1->hashType = SHA1;
     sha1->ctx = (void*) sha_context;
-    sha1->hashSize = SHA1_SIZE;
+    sha1->hashSize = SHA1_PROP_SIZE;
     sha1->toString = sha1_toString;
     sha1->equals = sha1_equal_prop;
     sha1->init = sha1_init_prop;

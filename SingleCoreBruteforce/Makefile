@@ -1,4 +1,4 @@
-CFLAGS = -Wall -fopenmp -DPROFILING
+CFLAGS = -Wall -fopenmp
 LIBS = 
 PROG = sha1
 

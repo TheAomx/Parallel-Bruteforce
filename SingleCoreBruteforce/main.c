@@ -62,7 +62,7 @@ void handleAlarm(int signal) {
 
 int main (int argc, char **argv) {
 	unsigned int passwordSearchLength = 6;
-	char passphrase[]={"zaaaa"};
+	char passphrase[]={"zaaa"};
 	char alphabet[] = {"abcdefghiklmnopqrstuvwxyzABCDEFGHIKLMOPQRSTUVXYZ123456789"};
 	char *hashAlgos[]={"SHA1", "SHA1_PROP", "MD5", "SHA256"};
 	int numHashAlgos = sizeof(hashAlgos)/sizeof(char*);
@@ -87,19 +87,21 @@ int main (int argc, char **argv) {
 	printf("using %s as hash algo!\n", randomHashAlgo);
 	algo = createHashAlgorithm(randomHashAlgo);
 	
-	uchar toBreakHash[algo->hashSize];
+	uchar hashBuffer[algo->hashSize];
 
-	//get_sha1_from_string( &sha_context, passphrase, toBreakHash);
-	getHashFromString( algo, passphrase, toBreakHash);
+	getHashFromString( algo, passphrase, hashBuffer);
+	//getHashFromFile(algo, "main.c", hashBuffer);
+	printf("generated hash is %s\n", algo->toString(hashBuffer));
 	
+#if 1
 	signal(SIGALRM, handleAlarm );
 
 	alarm(1);
 	
 	/* recursive bruteforce type */
-	bruteforcePasswordAll(algo, toBreakHash, checkPassword, alphabet, passwordSearchLength);
+	bruteforcePasswordAll(algo, hashBuffer, checkPassword, alphabet, passwordSearchLength);
 	/* iterative version: 
 	bruteforcePasswordAll(&sha_context, toBreakHash, checkPasswordSHA1, alphabet, passwordSearchLength); */
-	
+#endif
 	return 0;
 }
