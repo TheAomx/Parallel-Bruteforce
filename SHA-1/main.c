@@ -3,8 +3,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <time.h>
 
-#include "sha1.h"
+
+#include "hashing_algo.h"
+#include "sha256.h"
 #include "../Utils/utils.h"
 #include "../Utils/bruteforce.h"
 
@@ -12,40 +15,30 @@ unsigned long counter = 0;
 unsigned long needToCheck = 0;
 char *currentPassword = "a";
 
+HashAlgorithm *algo;
 
-void update_sha1 (void *buffer, unsigned int bytesRead, void *ctx) {
-	SHA1_CTX *sha_context = (SHA1_CTX*) ctx;
-	sha1_update(sha_context, (uchar*) buffer, bytesRead);
+void initSRand() {
+	time_t t;
+
+    time(&t);
+    srand((unsigned int)t);
 }
 
-void get_sha1_from_file(SHA1_CTX *ctx, char *filename, uchar *hash) {
-	sha1_init(ctx);
-	readFile(filename, update_sha1, ctx);
-	sha1_final(ctx, hash);
-}
-
-void get_sha1_from_string_iter(SHA1_CTX *ctx, char *string, uchar *hash, int numIterations) {
-	int i = 0;	
-	sha1_init(ctx);
-	for (i = 0; i < numIterations; i++) {
-		sha1_update(ctx, (uchar*) string, strlen(string));
-	}
-	sha1_final(ctx, hash);
-}
-
-void get_sha1_from_string(SHA1_CTX *ctx, char *string, uchar *hash) {
-	 get_sha1_from_string_iter(ctx, string, hash, 1);
+int rand_range(int low, int high) {
+	return  (rand() % high + low);
 }
 
 int checkPasswordSHA1 (void *ctx, char *password, uchar *toBreakHash) {
-	static uchar passwordHash[SHA1_SIZE];
+	static uchar passwordHash[SHA256_SIZE];
+	
+	HashAlgorithm *algo = (HashAlgorithm*) ctx;
 
 	currentPassword = password;	
 	counter++;
 
-	get_sha1_from_string( ctx, password, passwordHash);
+	getHashFromString( algo, password, passwordHash);
 	
-	if (sha1_equal(toBreakHash, passwordHash)) {
+	if (algo->equals(toBreakHash, passwordHash)) {
 		printf("broken the hash! password was %s\n", password);
 		return 1;
 	}
@@ -69,23 +62,42 @@ void handleAlarm(int signal) {
 
 int main (int argc, char **argv) {
 	unsigned int passwordSearchLength = 6;
-	char passphrase[]={"zaaa"};
+	char passphrase[]={"zaaaa"};
 	char alphabet[] = {"abcdefghiklmnopqrstuvwxyzABCDEFGHIKLMOPQRSTUVXYZ123456789"};
+	char *hashAlgos[]={"SHA1", "SHA1_PROP", "MD5", "SHA256"};
+	int numHashAlgos = sizeof(hashAlgos)/sizeof(char*);
+	char *randomHashAlgo;
 	
 	needToCheck = calcNumPasswords(strlen(alphabet), passwordSearchLength);
 	
-	uchar toBreakHash[SHA1_SIZE];
+	initSRand();
 	
-	SHA1_CTX sha_context;
+	if (argc < 2) {
+		randomHashAlgo = hashAlgos[rand_range(0,  numHashAlgos)];
+	}	
+	else {
+		unsigned int hashAlgoSelected = strtol(argv[1], NULL, 10);
+		hashAlgoSelected--;
+		if (hashAlgoSelected >= numHashAlgos) {
+			printf("invalid selection\n");
+			exit(-1);		
+		}
+		randomHashAlgo = hashAlgos[hashAlgoSelected];
+	}
+	printf("using %s as hash algo!\n", randomHashAlgo);
+	algo = createHashAlgorithm(randomHashAlgo);
+	
+	uchar toBreakHash[algo->hashSize];
 
-	get_sha1_from_string( &sha_context, passphrase, toBreakHash);
+	//get_sha1_from_string( &sha_context, passphrase, toBreakHash);
+	getHashFromString( algo, passphrase, toBreakHash);
 	
 	signal(SIGALRM, handleAlarm );
 
 	alarm(1);
 	
 	/* recursive bruteforce type */
-	bruteforcePasswordAll(&sha_context, toBreakHash, checkPasswordSHA1, alphabet, passwordSearchLength);
+	bruteforcePasswordAll(algo, toBreakHash, checkPasswordSHA1, alphabet, passwordSearchLength);
 	/* iterative version: 
 	bruteforcePasswordAll(&sha_context, toBreakHash, checkPasswordSHA1, alphabet, passwordSearchLength); */
 	

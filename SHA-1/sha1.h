@@ -1,29 +1,29 @@
-// Code by: B-Con (http://b-con.us) 
-// Released under the GNU GPL 
-// MD5 Hash Digest implementation (little endian byte order) 
-// http://bradconte.com/sha1_c
+/* 
+ * File:   pb_client.h
+ * Author: TBD
+ *      Defines SHA-1 algorithm functions and context.
+ * Created on 13. Januar 2015, 15:17
+ */
 
 #ifndef __SHA1_H
 #define __SHA1_H
 
-// Signed variables are for wimps 
-typedef unsigned char uchar;
-typedef unsigned int uint; 
+#include "hash_types.h"
 
 #define SHA1_SIZE 20
 
-typedef struct { 
-   uchar data[64]; 
-   uint datalen; 
-   uint bitlen[2]; 
-   uint state[5]; 
-   uint k[4]; 
-} SHA1_CTX; 
+typedef struct {
+    uchar data[64];
+    uint datalen;
+    uint bitlen[2];
+    uint state[5];
+    uint k[4];
+} SHA1_CTX;
 
-void sha1_print(unsigned char hash[]);
-int sha1_equal(unsigned char hash1[], unsigned char hash2[]);
-void sha1_init(SHA1_CTX *ctx);
-void sha1_update(SHA1_CTX *ctx, uchar data[], uint len);
-void sha1_final(SHA1_CTX *ctx, uchar hash[]);
+char* sha1_toString(uchar hash[]);
+int sha1_equal(uchar hash1[], uchar hash2[]);
+void sha1_init(void *context);
+void sha1_update(void *context, uchar data[], uint len);
+void sha1_final(void *context, uchar hash[]);
 
 #endif
