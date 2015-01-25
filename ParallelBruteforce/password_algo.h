@@ -43,6 +43,8 @@ extern "C" {
     typedef ulong(*PasswordValueCallback)(char* pass);
     typedef void (*PasswordAtIndexCallback)(ulong passIndex, char* result);
     typedef void (*PasswordAtRelativeIndexCallback)(char* in, ulong passIndex, char* result);
+    typedef void (*PasswordDataInitCallback)();
+    typedef void (*PasswordDataFreeCallback)();
 
     /**
      * Structure holding required data and function for executing generic kind of Password generation and calculation.
@@ -55,6 +57,8 @@ extern "C" {
         PasswordValueCallback valueOf;
         PasswordAtIndexCallback passwordAt;
         PasswordAtRelativeIndexCallback passwordAtRelative;
+        PasswordDataInitCallback initData;
+        PasswordDataFreeCallback clearData;
 
     };
     typedef struct passwordGenerationContext PasswordGenerationContext;

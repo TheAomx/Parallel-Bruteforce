@@ -76,6 +76,7 @@ int checkPasswordObserved(void *ctx, char *password, hashFoundCallback ohHashFou
     return 0;
 }
 
+
 void sendFoundPasswordAndHashToRoot(char* password, char* hash) {
     int lenPw = strlen(password);
     int lenHash = strlen(hash);

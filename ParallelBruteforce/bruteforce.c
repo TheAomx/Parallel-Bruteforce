@@ -7,194 +7,13 @@
 
 #include "core_headers.h"
 
-int bruteforcePasswordIter(void *ctx, bruteforceCallback callback, char *alphabet, unsigned int maxPasswordLength) {
-    const size_t charset_max = strlen(alphabet);
-    char permutation[maxPasswordLength + 1];
-    int charset_array[maxPasswordLength];
-    int i;
-
-    memset(permutation, 0, sizeof (permutation));
-    memset(charset_array, 0, sizeof (charset_array));
-
-    int current_len = 0;
-    int current_byte = 0;
-    while (current_len < maxPasswordLength) {
-        for (i = 0; i <= current_len; i++)
-            permutation[i] = alphabet[charset_array[current_len - i]];
-
-        if (callback((void*) ctx, permutation))
-            return 0;
-
-        charset_array[current_byte]++;
-        while (charset_array[current_byte] == charset_max) {
-            charset_array[current_byte] = 0;
-            current_byte++;
-            if (current_byte > current_len) {
-                current_len = current_byte;
-                break;
-            }
-            charset_array[current_byte]++;
-        }
-        current_byte = 0;
-    }
-
-    return 1;
-}
-
-static inline int isLastLine(unsigned int passwordLength, unsigned int currentIndex) {
-    return passwordLength == (currentIndex + 1);
-}
-
-static void bruteforcePasswordSimple(void *ctx, bruteforceCallback callback, char *alphabet, char *currentPassphrase, unsigned int passwordLength, unsigned int currentIndex) {
-    //int i=0;
-    for (int i = 0; i < strlen(alphabet); i++) {
-        currentPassphrase[currentIndex] = alphabet[i];
-
-        /* if it isnt the last line in the password...*/
-        if (!isLastLine(passwordLength, currentIndex)) {
-            /* we'll have to do a recursive call... */
-            bruteforcePasswordSimple(ctx, callback, alphabet, currentPassphrase, passwordLength, currentIndex + 1);
-        } else {
-            /*if it is the last line in the password, we can check the hash codes...*/
-            if (callback((void*) ctx, currentPassphrase)) {
-                exit(0);
-            }
-        }
-    }
-}
-
-void bruteforcePassword(void *ctx, bruteforceCallback callback, char *alphabet, char **passphraseBuffer, unsigned int passwordLength, unsigned int currentIndex) {
-    //int i=0;
-#pragma omp parallel for 
-    for (int i = 0; i < strlen(alphabet); i++) {
-
-        int threadID = getThreadID();
-        char *currentPassphrase = passphraseBuffer[threadID];
-
-
-
-        currentPassphrase[currentIndex] = alphabet[i];
-        /* if it isnt the last line in the password...*/
-        if (!isLastLine(passwordLength, currentIndex)) {
-            /* we'll have to do a recursive call... */
-            bruteforcePasswordSimple(ctx, callback, alphabet, currentPassphrase, passwordLength, currentIndex + 1);
-        } else {
-            /*if it is the last line in the password, we can check the hash codes...*/
-            if (callback((void*) ctx, currentPassphrase)) {
-                exit(0);
-            }
-        }
-    }
-}
-
-void bruteforcePasswordAll(void *ctx, bruteforceCallback callback, char *alphabet, char **passphraseBuffer, unsigned int maxPasswordLength, int rank, int nTasks) {
-
-    int pwLen;
-    int searchStart = 1;
-
-    PasswordHashes *pwHashes = (PasswordHashes*) ctx;
-    int i = 0, j = 0;
-    int numThreads = pwHashes->numThreads;
-
-    for (pwLen = 2; pwLen <= maxPasswordLength; pwLen++) {
-        for (i = (rank - 1); i < strlen(alphabet); i += (nTasks - 1)) {
-            for (j = 0; j < numThreads; j++) {
-                passphraseBuffer[j][0] = alphabet[i];
-            }
-            //printf("[%d]Testing %s....\n", rank, passphraseBuffer[0]);
-            bruteforcePassword(ctx, callback, alphabet, passphraseBuffer, pwLen, searchStart);
-        }
-    }
-
-
-
-}
-
 void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCallback callback, char **passphraseBuffer) {
     PasswordGenerationContext* context = taskInfo->generationContext;
     int len = strlen(taskInfo->startPassword);
     char* tmpPwd = (char*) malloc(sizeof (char)*MAX_PASSWORD);
     char* tmpPwd2 = (char*) malloc(sizeof (char)*MAX_PASSWORD);
 
-#ifdef _OPENMP
-    double time = 0;
-    char takeTimeOffset = 1;
-    double timeDiff;
-    double kiloHashesPerSecond = 0;
-    ulong checkedLast = 0;
-#endif
-
-
-    memset(tmpPwd, '\0', sizeof (char)*MAX_PASSWORD);
-    memset(tmpPwd2, '\0', sizeof (char)*MAX_PASSWORD);
-
-    strncpy(tmpPwd, taskInfo->startPassword, len);
-
-    PasswordHashes *pwHashes = (PasswordHashes*) ctx;
-    int numThreads = pwHashes->numThreads;
-
-
-
-    //DBG_OK("           %s(%ld)      ->      %s(%ld)    :%ld   ", tmpPwd,(pwGenType->valueOf(tmpPwd)),tmpPwd2,(pwGenType->valueOf(tmpPwd2)),i);
-    ulong count = context->passwordDiff(taskInfo->startPassword, taskInfo->endPassword);
-    DBG_OK("Generating %ld passwords from %s to %s.", count, taskInfo->startPassword, taskInfo->endPassword);
-    DBG_OK("need to check %lu passwords!", count);
-    //FIXME: Splitting work into peaces and do a parallel region with countPasswords.
-
-    ulong offset = context->valueOf(taskInfo->startPassword);
-
-#pragma omp parallel for
-    for (ulong i = 0; i <= count; i++) {
-        int threadID = getThreadID();
-        char *currentPassphrase = passphraseBuffer[threadID];
-#ifdef _OPENMP
-
-        if (takeTimeOffset == 1) {
-            if (time == (double) 0) {
-                time = omp_get_wtime();
-            }
-            time = omp_get_wtick();
-            takeTimeOffset = 0;
-        }
-#endif
-
-        context->passwordAt(i + offset, currentPassphrase);
-        callback((void*) ctx, currentPassphrase);
-
-
-        if ((i % 1000000) == 0) {
-            ulong needToCheck = (count / numThreads);
-            ulong checkedPws = i - threadID * needToCheck;
-            double percentFinished = (double) checkedPws / (double) needToCheck;
-            percentFinished *= 100;
-#ifdef _OPENMP
-
-
-            timeDiff = omp_get_wtick() - time;
-
-            takeTimeOffset = 1;
-            if (i == 0)
-                kiloHashesPerSecond = 0;
-            else
-                kiloHashesPerSecond = (((checkedPws / 1000000) / 1000) * timeDiff);
-
-            printf("[%d] %.2f%% %s %.3f msec -> %.3f kHashes/s.\n", threadID, percentFinished, currentPassphrase, timeDiff * 1000.0, kiloHashesPerSecond);
-#else
-            printf("[%d] %.2f%% %s\n", threadID, percentFinished, currentPassphrase);
-#endif
-            fflush(stdout);
-        }
-
-    }
-
-
-}
-
-void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer) {
-    PasswordGenerationContext* context = taskInfo->generationContext;
-    int len = strlen(taskInfo->startPassword);
-    char* tmpPwd = (char*) malloc(sizeof (char)*MAX_PASSWORD);
-    char* tmpPwd2 = (char*) malloc(sizeof (char)*MAX_PASSWORD);
+    const ulong perfCounterCheckIntervall = 10000000;
 
 #ifdef _OPENMP
     double time = 0;
@@ -238,44 +57,144 @@ void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, brutef
 #endif
 
         context->passwordAt(i + offset, currentPassphrase);
-        callback((void*) ctx, currentPassphrase, onHashFound);
+        callback((void*) ctx, currentPassphrase);
 
 
-        if ((i % 10000000) == 0) {
+        if ((i % perfCounterCheckIntervall) == 0) {
             ulong needToCheck = (count / numThreads);
             ulong checkedPws = i - threadID * needToCheck;
             double percentFinished = (double) checkedPws / (double) needToCheck;
-            percentFinished *= 100;
+            percentFinished *= 100.0;
 #ifdef _OPENMP
-
             timeDiff = omp_get_wtime() - time;
             takeTimeOffset = 1;
-
             if (checkedLast == 0) {
                 pwDiff = 0;
             } else {
                 pwDiff = checkedPws - checkedLast;
             }
-
             if (i == 0 || pwDiff <= 0) {
                 kiloHashesPerSecond = 0.0;
                 timeDiff = 0.0;
+
             } else {
-
                 kiloHashesPerSecond = (((double) pwDiff) * (1.0 / timeDiff)) / 1000.0;
+
             }
-
-            
-                printf("[%d] %.2f%% %s, %.3f msec(per %ld hashes) -> %.3f kHashes/s.\n", threadID, percentFinished, currentPassphrase, timeDiff * 1000.0,10000000, kiloHashesPerSecond);
-            
-
-
-            checkedLast = checkedPws;
+            printf("[%d] %.2f%% %s, %.3f msec(per %ld hashes) -> %.3f kHashes/s.\n", threadID, percentFinished, currentPassphrase, timeDiff * 1000.0, perfCounterCheckIntervall, kiloHashesPerSecond);
 #else
             printf("[%d] %.2f%% %s\n", threadID, percentFinished, currentPassphrase);
 #endif
             fflush(stdout);
+            checkedLast = checkedPws;
         }
 
     }
+}
+
+void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer) {
+    PasswordGenerationContext* context = taskInfo->generationContext;
+    int len = strlen(taskInfo->startPassword);
+    char* tmpPwd = (char*) malloc(sizeof (char)*MAX_PASSWORD);
+    char* tmpPwd2 = (char*) malloc(sizeof (char)*MAX_PASSWORD);
+
+    const ulong perfCounterCheckIntervall = 5000000;
+
+#ifdef _OPENMP
+    double time = 0;
+    char takeTimeOffset = 1;
+    double timeDiff;
+    double kiloHashesPerSecond = 0;
+    ulong checkedLast = 0;
+    ulong pwDiff = 0;
+#endif
+
+
+    memset(tmpPwd, '\0', sizeof (char)*MAX_PASSWORD);
+    memset(tmpPwd2, '\0', sizeof (char)*MAX_PASSWORD);
+
+    strncpy(tmpPwd, taskInfo->startPassword, len);
+
+    PasswordHashes* pwHashes = (PasswordHashes*) ctx;
+    int numThreads = pwHashes->numThreads;
+
+
+    context->initData();
+
+    ulong count = context->passwordDiff(taskInfo->startPassword, taskInfo->endPassword);
+    DBG_OK("Generating %ld passwords from %s to %s.", count, taskInfo->startPassword, taskInfo->endPassword);
+    DBG_OK("need to check %lu passwords!", count);
+    //FIXME: Splitting work into peaces and do a parallel region with countPasswords.
+
+    ulong offset = context->valueOf(taskInfo->startPassword);
+
+#pragma omp parallel for private(checkedLast,pwDiff,timeDiff,takeTimeOffset,kiloHashesPerSecond,time)
+    for (ulong i = 0; i <= count; i++) {
+        int threadID = getThreadID();
+        char *currentPassphrase = passphraseBuffer[threadID];
+#ifdef _OPENMP
+
+        if (takeTimeOffset == 1) {
+
+            time = omp_get_wtime();
+            takeTimeOffset = 0;
+        }
+#endif
+
+#ifdef PROFILE_ALGOS 
+        long double testTime = (long double) omp_get_wtime()*1000000.0;
+#endif
+        
+        context->passwordAt(i + offset, currentPassphrase);
+        
+#ifdef PROFILE_ALGOS
+        printf("passwordAt time: %Lf usec.\n", ((long double) omp_get_wtime()*1000000.0) - testTime);
+        fflush(stdout);
+#endif
+#ifdef PROFILE_ALGOS
+        testTime = (long double) omp_get_wtime()*1000000.0;
+#endif
+        
+        callback((void*) ctx, currentPassphrase, onHashFound);
+        
+#ifdef PROFILE_ALGOS
+        printf("callback time: %Lf usec.\n", ((long double) omp_get_wtime()*1000000.0) - testTime);
+#endif
+
+
+        if ((i % perfCounterCheckIntervall) == 0) {
+            ulong needToCheck = (count / numThreads);
+            ulong checkedPws = i - threadID * needToCheck;
+            double percentFinished = (double) checkedPws / (double) needToCheck;
+            percentFinished *= 100.0;
+#ifdef _OPENMP
+            timeDiff = omp_get_wtime() - time;
+            takeTimeOffset = 1;
+            if (checkedLast == 0) {
+                pwDiff = 0;
+            } else {
+                pwDiff = checkedPws - checkedLast;
+            }
+            if (i == 0 || pwDiff <= 0) {
+                kiloHashesPerSecond = 0.0;
+                timeDiff = 0.0;
+            } else {
+                kiloHashesPerSecond = (((double) pwDiff) * (1.0 / timeDiff)) / 1000.0;
+
+            }
+            if (kiloHashesPerSecond <= 1.0) {
+                printf("[%d] %.2f%% %s.\n", threadID, percentFinished, currentPassphrase);
+            } else {
+                printf("[%d] %.2f%% %s, %.3f msec(per %ld hashes) -> %.3f kHashes/s.\n", threadID, percentFinished, currentPassphrase, timeDiff * 1000.0, perfCounterCheckIntervall, kiloHashesPerSecond);
+
+            }
+#else
+            printf("[%d] %.2f%% %s\n", threadID, percentFinished, currentPassphrase);
+#endif
+            fflush(stdout);
+            checkedLast = checkedPws;
+        }
+
+    }
+    context->clearData();
 }

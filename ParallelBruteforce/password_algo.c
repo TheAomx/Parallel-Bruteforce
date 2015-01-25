@@ -13,13 +13,9 @@ static ulong* pregeneratedOffsets = NULL;
 static int pregeneratedLen = 0;
 static Mapping* alphabetMapping = NULL;
 
-
-
-static void reverse(char s[]) {
-    int length = strlen(s);
+static void reverse(char s[], int len) {
     int c, i, j;
-
-    for (i = 0, j = length - 1; i < j; i++, j--) {
+    for (i = 0, j = len - 1; i < j; i++, j--) {
         c = s[i];
         s[i] = s[j];
         s[j] = c;
@@ -29,9 +25,7 @@ static void reverse(char s[]) {
 static void getMapping(const char* alphabet, Mapping** outPtr) {
     int alphabetLen = alphabetLength;
     *outPtr = NULL;
-
     *outPtr = (Mapping*) malloc(sizeof (Mapping) * alphabetLen);
-
     if (*outPtr == NULL) {
         free(*outPtr);
         DBG_OK("Memory allocation did not complete successfully!");
@@ -44,17 +38,21 @@ static void getMapping(const char* alphabet, Mapping** outPtr) {
     }
 }
 
-static void initializeGlobals() {
-    
-    if (alphabetMapping == NULL)
-        getMapping(defaultAlphabet, &alphabetMapping);
-    if(pregeneratedOffsets==NULL){
-        pregeneratedOffsets=(ulong*)malloc(sizeof(ulong)*MAX_PASSWORD);
-        pregeneratedLen=0;
+void initializeGlobals() {
+
+    alphabetLength = strlen(defaultAlphabet);
+    getMapping(defaultAlphabet, &alphabetMapping);
+
+    pregeneratedOffsets = (ulong*) malloc(sizeof (ulong) * MAX_PASSWORD);
+    ulong result = 0;
+    for (int i = 0; i < 20; i++) {
+        result += pow_ul(alphabetLength, (ulong) (i + 1));
+        pregeneratedOffsets[i] = result;
     }
+    pregeneratedLen = 20;
 }
 
-static void freeGlobals() {
+void freeGlobals() {
     if (alphabetMapping != NULL)
         free(alphabetMapping);
     if (pregeneratedOffsets != NULL);
@@ -76,13 +74,7 @@ static int getValue(Mapping* mappings, char key) {
 static char getKey(Mapping* mappings, int val) {
     char result; /* Default value... */
     int len = alphabetLength;
-    for (int j = 0; j < len; j++) {
-        if (mappings[j].val == val) {
-            //            DBG_OK("Found mapping of value: %d to key: %c",val,mappings[j].c);
-            result = mappings[j].c;
-            break;
-        }
-    }
+    result = mappings[val].c;
     return result;
 }
 
@@ -103,38 +95,25 @@ static Mapping getMax(Mapping* mappings) {
 static void convert(ulong number, int alphabetLen, Mapping* mapping, int* outLen, char* out) {
     char rem;
     int i = 0;
-    uint alphaLen = alphabetLen;
     ulong numTmp = number;
-    uint remNum;
-    while (numTmp != (ulong) 0) {
-        remNum = numTmp % alphaLen;
-
-        rem = getKey(mapping, remNum);
-
-        numTmp /= alphaLen;
+    int remNum;
+    while (numTmp != 0) {
+        remNum = numTmp % alphabetLen;
+        rem = mapping[remNum].c; //getKey(mapping, remNum);
+        numTmp /= alphabetLen;
         out[i] = rem;
         i++;
         *outLen = i;
     }
-
     out[*outLen] = '\0';
-
-    reverse(out);
+    reverse(out, *outLen);
 }
 
-static void toString(ulong number, Mapping* mapping, char* out) {
+static void toString(ulong number, Mapping* mapping, char* out, char nullChar) {
     int alphabetLen = alphabetLength;
-
     Mapping *map = mapping;
-    char nullChar = '\0';
-    if (map == NULL) {
-        DBG_OK("Unable to create alphabet mapping");
-        exit(EXIT_FAILURE);
-    }
-    nullChar = getKey(map, 0);
     if (number == 0) {
         out[0] = nullChar;
-        out[1] = '\0';
     } else {
         int outLen = 0;
         convert(number, alphabetLen, map, &outLen, out);
@@ -148,31 +127,21 @@ static void toStringWithMinLen(ulong number, Mapping* mapping, int minLen, char*
 
     nullChar = getKey(map, 0);
     if (number == 0) {
-
-        for (int i = 0; i < minLen; i++) {
-            out[i] = nullChar;
-        }
-        out[minLen] = '\0';
-
+        memset(out,nullChar,sizeof(char)*minLen);
     } else {
 
-        toString(number, map, out);
-        //        DBG_OK("Converted num %ld to %s", number, out);
+        toString(number, map, out, nullChar);
+
         int outlen = strlen(out);
         if (outlen < minLen) {
             int lenDif = minLen - outlen;
             char* tmp = (char*) malloc(sizeof (char)*outlen);
+            
             strncpy(tmp, out, outlen);
-
             memset(out, '\0', sizeof (char)*minLen);
-            for (int i = 0; i < minLen; i++) {
-                out[i] = nullChar;
-            }
+            memset(out,nullChar,sizeof(char)*minLen);
             strncpy((out + (lenDif)), tmp, outlen);
-            out[minLen] = '\0';
             free(tmp);
-
-
         }
     }
 
@@ -185,25 +154,20 @@ static void toStringWithMinLen(ulong number, Mapping* mapping, int minLen, char*
  * @return 
  */
 static ulong numberOffset(int numberLen) {
-    if(numberLen<=0)
+    if (numberLen <= 1)
         return 0;
-    initializeGlobals();
-    if(pregeneratedLen>=numberLen){
-        return pregeneratedOffsets[numberLen-1];
+
+    if (pregeneratedLen >= numberLen) {
+        return pregeneratedOffsets[numberLen - 2];
     }
-    if (numberLen == 1){
-        pregeneratedOffsets[0]=(ulong)0;
-        pregeneratedLen=1;
-        return 0;
-    }
+    DBG_OK("regeneratedOffsets not containing value for len %d", numberLen);
     ulong alphabetLen = alphabetLength;
     ulong result = 0;
-    for (ulong i = 1; i < numberLen; i++) {
+    for (int i = 1; i < numberLen; i++) {
         result += pow_ul(alphabetLen, i);
-        pregeneratedOffsets[pregeneratedLen]=result;
-        pregeneratedLen++;
-        
+        pregeneratedOffsets[i - 1] = result;
     }
+    pregeneratedLen = numberLen;
     return result;
 }
 
@@ -240,13 +204,11 @@ static ulong toNumber(char* string, Mapping* mapping) {
 }
 
 ulong toNumberIndefaultAlphabet(char* string) {
-    
-    initializeGlobals(); 
-    ulong result = toNumber(string, alphabetMapping) + numberOffset(strlen(string)); 
+
+    initializeGlobals();
+    ulong result = toNumber(string, alphabetMapping) + numberOffset(strlen(string));
     return result;
 }
-
-
 
 /**
  * Determines if the given number is the highest value for a password of this length.
@@ -320,36 +282,25 @@ void getPasswordAtRelativeOffset(char* offsetPw, ulong targetDifference, char* r
 }
 
 static ulong getOffsetForLen(int pwLength) {
-    if(pwLength<=0)
+    if (pwLength <= 1)
         return 0;
-    initializeGlobals();
-    if(pregeneratedLen>=pwLength){
-        return pregeneratedOffsets[pwLength-1];
+    if (pregeneratedLen >= pwLength) {
+        return pregeneratedOffsets[pwLength - 2];
     }
-    if (pwLength == 1){
-        pregeneratedOffsets[0]=(ulong)0;
-        pregeneratedLen=1;
-        return 0;
-    }
-    ulong alphabetLen = alphabetLength;
+
+    int alphabetLen = alphabetLength;
     ulong result = 0;
-    for (ulong i = 1; i < pwLength; i++) {
-        result += pow_ul(alphabetLen, i);
-        pregeneratedOffsets[i]=result;
-        pregeneratedLen=i;
-        
+    for (int i = 1; i < pwLength; i++) {
+        result += pow_ul((ulong) alphabetLen, (ulong) i);
+        pregeneratedOffsets[i - 1] = result;
     }
-    pregeneratedLen+=1;
+    pregeneratedLen = pwLength;
     return result;
 }
 
 void getPasswordAt(ulong passwordIndex, char* result) {
-    if (alphabetLength == 0) {
-        alphabetLength = strlen(defaultAlphabet);
-    }
-    initializeGlobals();
     Mapping *map = alphabetMapping;
- 
+
     long resultingIndex = passwordIndex;
     if (passwordIndex < 0) {
         toStringWithMinLen(0, map, 1, result);
@@ -359,6 +310,7 @@ void getPasswordAt(ulong passwordIndex, char* result) {
         int i = 0;
         ulong tmp = 0;
         int pos = 1;
+
         while (1) {
             if (getOffsetForLen(pos) > resultingIndex) {
                 if (pos > 0 && getOffsetForLen(pos - 1) <= resultingIndex)
@@ -367,13 +319,14 @@ void getPasswordAt(ulong passwordIndex, char* result) {
             }
             pos++;
         }
-        tmp = resultingIndex - getOffsetForLen(pos);
+        ulong offForPos = getOffsetForLen(pos);
+        tmp = resultingIndex - offForPos;
         if (resultingIndex > 0 && tmp <= 0 && pos > 0) {
-            if (resultingIndex == getOffsetForLen(pos)) {
+            if (resultingIndex == offForPos) {
                 toStringWithMinLen(0, map, pos, result);
             } else {
                 pos--;
-                tmp = (getOffsetForLen(pos + 1) - getOffsetForLen(pos)) - 1;
+                tmp = (getOffsetForLen(pos + 1) - offForPos) - 1;
                 toStringWithMinLen(tmp, map, pos, result);
             }
         } else {
@@ -397,6 +350,8 @@ static PasswordGenerationContext* createDefaultContext() {
     result->passwordAtRelative = getPasswordAtRelativeOffset;
     result->valueOf = toNumberIndefaultAlphabet;
     result->type = DEFAULT;
+    result->initData = initializeGlobals;
+    result->clearData = freeGlobals;
     return result;
 }
 
