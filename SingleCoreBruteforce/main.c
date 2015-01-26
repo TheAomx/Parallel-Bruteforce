@@ -64,7 +64,7 @@ int main (int argc, char **argv) {
 	unsigned int passwordSearchLength = 6;
 	char passphrase[]={"zaaa"};
 	char alphabet[] = {"abcdefghiklmnopqrstuvwxyzABCDEFGHIKLMOPQRSTUVXYZ123456789"};
-	char *hashAlgos[]={"SHA1", "SHA1_PROP", "MD5", "SHA256"};
+	char *hashAlgos[]={"SHA1", "SHA1_PROP", "MD5", "MD5_SPH", "SHA256", "SHA256_SPH"};
 	int numHashAlgos = sizeof(hashAlgos)/sizeof(char*);
 	char *randomHashAlgo;
 	

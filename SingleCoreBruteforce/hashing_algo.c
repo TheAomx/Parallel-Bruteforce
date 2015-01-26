@@ -14,7 +14,9 @@
 
 #include "sha1.h"
 #include "md5.h"
+#include "sph_md5.h"
 #include "sha256.h"
+#include "sph_sha2.h"
 #include "sha1_prop.h"
 #include "../Utils/utils.h"
 
@@ -65,6 +67,20 @@ static HashAlgorithm* createSHA256() {
     return sha256;
 }
 
+static HashAlgorithm* createSHA256SPH() {
+    HashAlgorithm *sha256 = (HashAlgorithm*) malloc(sizeof (HashAlgorithm));
+    sph_sha256_context *sha256_context = (sph_sha256_context*) malloc(sizeof (sph_sha256_context));
+    sha256->hashType = SHA256;
+    sha256->ctx = (void*) sha256_context;
+    sha256->hashSize = SHA256_SPH_SIZE;
+    sha256->toString = sha256_toString;
+    sha256->equals = sha256_equal_sph;
+    sha256->init = sha256_init_sph;
+    sha256->update = sha256_update_sph;
+    sha256->final = sha256_final_sph;
+    return sha256;
+}
+
 static HashAlgorithm* createMD5() {
     HashAlgorithm *md5 = (HashAlgorithm*) malloc(sizeof (HashAlgorithm));
     MD5_CTX *md5_context = (MD5_CTX*) malloc(sizeof (MD5_CTX));
@@ -79,6 +95,20 @@ static HashAlgorithm* createMD5() {
     return md5;
 }
 
+static HashAlgorithm* createMD5SPH() {
+    HashAlgorithm *md5 = (HashAlgorithm*) malloc(sizeof (HashAlgorithm));
+    sph_md5_context *md5_context = (sph_md5_context*) malloc(sizeof (sph_md5_context));
+    md5->hashType = MD5;
+    md5->ctx = (void*) md5_context;
+    md5->hashSize = MD5_SIZE;
+    md5->toString = md5_toString;
+    md5->equals = md5_equal_sph;
+    md5->init = md5_init_sph;
+    md5->update = md5_update_sph;
+    md5->final = md5_final_sph;
+    return md5;
+}
+
 HashAlgorithm* createHashAlgorithm(char *hashAlgorithm) {
     if (!strcmp("SHA1", hashAlgorithm)) {
         return createSHA1();
@@ -88,9 +118,17 @@ HashAlgorithm* createHashAlgorithm(char *hashAlgorithm) {
     }
     else if(!strcmp("SHA256", hashAlgorithm)) {
         return createSHA256();
-    } else if (!strcmp("MD5", hashAlgorithm)) {
+    } 
+	else if(!strcmp("SHA256_SPH", hashAlgorithm)) {
+        return createSHA256SPH();
+    } 
+	else if (!strcmp("MD5", hashAlgorithm)) {
         return createMD5();
-    } else {
+    }
+	else if (!strcmp("MD5_SPH", hashAlgorithm)) {
+        return createMD5SPH();
+    }		 
+	else {
         return NULL;
     }
 }
