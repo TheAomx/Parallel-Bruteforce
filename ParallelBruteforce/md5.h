@@ -20,6 +20,9 @@ extern "C" {
 
     /**************************** DATA TYPES ****************************/
 
+    /**
+     * The MD5 hashing context.
+     */
     typedef struct {
         uchar data[64];
         uint datalen;

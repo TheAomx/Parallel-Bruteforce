@@ -119,7 +119,7 @@ void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, brutef
     int numThreads = pwHashes->numThreads;
 
 
-    context->initData();
+    context->initData(context->alphabet);
 
     ulong count = context->passwordDiff(taskInfo->startPassword, taskInfo->endPassword);
     DBG_OK("Generating %ld passwords from %s to %s.", count, taskInfo->startPassword, taskInfo->endPassword);
@@ -144,9 +144,9 @@ void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, brutef
 #ifdef PROFILE_ALGOS 
         long double testTime = (long double) omp_get_wtime()*1000000.0;
 #endif
-        
+
         context->passwordAt(i + offset, currentPassphrase);
-        
+
 #ifdef PROFILE_ALGOS
         printf("passwordAt time: %Lf usec.\n", ((long double) omp_get_wtime()*1000000.0) - testTime);
         fflush(stdout);
@@ -154,9 +154,9 @@ void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, brutef
 #ifdef PROFILE_ALGOS
         testTime = (long double) omp_get_wtime()*1000000.0;
 #endif
-        
+
         callback((void*) ctx, currentPassphrase, onHashFound);
-        
+
 #ifdef PROFILE_ALGOS
         printf("callback time: %Lf usec.\n", ((long double) omp_get_wtime()*1000000.0) - testTime);
 #endif

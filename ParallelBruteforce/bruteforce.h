@@ -12,7 +12,7 @@
 
 #include "core_headers.h"
 
-/*
+/**
  * Simple callback to be used with bruteforcePasswordTask function.
  */
 typedef void (*hashFoundCallback)(char* password, char* hash);

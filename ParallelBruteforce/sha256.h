@@ -10,6 +10,9 @@
 
 #define SHA256_SIZE 32
 
+/**
+ * The SHA256 hashing context.
+ */
 typedef struct {
     uchar data[64];
     uint datalen;

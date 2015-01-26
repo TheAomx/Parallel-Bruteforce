@@ -1,6 +1,11 @@
 
 #include "core_headers.h"
 
+/**
+ * The default alphabet used.
+ */
+static char defaultAlphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"};
+
 static void initClientTask(ClientTask* outTask, long numPasswords, char* startPW, char* endPw, PwGenAlgoType pwGenAlgoType) {
     outTask->startPass = startPW;
     outTask->endPass = endPw;
@@ -53,6 +58,7 @@ static void createClientTasks(int numTasks, long numPasswords, char* startPW, ch
 }
 
 static void initServerContext(char* hashesFileName, char* start, char* end, int numWorkers, ulong numPasswords, ServerContext* out, PwGenAlgoType pwGenAlgo) {
+    DBG_OK("Test");
     out->startPassword = start;
     out->endPassword = end;
     out->numClients = numWorkers;
@@ -60,19 +66,21 @@ static void initServerContext(char* hashesFileName, char* start, char* end, int 
     out->type = DEFAULT;
     out->hashesFileName = hashesFileName;
     out->tasks = (ClientTask*) malloc(sizeof (ClientTask) * numWorkers);
-    
+
     createClientTasks(numWorkers, numPasswords, start, end, out->tasks, DEFAULT);
 }
 
 ServerContext* initializeWithPW(char* hashesFileName, int numWorkers, char* startPW, char* endPW) {
+    initializeGlobals(defaultAlphabet);
     ulong numPWD = getPasswordDiff(startPW, endPW);
     ServerContext* result = (ServerContext*) malloc(sizeof (ServerContext));
     initServerContext(hashesFileName, startPW, endPW, numWorkers, numPWD, result, DEFAULT);
+    freeGlobals();
     return result;
 }
 
 ServerContext* initializeWithLenght(char* hashesFileName, int numWorkers, char* startPW, ulong numPasswords) {
-
+    initializeGlobals(defaultAlphabet);
     ulong startValue = toNumberIndefaultAlphabet(startPW);
     char* tmp = (char*) malloc(sizeof (char)*MAX_PASSWORD);
     memset(tmp, '\0', sizeof (char)*MAX_PASSWORD);
@@ -80,6 +88,7 @@ ServerContext* initializeWithLenght(char* hashesFileName, int numWorkers, char* 
     ulong numPWD = numPasswords;
     ServerContext* result = (ServerContext*) malloc(sizeof (ServerContext));
     initServerContext(hashesFileName, startPW, tmp, numWorkers, numPWD, result, DEFAULT);
+    freeGlobals();
     return result;
 }
 

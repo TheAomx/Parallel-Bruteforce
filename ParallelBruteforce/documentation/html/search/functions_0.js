@@ -1,0 +1,5 @@
+var searchData=
+[
+  ['bruteforcepasswordtask',['bruteforcePasswordTask',['../bruteforce_8c.html#a95c8fae318202ba28010825e96b3f73e',1,'bruteforcePasswordTask(PasswordGenTask *taskInfo, void *ctx, bruteforceCallback callback, char **passphraseBuffer):&#160;bruteforce.c'],['../bruteforce_8h.html#a95c8fae318202ba28010825e96b3f73e',1,'bruteforcePasswordTask(PasswordGenTask *taskInfo, void *ctx, bruteforceCallback callback, char **passphraseBuffer):&#160;bruteforce.c']]],
+  ['bruteforcepasswordtaskobserved',['bruteforcePasswordTaskObserved',['../bruteforce_8c.html#ac9c6f16d6ca726bfe52cd9c928be1387',1,'bruteforcePasswordTaskObserved(PasswordGenTask *taskInfo, void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer):&#160;bruteforce.c'],['../bruteforce_8h.html#ac9c6f16d6ca726bfe52cd9c928be1387',1,'bruteforcePasswordTaskObserved(PasswordGenTask *taskInfo, void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer):&#160;bruteforce.c']]]
+];

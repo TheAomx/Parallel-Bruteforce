@@ -6,13 +6,37 @@
  */
 #include "core_headers.h"
 
-
+/**
+ * The default alphabet used.
+ */
 static char defaultAlphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"};
+/**
+ * The length of the default alphabet.
+ */
 static int alphabetLength = 0;
+/**
+ * An array of pre calculated offset values used for conversion.
+ */
 static ulong* pregeneratedOffsets = NULL;
+/**
+ * The length of predefined offset values.
+ */
 static int pregeneratedLen = 0;
+/**
+ * An array of mappings of int to char.
+ */
 static Mapping* alphabetMapping = NULL;
 
+/**
+ * The key which is mapped to zero.
+ */
+static char nullChar;
+
+/**
+ * Inverts the given string while assuming the string length == <code>len</code>.
+ * @param s The string to be inverted.
+ * @param len The length of the string.
+ */
 static void reverse(char s[], int len) {
     int c, i, j;
     for (i = 0, j = len - 1; i < j; i++, j--) {
@@ -22,6 +46,11 @@ static void reverse(char s[], int len) {
     }
 }
 
+/**
+ * Creates the default mapping of alphabet chars to integer values.
+ * @param alphabet The alphabet to create the mapping for.
+ * @param outPtr The resulting alphabet.(Double pointer, since we allocating the result)
+ */
 static void getMapping(const char* alphabet, Mapping** outPtr) {
     int alphabetLen = alphabetLength;
     *outPtr = NULL;
@@ -38,11 +67,24 @@ static void getMapping(const char* alphabet, Mapping** outPtr) {
     }
 }
 
-void initializeGlobals() {
+/**
+ * Retrieve the key mapped to a given <code>value</code> from the specified mapping.
+ * @param mappings The mapping to search for <code>value</code>.
+ * @param value The value, which mapped key to receive.
+ * @return The key from <code>mappings</code> mapped to <code>value</code>.
+ */
+static char getKey(Mapping* mappings, int val) {
+    char result; /* Default value... */
+    int len = alphabetLength;
+    result = mappings[val].c;
+    return result;
+}
 
-    alphabetLength = strlen(defaultAlphabet);
+void initializeGlobals(char* alphabet) {
+    alphabetLength = strlen(alphabet);
+    DBG_OK("Initializing password generation with alphabet: %s, %d", alphabet, alphabetLength);
     getMapping(defaultAlphabet, &alphabetMapping);
-
+    nullChar = getKey(alphabetMapping, 0);
     pregeneratedOffsets = (ulong*) malloc(sizeof (ulong) * MAX_PASSWORD);
     ulong result = 0;
     for (int i = 0; i < 20; i++) {
@@ -59,6 +101,12 @@ void freeGlobals() {
     free(pregeneratedOffsets);
 }
 
+/**
+ * Retrieve the value mapped to a given <code>key</code> from the specified mapping.
+ * @param mappings The mapping to search for <code>key</code>.
+ * @param key The key, which mapped value to receive.
+ * @return The value from <code>mappings</code> mapped to <code>key</code>.
+ */
 static int getValue(Mapping* mappings, char key) {
     int result = -1; /* Default value... */
     int len = alphabetLength;
@@ -71,13 +119,11 @@ static int getValue(Mapping* mappings, char key) {
     return result;
 }
 
-static char getKey(Mapping* mappings, int val) {
-    char result; /* Default value... */
-    int len = alphabetLength;
-    result = mappings[val].c;
-    return result;
-}
-
+/**
+ * Retrieve the mapping element with the highest value from <code>mappings</code>.
+ * @param mappings The array of mappings
+ * @return The mapping element with the highest value.
+ */
 static Mapping getMax(Mapping* mappings) {
     Mapping result;
     result.c = '\0';
@@ -92,6 +138,14 @@ static Mapping getMax(Mapping* mappings) {
     return result;
 }
 
+/**
+ * Converts the given <code>number</code> to a string.
+ * @param number The number to convert.
+ * @param alphabetLen The length of the alphabet (and the supplied <code>mapping</code>) used.
+ * @param mapping The mapping array of the alphabet.
+ * @param outLen The length of the result.
+ * @param out The resulting string.
+ */
 static void convert(ulong number, int alphabetLen, Mapping* mapping, int* outLen, char* out) {
     char rem;
     int i = 0;
@@ -99,7 +153,7 @@ static void convert(ulong number, int alphabetLen, Mapping* mapping, int* outLen
     int remNum;
     while (numTmp != 0) {
         remNum = numTmp % alphabetLen;
-        rem = mapping[remNum].c; //getKey(mapping, remNum);
+        rem = mapping[remNum].c;
         numTmp /= alphabetLen;
         out[i] = rem;
         i++;
@@ -109,65 +163,71 @@ static void convert(ulong number, int alphabetLen, Mapping* mapping, int* outLen
     reverse(out, *outLen);
 }
 
-static void toString(ulong number, Mapping* mapping, char* out, char nullChar) {
+/**
+ * Converts the given <code>number</code> to a string.
+ * @param number The number to convert.
+ * @param mapping The mapping array of the alphabet.
+ * @param out The resulting string.
+ * @param nullChar The character mapped to the value zero.
+ * @param outLen The length of the result.
+ */
+static void toString(ulong number, Mapping* mapping, char* out, char nullChar, int *outLen) {
     int alphabetLen = alphabetLength;
     Mapping *map = mapping;
     if (number == 0) {
         out[0] = nullChar;
     } else {
-        int outLen = 0;
-        convert(number, alphabetLen, map, &outLen, out);
+        convert(number, alphabetLen, map, outLen, out);
     }
-
-}
-
-static void toStringWithMinLen(ulong number, Mapping* mapping, int minLen, char* out) {
-    Mapping *map = mapping;
-    char nullChar = '\0';
-
-    nullChar = getKey(map, 0);
-    if (number == 0) {
-        memset(out,nullChar,sizeof(char)*minLen);
-    } else {
-
-        toString(number, map, out, nullChar);
-
-        int outlen = strlen(out);
-        if (outlen < minLen) {
-            int lenDif = minLen - outlen;
-            char* tmp = (char*) malloc(sizeof (char)*outlen);
-            
-            strncpy(tmp, out, outlen);
-            memset(out, '\0', sizeof (char)*minLen);
-            memset(out,nullChar,sizeof(char)*minLen);
-            strncpy((out + (lenDif)), tmp, outlen);
-            free(tmp);
-        }
-    }
-
 
 }
 
 /**
+ * Converts the given <code>number</code> to a string with the provided minimum length.
+ * @param number
+ * @param mapping
+ * @param minLen
+ * @param out
+ */
+static void toStringWithMinLen(ulong number, Mapping* mapping, int minLen, char* out) {
+    Mapping *map = mapping;
+    if (number == 0) {
+        memset(out, nullChar, sizeof (char)*minLen);
+    } else {
+        int outlen = 0;
+        toString(number, map, out, nullChar, &outlen);
+
+        if (outlen < minLen) {
+            int lenDif = minLen - outlen;
+            char* tmp = (char*) malloc(sizeof (char)*outlen);
+            strncpy(tmp, out, outlen);
+            memset(out, '\0', sizeof (char)*minLen);
+            memset(out, nullChar, sizeof (char)*minLen);
+            strncpy((out + (lenDif)), tmp, outlen);
+            free(tmp);
+        }
+    }
+}
+
+/**
  * Calculates the offset for a password with a given length. (That is because 'aaba' != 'ba' but val('aaba')==val('ba'))
- * @param numberLen Length of the password
+ * @param pwLength Length of the password
  * @return 
  */
-static ulong numberOffset(int numberLen) {
-    if (numberLen <= 1)
+static ulong getOffsetForLen(int pwLength) {
+    if (pwLength <= 1)
         return 0;
-
-    if (pregeneratedLen >= numberLen) {
-        return pregeneratedOffsets[numberLen - 2];
+    if (pregeneratedLen >= pwLength) {
+        return pregeneratedOffsets[pwLength - 2];
     }
-    DBG_OK("regeneratedOffsets not containing value for len %d", numberLen);
-    ulong alphabetLen = alphabetLength;
+
+    int alphabetLen = alphabetLength;
     ulong result = 0;
-    for (int i = 1; i < numberLen; i++) {
-        result += pow_ul(alphabetLen, i);
+    for (int i = 1; i < pwLength; i++) {
+        result += pow_ul((ulong) alphabetLen, (ulong) i);
         pregeneratedOffsets[i - 1] = result;
     }
-    pregeneratedLen = numberLen;
+    pregeneratedLen = pwLength;
     return result;
 }
 
@@ -193,20 +253,15 @@ static ulong toNumber(char* string, Mapping* mapping) {
     for (int i = inputLen - 1; i >= 0; i--, currentPosition++) {
         char currentLetter;
         currentLetter = string[i];
-
         currentValue = ((ulong) getValue(map, currentLetter)) * pow_ul(alphabetLen, currentPosition);
-
         result += currentValue;
-
     }
 
     return result;
 }
 
 ulong toNumberIndefaultAlphabet(char* string) {
-
-    initializeGlobals();
-    ulong result = toNumber(string, alphabetMapping) + numberOffset(strlen(string));
+    ulong result = toNumber(string, alphabetMapping) + getOffsetForLen(strlen(string));
     return result;
 }
 
@@ -230,9 +285,14 @@ static char isMaxPwForLen(char* in, int len, Mapping* map) {
     return 1;
 }
 
+/**
+ * Counts up the given input by one and return the result in <code>outPtr</code>.
+ * @param in
+ * @param outPtr
+ * @param inputLen
+ */
 static void countUp(char* in, char* outPtr, int inputLen) {
-    Mapping *map = NULL;
-    getMapping(defaultAlphabet, &map);
+    Mapping *map = alphabetMapping;
     ulong inputValue = toNumber(in, map);
     if (isMaxPwForLen(in, inputLen, map) == 1) {
         /* 
@@ -248,9 +308,7 @@ static void countUp(char* in, char* outPtr, int inputLen) {
 }
 
 void nextPass(char* in, char* outPass) {
-    if (alphabetLength == 0) {
-        alphabetLength = strlen(defaultAlphabet);
-    }
+
     int inlen = strlen(in);
     countUp(in, outPass, inlen);
 
@@ -262,40 +320,19 @@ void nextPass(char* in, char* outPass) {
 }
 
 ulong getPasswordDiff(char* pw1, char* pw2) {
-    if (alphabetLength == 0) {
-        alphabetLength = strlen(defaultAlphabet);
-    }
+
     ulong pw1Idx = toNumberIndefaultAlphabet(pw1);
     ulong pw2Idx = toNumberIndefaultAlphabet(pw2);
     return (pw1Idx < pw2Idx) ? pw2Idx - pw1Idx : pw1Idx - pw2Idx;
 }
 
 void getPasswordAtRelativeOffset(char* offsetPw, ulong targetDifference, char* result) {
-    if (alphabetLength == 0) {
-        alphabetLength = strlen(defaultAlphabet);
-    }
+
     long offsetPwIndex = toNumberIndefaultAlphabet(offsetPw);
     long resultingIndex = targetDifference + offsetPwIndex;
     getPasswordAt(resultingIndex, result);
 
 
-}
-
-static ulong getOffsetForLen(int pwLength) {
-    if (pwLength <= 1)
-        return 0;
-    if (pregeneratedLen >= pwLength) {
-        return pregeneratedOffsets[pwLength - 2];
-    }
-
-    int alphabetLen = alphabetLength;
-    ulong result = 0;
-    for (int i = 1; i < pwLength; i++) {
-        result += pow_ul((ulong) alphabetLen, (ulong) i);
-        pregeneratedOffsets[i - 1] = result;
-    }
-    pregeneratedLen = pwLength;
-    return result;
 }
 
 void getPasswordAt(ulong passwordIndex, char* result) {
@@ -338,8 +375,13 @@ void getPasswordAt(ulong passwordIndex, char* result) {
 
 }
 
+/**
+ * Create the default type of <code>PasswordGenerationContext</code> used by the brute force algorithm.
+ * @return 
+ */
 static PasswordGenerationContext* createDefaultContext() {
     PasswordGenerationContext* result = NULL;
+    alphabetLength = strlen(defaultAlphabet);
     result = (PasswordGenerationContext*) malloc(sizeof (PasswordGenerationContext));
     result->alphabet = (char*) malloc(sizeof (char)*alphabetLength);
     memset(result->alphabet, '\0', sizeof (char)*alphabetLength);
@@ -355,6 +397,49 @@ static PasswordGenerationContext* createDefaultContext() {
     return result;
 }
 
+/**
+ * Create the default type of <code>PasswordGenerationContext</code> used by the brute force algorithm.
+ * @return 
+ */
+static PasswordGenerationContext* createDefaultContextWithAlphabet(char* alphabet) {
+    PasswordGenerationContext* result = NULL;
+    int alphaLen = strlen(alphabet);
+    result = (PasswordGenerationContext*) malloc(sizeof (PasswordGenerationContext));
+    result->alphabet = (char*) malloc(sizeof (char)*alphaLen);
+    memset(result->alphabet, '\0', sizeof (char)*alphaLen);
+    strncpy(result->alphabet, alphabet, sizeof (char)*alphaLen);
+    result->nextPassword = nextPass;
+    result->passwordDiff = getPasswordDiff;
+    result->passwordAt = getPasswordAt;
+    result->passwordAtRelative = getPasswordAtRelativeOffset;
+    result->valueOf = toNumberIndefaultAlphabet;
+    result->type = DEFAULT;
+    result->initData = initializeGlobals;
+    result->clearData = freeGlobals;
+    return result;
+}
+
+static PasswordGenerationContext* createContext(char* alphabet,
+    PasswordDataInitCallback dataInitFunction, PasswordDataFreeCallback dataFreeFunction,
+    PasswordCountCallback nextPasswordFunction, PasswordAtIndexCallback passwordAtFunction,
+    PasswordAtRelativeIndexCallback passwordAtRelativeFunction, PasswordValueCallback passwordValueOfFunction, PasswordAbsDiffCallback passwordAbsDiffFunction) {
+    PasswordGenerationContext* result = NULL;
+    int alphaLen = strlen(alphabet);
+    result = (PasswordGenerationContext*) malloc(sizeof (PasswordGenerationContext));
+    result->alphabet = (char*) malloc(sizeof (char)*alphaLen);
+    memset(result->alphabet, '\0', sizeof (char)*alphaLen);
+    strncpy(result->alphabet, alphabet, sizeof (char)*alphaLen);
+    result->nextPassword = nextPasswordFunction;
+    result->passwordDiff = passwordAbsDiffFunction;
+    result->passwordAt = passwordAtFunction;
+    result->passwordAtRelative = passwordAtRelativeFunction;
+    result->valueOf = passwordValueOfFunction;
+    result->type = 1000;
+    result->initData = dataInitFunction;
+    result->clearData = dataFreeFunction;
+    return result;
+}
+
 PasswordGenerationContext* createPasswordGenerationContextByType(int type) {
     PasswordGenerationContext* result = NULL;
     switch (type) {
@@ -365,6 +450,23 @@ PasswordGenerationContext* createPasswordGenerationContextByType(int type) {
             DBG_OK("Error unknown type of password generation algorithm defined.");
             exit(EXIT_FAILURE);
     }
+    return result;
+}
+
+PasswordGenerationContext* createCustomPasswordGenerationContext(char* alphabet,
+    PasswordDataInitCallback dataInitFunction,
+    PasswordDataFreeCallback dataFreeFunction,
+    PasswordCountCallback nextPasswordFunction,
+    PasswordAtIndexCallback passwordAtFunction,
+    PasswordAtRelativeIndexCallback passwordAtRelativeFunction,
+    PasswordValueCallback passwordValueOfFunction,
+    PasswordAbsDiffCallback passwordAbsDiffFunction) {
+    PasswordGenerationContext* result = NULL;
+
+    result = createContext(alphabet, dataInitFunction, dataFreeFunction,
+        nextPasswordFunction, passwordAtFunction, passwordAtRelativeFunction,
+        passwordValueOfFunction, passwordAbsDiffFunction);
+
     return result;
 }
 

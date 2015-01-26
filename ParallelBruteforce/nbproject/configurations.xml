@@ -21,7 +21,6 @@
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
-      <itemPath>testHashes.txt</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -114,8 +113,6 @@
       </item>
       <item path="sha256.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="testHashes.txt" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="utils.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="utils.h" ex="false" tool="3" flavor2="0">
@@ -188,8 +185,6 @@
       <item path="sha256.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="sha256.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="testHashes.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="utils.c" ex="false" tool="0" flavor2="0">
       </item>

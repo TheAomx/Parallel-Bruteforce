@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
         MPI_Finalize();
         exit(EXIT_FAILURE);
     }
-
+    
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_File fh;
     char *hashFile = "hashes.txt";
@@ -122,7 +122,7 @@ int main(int argc, char** argv) {
          * client will do.
          */
         ServerContext* context = initializeWithPW(hashFile, nTasks - 1, "a", "000000");
-
+DBG_OK("Test");
         printServerContext(context);
 
 

@@ -12,6 +12,9 @@
 
 #define SHA1_SIZE 20
 
+/**
+ * The SHA1 hashing context.
+ */
 typedef struct {
     uchar data[64];
     uint datalen;
