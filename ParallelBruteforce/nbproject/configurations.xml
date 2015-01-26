@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>bruteforce.h</itemPath>
       <itemPath>core_headers.h</itemPath>
+      <itemPath>hash_types.h</itemPath>
       <itemPath>hashing_algo.h</itemPath>
       <itemPath>md5.h</itemPath>
       <itemPath>openmp.h</itemPath>
@@ -16,6 +17,9 @@
       <itemPath>sha1.h</itemPath>
       <itemPath>sha1_prop.h</itemPath>
       <itemPath>sha256.h</itemPath>
+      <itemPath>sph_md5.h</itemPath>
+      <itemPath>sph_sha2.h</itemPath>
+      <itemPath>sph_types.h</itemPath>
       <itemPath>utils.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -36,7 +40,9 @@
       <itemPath>sds.c</itemPath>
       <itemPath>sha1.c</itemPath>
       <itemPath>sha1_prop.c</itemPath>
+      <itemPath>sha2.c</itemPath>
       <itemPath>sha256.c</itemPath>
+      <itemPath>sph_md5.c</itemPath>
       <itemPath>utils.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -71,6 +77,8 @@
       </item>
       <item path="core_headers.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="hash_types.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="hashing_algo.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="hashing_algo.h" ex="false" tool="3" flavor2="0">
@@ -109,9 +117,19 @@
       </item>
       <item path="sha1_prop.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="sha2.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="sha256.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="sha256.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sph_md5.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="sph_md5.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sph_sha2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sph_types.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="utils.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -144,6 +162,8 @@
       </item>
       <item path="core_headers.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="hash_types.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="hashing_algo.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="hashing_algo.h" ex="false" tool="3" flavor2="0">
@@ -182,9 +202,19 @@
       </item>
       <item path="sha1_prop.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="sha2.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="sha256.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="sha256.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sph_md5.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="sph_md5.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sph_sha2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sph_types.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="utils.c" ex="false" tool="0" flavor2="0">
       </item>

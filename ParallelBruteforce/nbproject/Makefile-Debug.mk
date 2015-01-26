@@ -46,7 +46,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/sds.o \
 	${OBJECTDIR}/sha1.o \
 	${OBJECTDIR}/sha1_prop.o \
+	${OBJECTDIR}/sha2.o \
 	${OBJECTDIR}/sha256.o \
+	${OBJECTDIR}/sph_md5.o \
 	${OBJECTDIR}/utils.o
 
 
@@ -129,10 +131,20 @@ ${OBJECTDIR}/sha1_prop.o: sha1_prop.c
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1_prop.o sha1_prop.c
 
+${OBJECTDIR}/sha2.o: sha2.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha2.o sha2.c
+
 ${OBJECTDIR}/sha256.o: sha256.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha256.o sha256.c
+
+${OBJECTDIR}/sph_md5.o: sph_md5.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sph_md5.o sph_md5.c
 
 ${OBJECTDIR}/utils.o: utils.c 
 	${MKDIR} -p ${OBJECTDIR}

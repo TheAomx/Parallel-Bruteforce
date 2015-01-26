@@ -1,24 +1,12 @@
-/* 
- * File:   sha1_prop.h
- * Author: TBD
- *      Header file for sha1 implementation from splashtop streamer(R) source package.
- * Created on 13. Januar 2015, 15:17
- */
-
-#ifndef __SHA1_PROP_H
-#define __SHA1_PROP_H
-
-/* $Id: sph_sha1.h 216 2010-06-08 09:46:57Z tp $ */
+/* $Id: sph_md5.h 216 2010-06-08 09:46:57Z tp $ */
 /**
- * SHA-1 interface.
+ * MD5 interface.
  *
- * SHA-1 is described in FIPS 180-1 (now superseded by FIPS 180-2, but the
- * description of SHA-1 is still included and has not changed). FIPS
- * standards can be found at: http://csrc.nist.gov/publications/fips/
+ * MD5 is described in RFC 1321.
  *
- * @warning   A theoretical collision attack against SHA-1, with work
- * factor 2^63, has been published. SHA-1 should not be used in new
- * protocol designs.
+ * @warning   The MD5 hash function is considered as broken,
+ * cryptographically speaking: collisions have been published, with a
+ * quite efficient method of generation. Use only with care.
  *
  * ==========================(LICENSE BEGIN)============================
  *
@@ -45,103 +33,104 @@
  *
  * ===========================(LICENSE END)=============================
  *
- * @file     sph_sha1.h
+ * @file     sph_md5.h
  * @author   Thomas Pornin <thomas.pornin@cryptolog.com>
  */
 
+#ifndef SPH_MD5_H__
+#define SPH_MD5_H__
+
 #include <stddef.h>
-#include "hash_types.h"
 #include "sph_types.h"
+#include "hash_types.h"
 
 /**
- * Output size (in bits) for SHA-1.
+ * Output size (in bits) for MD4.
  */
-#define SPH_SIZE_sha1   160
-#define SHA1_PROP_SIZE 20
+#define SPH_SIZE_md5   128
+#define SPH_SIZE_MD5_IN_BYTE   16
 
 /**
- * This structure is a context for SHA-1 computations: it contains the
+ * This structure is a context for MD5 computations: it contains the
  * intermediate values and some data from the last entered block. Once
- * a SHA-1 computation has been performed, the context can be reused for
+ * a MD5 computation has been performed, the context can be reused for
  * another computation.
  *
- * The contents of this structure are private. A running SHA-1 computation
+ * The contents of this structure are private. A running MD5 computation
  * can be cloned by copying the context (e.g. with a simple
  * <code>memcpy()</code>).
  */
 typedef struct {
 #ifndef DOXYGEN_IGNORE
 	unsigned char buf[64];    /* first field, for alignment */
-	sph_u32 val[5];
+	sph_u32 val[4];
 #if SPH_64
 	sph_u64 count;
 #else
 	sph_u32 count_high, count_low;
 #endif
 #endif
-} sph_sha1_context;
+} sph_md5_context;
 
 /**
- * Initialize a SHA-1 context. This process performs no memory allocation.
+ * Initialize a MD5 context. This process performs no memory allocation.
  *
- * @param cc   the SHA-1 context (pointer to a <code>sph_sha1_context</code>)
+ * @param cc   the MD5 context (pointer to a <code>sph_md5_context</code>)
  */
-void sph_sha1_init(void *cc);
+void sph_md5_init(void *cc);
 
 /**
  * Process some data bytes. It is acceptable that <code>len</code> is zero
  * (in which case this function does nothing).
  *
- * @param cc     the SHA-1 context
+ * @param cc     the MD5 context
  * @param data   the input data
  * @param len    the input data length (in bytes)
  */
-void sph_sha1(void *cc, const void *data, size_t len);
+void sph_md5(void *cc, const void *data, size_t len);
 
 /**
- * Terminate the current SHA-1 computation and output the result into the
+ * Terminate the current MD5 computation and output the result into the
  * provided buffer. The destination buffer must be wide enough to
- * accomodate the result (20 bytes). The context is automatically
+ * accomodate the result (16 bytes). The context is automatically
  * reinitialized.
  *
- * @param cc    the SHA-1 context
+ * @param cc    the MD5 context
  * @param dst   the destination buffer
  */
-void sph_sha1_close(void *cc, void *dst);
+void sph_md5_close(void *cc, void *dst);
 
 /**
  * Add a few additional bits (0 to 7) to the current computation, then
  * terminate it and output the result in the provided buffer, which must
- * be wide enough to accomodate the result (20 bytes). If bit number i
+ * be wide enough to accomodate the result (16 bytes). If bit number i
  * in <code>ub</code> has value 2^i, then the extra bits are those
  * numbered 7 downto 8-n (this is the big-endian convention at the byte
  * level). The context is automatically reinitialized.
  *
- * @param cc    the SHA-1 context
+ * @param cc    the MD5 context
  * @param ub    the extra bits
  * @param n     the number of extra bits (0 to 7)
  * @param dst   the destination buffer
  */
-void sph_sha1_addbits_and_close(void *cc, unsigned ub, unsigned n, void *dst);
+void sph_md5_addbits_and_close(void *cc, unsigned ub, unsigned n, void *dst);
 
 /**
- * Apply the SHA-1 compression function on the provided data. The
+ * Apply the MD5 compression function on the provided data. The
  * <code>msg</code> parameter contains the 16 32-bit input blocks,
- * as numerical values (hence after the big-endian decoding). The
- * <code>val</code> parameter contains the 5 32-bit input blocks for
+ * as numerical values (hence after the little-endian decoding). The
+ * <code>val</code> parameter contains the 4 32-bit input blocks for
  * the compression function; the output is written in place in this
  * array.
  *
  * @param msg   the message block (16 values)
- * @param val   the function 160-bit input and output
+ * @param val   the function 128-bit input and output
  */
-void sph_sha1_comp(const sph_u32 msg[16], sph_u32 val[5]);
+void sph_md5_comp(const sph_u32 msg[16], sph_u32 val[4]);
 
-
-
-int sha1_equal_prop(uchar hash1[], uchar hash2[]);
-void sha1_init_prop(void *context);
-void sha1_update_prop(void *context, uchar data[], uint len);
-void sha1_final_prop(void *context, uchar hash[]);
+int md5_equal_sph(uchar hash1[], uchar hash2[]);
+void md5_init_sph(void *context);
+void md5_update_sph(void *context, uchar data[], uint len);
+void md5_final_sph(void *context, uchar hash[]);
 
 #endif

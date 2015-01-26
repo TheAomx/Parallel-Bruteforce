@@ -8,11 +8,10 @@
 #ifndef __SHA256_H
 #define __SHA256_H
 
+#include "hash_types.h"
+
 #define SHA256_SIZE 32
 
-/**
- * The SHA256 hashing context.
- */
 typedef struct {
     uchar data[64];
     uint datalen;

@@ -7,14 +7,11 @@
 
 #ifndef __SHA1_H
 #define __SHA1_H
-#include "core_headers.h"
 
+#include "hash_types.h"
 
 #define SHA1_SIZE 20
 
-/**
- * The SHA1 hashing context.
- */
 typedef struct {
     uchar data[64];
     uint datalen;

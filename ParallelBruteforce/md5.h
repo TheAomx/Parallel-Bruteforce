@@ -16,21 +16,16 @@ extern "C" {
 
     /*************************** HEADER FILES ***************************/
 #include <stddef.h>
-#include "core_headers.h"
+#include "hash_types.h"
 
     /**************************** DATA TYPES ****************************/
 
-    /**
-     * The MD5 hashing context.
-     */
     typedef struct {
         uchar data[64];
         uint datalen;
         unsigned long long bitlen;
         uint state[4];
     } MD5_CTX;
-
-
 
     char* md5_toString(unsigned char hash[]);
     int md5_equal(unsigned char hash1[], unsigned char hash2[]);

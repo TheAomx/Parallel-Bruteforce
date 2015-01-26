@@ -4,7 +4,21 @@
  *
  * Created on 13. Januar 2015, 18:41
  */
-#include "core_headers.h"
+
+#include <string.h>
+#include <stdlib.h>
+
+
+
+#include "hashing_algo.h"
+
+#include "sha1.h"
+#include "md5.h"
+#include "sph_md5.h"
+#include "sha256.h"
+#include "sph_sha2.h"
+#include "sha1_prop.h"
+#include "../Utils/utils.h"
 
 void freeHashAlgo(HashAlgorithm *algo) {
     free(algo->ctx);
@@ -27,10 +41,10 @@ static HashAlgorithm* createSHA1() {
 
 static HashAlgorithm* createSHA1Prop() {
     HashAlgorithm *sha1 = (HashAlgorithm*) malloc(sizeof (HashAlgorithm));
-    SHA1_CTX *sha_context = (SHA1_CTX*) malloc(sizeof (SHA1_CTX));
+    sph_sha1_context *sha_context = (sph_sha1_context*) malloc(sizeof (sph_sha1_context));
     sha1->hashType = SHA1;
     sha1->ctx = (void*) sha_context;
-    sha1->hashSize = SHA1_SIZE;
+    sha1->hashSize = SHA1_PROP_SIZE;
     sha1->toString = sha1_toString;
     sha1->equals = sha1_equal_prop;
     sha1->init = sha1_init_prop;
@@ -53,6 +67,20 @@ static HashAlgorithm* createSHA256() {
     return sha256;
 }
 
+static HashAlgorithm* createSHA256SPH() {
+    HashAlgorithm *sha256 = (HashAlgorithm*) malloc(sizeof (HashAlgorithm));
+    sph_sha256_context *sha256_context = (sph_sha256_context*) malloc(sizeof (sph_sha256_context));
+    sha256->hashType = SHA256;
+    sha256->ctx = (void*) sha256_context;
+    sha256->hashSize = SHA256_SPH_SIZE;
+    sha256->toString = sha256_toString;
+    sha256->equals = sha256_equal_sph;
+    sha256->init = sha256_init_sph;
+    sha256->update = sha256_update_sph;
+    sha256->final = sha256_final_sph;
+    return sha256;
+}
+
 static HashAlgorithm* createMD5() {
     HashAlgorithm *md5 = (HashAlgorithm*) malloc(sizeof (HashAlgorithm));
     MD5_CTX *md5_context = (MD5_CTX*) malloc(sizeof (MD5_CTX));
@@ -67,6 +95,20 @@ static HashAlgorithm* createMD5() {
     return md5;
 }
 
+static HashAlgorithm* createMD5SPH() {
+    HashAlgorithm *md5 = (HashAlgorithm*) malloc(sizeof (HashAlgorithm));
+    sph_md5_context *md5_context = (sph_md5_context*) malloc(sizeof (sph_md5_context));
+    md5->hashType = MD5;
+    md5->ctx = (void*) md5_context;
+    md5->hashSize = MD5_SIZE;
+    md5->toString = md5_toString;
+    md5->equals = md5_equal_sph;
+    md5->init = md5_init_sph;
+    md5->update = md5_update_sph;
+    md5->final = md5_final_sph;
+    return md5;
+}
+
 HashAlgorithm* createHashAlgorithm(char *hashAlgorithm) {
     if (!strcmp("SHA1", hashAlgorithm)) {
         return createSHA1();
@@ -76,9 +118,17 @@ HashAlgorithm* createHashAlgorithm(char *hashAlgorithm) {
     }
     else if(!strcmp("SHA256", hashAlgorithm)) {
         return createSHA256();
-    } else if (!strcmp("MD5", hashAlgorithm)) {
+    } 
+	else if(!strcmp("SHA256_SPH", hashAlgorithm)) {
+        return createSHA256SPH();
+    } 
+	else if (!strcmp("MD5", hashAlgorithm)) {
         return createMD5();
-    } else {
+    }
+	else if (!strcmp("MD5_SPH", hashAlgorithm)) {
+        return createMD5SPH();
+    }		 
+	else {
         return NULL;
     }
 }
@@ -126,7 +176,7 @@ static uchar hexToBin(char c1, char c2) {
     return temp;
 }
 
-uchar* convertHashStringToBinary(HashAlgorithm *algo, sds hashString) {
+uchar* convertHashStringToBinary(HashAlgorithm *algo, char *hashString) {
     int i, j;
     uchar *hashBinary = (uchar*) malloc(sizeof (uchar) * algo->hashSize);
     for (i = 0, j = 0; i < algo->hashSize; i++, j += 2) {
