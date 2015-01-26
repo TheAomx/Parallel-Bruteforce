@@ -4,7 +4,7 @@
 
 
 function printUsage {
-echo -e "usage: bash run.sh <scp_host_file> <hash_list_file> <mpi_hosts_file>\n\n"
+echo -e "usage: bash run.sh <scp_host_file> <hash_list_file>\n\n"
 echo  "	scp_host_file:      path to a file which defines each host which will"
 echo "			    execute the bruteforce programm."
 echo "			    Format example (simular to the mpi host file):"
@@ -32,15 +32,6 @@ echo "			       {SHA265_HASH}"
 echo "			       {SHA265_HASH}"
 echo "			       ..."
 echo -e "			    ---------------------------------------------------\n\n"
-echo "	mpi_hosts_file:     path to a mpi host file "
-echo "			    (mpirun prameter -hostfile)."
-echo "			    Sample:"
-echo "			    ---------------------------------------------------"
-echo "			       www.mympiprocessor.com slots=10 max-slots=1000"
-echo "			       localhost slots=1 max-slots=1 min-slots=1"
-echo "			       ..."
-echo -e "			    ---------------------------------------------------\n\n"
-
 }			    
 			      
 
@@ -48,7 +39,8 @@ executionPath="/tmp"
 binaryName="parallelbruteforce"
 prefix="/usr"
 tempDir="/tmp"
-localExecutionRunInstruction="--host localhost -np 2 $binaryName"
+mpiHostFileName="mpi_hostfile"
+
 
 numProcessors=0;
 localExecution=0;
@@ -69,14 +61,13 @@ if [ $# -eq 0 ]
     exit -1
 fi
 
-if ! [ $# -eq 3 ]
+if ! [ $# -eq 2 ]
   then
     printUsage
     echo -e "Error cause:   wrong number of parameters specified\n\n"
     exit -1
 fi
 
-# parameter checks (checks if parameters are empty strings)
 if [ -z "$1" ]
   then
     printUsage
@@ -91,16 +82,6 @@ if [ -z "$2" ]
     exit -1
 fi
 
-if [ -z "$3" ]
-  then
-    printUsage
-    echo -e "Error cause:   scp_host_file parameter not present\n\n"
-    exit -1
-fi
-
-# parameter checks (checks if required files are present and regular files)
-
-
 if ! [ -e $1 ] 
   then
     printUsage
@@ -108,21 +89,12 @@ if ! [ -e $1 ]
     exit -1
 fi
 
-
 if ! [ -e $2 ]
   then
     printUsage
     echo -e "Error cause:   hash_list_file not present\n\n"
     exit -1
 fi
-
-if ! [ -e $3 ]
-  then
-    printUsage
-    echo -e "Error cause:   mpi_host_file not present\n\n"
-    exit -1
-fi
-
 
 if ! [ -f $1 ]
   then
@@ -137,60 +109,49 @@ if ! [ -f $2 ]
     echo -e "Error cause:   hash_list_file not a regular file\n\n"
     exit -1
 fi
-if ! [ -f $3 ]
+
+
+if [ -e $mpiHostFileName ]
   then
-    printUsage
-    echo -e "Error cause:   mpi_host_file not a regular file\n\n"
-    exit -1
+    rm $mpiHostFileName
 fi
 
-
-# end of function checkParameter
-
+touch $mpiHostFileName
 
 
-
-
-
+atSymbol="@"
 while read line           
 do   
 case "$line" in \#*) continue ;; 
 esac
-    echo -e "$line"
-    
+#     echo -e "$line"
       array[numProcessors]=$line
       numProcessors=$(($numProcessors+1));
       if [ $line = "localhost" ]
       then
-	localExecution=1; 
+	localExecution=1;
+      else
+	echo "$line slots=1 max-slots=1" >> $mpiHostFileName
       fi
     
 done <$1
 
-echo -e "number of clients = $numProcessors"
-echo "List of hosts: ${array[*]}"
+# echo -e "number of clients = $numProcessors"
+# echo "List of hosts: ${array[*]}"
 
-if [ localExecution = 1 ]
-then
-  echo "Local execution enabled"
-fi
-
-
-
-
-
-
+# if [ localExecution = 1 ]
+# then
+#   echo "Local execution enabled"
+# fi
 
 counter=0
 while [  $counter -lt $(($numProcessors)) ]; do
-   if [ ${array[$(($counter))]} = "localhost" ]
+   if ! [ ${array[$(($counter))]} = "localhost" ]
   then
-    echo "skip copying to localhost"    
-  else
     echo "executing: scp $binaryName ${array[$(($counter))]}:$tempDir/$binaryName"
     scp "$binaryName" "${array[$(($counter))]}:$tempDir/$binaryName"
-    echo "executing: scp $3 ${array[$(($counter))]}:$tempDir/$3"
-    scp "$3" "${array[$(($counter))]}:$tempDir/$3"
+    echo "executing: scp $mpiHostFileName ${array[$(($counter))]}:$tempDir/$mpiHostFileName"
+    scp "$mpiHostFileName" "${array[$(($counter))]}:$tempDir/$mpiHostFileName"
     echo "executing: scp $2 ${array[$(($counter))]}:$tempDir/$2"
     scp "$2" "${array[$(($counter))]}:$tempDir/$2"
   fi
@@ -206,7 +167,11 @@ then
 remoteProcNum=$(($remoteProcNum-1));
 fi
 
-remoteExecutionRunInstruction="--hostfile $3 --path $executionPath --tmpdir $tempDir --prefix $prefix --wdir $executionPath -np $remoteProcNum $binaryName"
+localExecutionRunInstruction="--host localhost -np 2 $binaryName $2"
+
+remoteExecutionRunInstruction="--hostfile $mpiHostFileName --path $executionPath --tmpdir $tempDir --prefix $prefix --wdir $executionPath -np $remoteProcNum $binaryName $2"
+
+
 
 if [ $localExecution = 1 ]
 then

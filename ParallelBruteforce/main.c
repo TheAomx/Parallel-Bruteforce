@@ -76,7 +76,6 @@ int checkPasswordObserved(void *ctx, char *password, hashFoundCallback ohHashFou
     return 0;
 }
 
-
 void sendFoundPasswordAndHashToRoot(char* password, char* hash) {
     int lenPw = strlen(password);
     int lenHash = strlen(hash);
@@ -89,8 +88,9 @@ void sendFoundPasswordAndHashToRoot(char* password, char* hash) {
 }
 
 int main(int argc, char** argv) {
-    int maxNum;
-    int nTasks, rank, alphaPos = 0;
+
+    int nTasks, rank;
+
     if (MPI_Init(&argc, &argv) != MPI_SUCCESS) {
         printf("MPI_init failed\n");
         exit(EXIT_FAILURE);
@@ -104,10 +104,10 @@ int main(int argc, char** argv) {
         MPI_Finalize();
         exit(EXIT_FAILURE);
     }
-    
+
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_File fh;
-    char *hashFile = "hashes.txt";
+    char *hashFile = (argc >= 2) ? argv[1] : "hashes.txt";
     int ret = MPI_File_open(MPI_COMM_WORLD, hashFile, MPI_MODE_RDONLY, MPI_INFO_NULL, &fh);
     if (ret < 0) {
         printf("MPI_File_open failed");
@@ -122,7 +122,7 @@ int main(int argc, char** argv) {
          * client will do.
          */
         ServerContext* context = initializeWithPW(hashFile, nTasks - 1, "a", "000000");
-DBG_OK("Test");
+        DBG_OK("Test");
         printServerContext(context);
 
 
@@ -174,9 +174,6 @@ DBG_OK("Test");
         MPI_Barrier(MPI_COMM_WORLD);
 
 
-        // MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status)
-        // We need to go and receive the data from all other threads.
-        // The arbitrary tag we choose is 1, for now.
         pwHashes = generatePasswordHashes(&fh, 1);
         //printHashes(pwHashes, rank);
         DBG_OK("Sent all data to clients ... now going to receive cracked hashes");

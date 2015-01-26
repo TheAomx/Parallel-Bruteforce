@@ -37,7 +37,7 @@ static char nullChar;
  * @param s The string to be inverted.
  * @param len The length of the string.
  */
-static void reverse(char s[], int len) {
+static inline void reverse(char s[], int len) {
     int c, i, j;
     for (i = 0, j = len - 1; i < j; i++, j--) {
         c = s[i];
@@ -87,11 +87,13 @@ void initializeGlobals(char* alphabet) {
     nullChar = getKey(alphabetMapping, 0);
     pregeneratedOffsets = (ulong*) malloc(sizeof (ulong) * MAX_PASSWORD);
     ulong result = 0;
+    pregeneratedOffsets[0] = 0;
+    pregeneratedOffsets[1] = 0;
     for (int i = 0; i < 20; i++) {
         result += pow_ul(alphabetLength, (ulong) (i + 1));
-        pregeneratedOffsets[i] = result;
+        pregeneratedOffsets[i + 2] = result;
     }
-    pregeneratedLen = 20;
+    pregeneratedLen = 22;
 }
 
 void freeGlobals() {
@@ -146,7 +148,7 @@ static Mapping getMax(Mapping* mappings) {
  * @param outLen The length of the result.
  * @param out The resulting string.
  */
-static void convert(ulong number, int alphabetLen, Mapping* mapping, int* outLen, char* out) {
+static inline void convert(ulong number, int alphabetLen, Mapping* mapping, int* outLen, char* out) {
     char rem;
     int i = 0;
     ulong numTmp = number;
@@ -171,13 +173,13 @@ static void convert(ulong number, int alphabetLen, Mapping* mapping, int* outLen
  * @param nullChar The character mapped to the value zero.
  * @param outLen The length of the result.
  */
-static void toString(ulong number, Mapping* mapping, char* out, char nullChar, int *outLen) {
-    int alphabetLen = alphabetLength;
+static inline void toString(ulong number, Mapping* mapping, char* out, char nullChar, int *outLen) {
+
     Mapping *map = mapping;
     if (number == 0) {
         out[0] = nullChar;
     } else {
-        convert(number, alphabetLen, map, outLen, out);
+        convert(number, alphabetLength, map, outLen, out);
     }
 
 }
@@ -189,10 +191,11 @@ static void toString(ulong number, Mapping* mapping, char* out, char nullChar, i
  * @param minLen
  * @param out
  */
-static void toStringWithMinLen(ulong number, Mapping* mapping, int minLen, char* out) {
+static inline void toStringWithMinLen(ulong number, Mapping* mapping, int minLen, char* out) {
     Mapping *map = mapping;
     if (number == 0) {
         memset(out, nullChar, sizeof (char)*minLen);
+
     } else {
         int outlen = 0;
         toString(number, map, out, nullChar, &outlen);
@@ -200,36 +203,18 @@ static void toStringWithMinLen(ulong number, Mapping* mapping, int minLen, char*
         if (outlen < minLen) {
             int lenDif = minLen - outlen;
             char* tmp = (char*) malloc(sizeof (char)*outlen);
-            strncpy(tmp, out, outlen);
+
+            memcpy(tmp, out, outlen);
+            //            strncpy(tmp, out, outlen);
             memset(out, '\0', sizeof (char)*minLen);
             memset(out, nullChar, sizeof (char)*minLen);
-            strncpy((out + (lenDif)), tmp, outlen);
+            memcpy((out + (lenDif)), tmp, outlen);
+            //            strncpy((out + (lenDif)), tmp, outlen);
             free(tmp);
         }
     }
 }
 
-/**
- * Calculates the offset for a password with a given length. (That is because 'aaba' != 'ba' but val('aaba')==val('ba'))
- * @param pwLength Length of the password
- * @return 
- */
-static ulong getOffsetForLen(int pwLength) {
-    if (pwLength <= 1)
-        return 0;
-    if (pregeneratedLen >= pwLength) {
-        return pregeneratedOffsets[pwLength - 2];
-    }
-
-    int alphabetLen = alphabetLength;
-    ulong result = 0;
-    for (int i = 1; i < pwLength; i++) {
-        result += pow_ul((ulong) alphabetLen, (ulong) i);
-        pregeneratedOffsets[i - 1] = result;
-    }
-    pregeneratedLen = pwLength;
-    return result;
-}
 
 /**
  * Calculates a number from the given string. The result of this function is the 
@@ -251,6 +236,7 @@ static ulong toNumber(char* string, Mapping* mapping) {
     int currentPosition = 0;
     ulong currentValue = 0;
     for (int i = inputLen - 1; i >= 0; i--, currentPosition++) {
+
         char currentLetter;
         currentLetter = string[i];
         currentValue = ((ulong) getValue(map, currentLetter)) * pow_ul(alphabetLen, currentPosition);
@@ -261,7 +247,8 @@ static ulong toNumber(char* string, Mapping* mapping) {
 }
 
 ulong toNumberIndefaultAlphabet(char* string) {
-    ulong result = toNumber(string, alphabetMapping) + getOffsetForLen(strlen(string));
+    ulong result = toNumber(string, alphabetMapping) + pregeneratedOffsets[strlen(string)];
+
     return result;
 }
 
@@ -279,6 +266,7 @@ static char isMaxPwForLen(char* in, int len, Mapping* map) {
     int i = 0;
     while (i < len) {
         if (in[i] != maxKey)
+
             return 0;
         i++;
     }
@@ -302,6 +290,7 @@ static void countUp(char* in, char* outPtr, int inputLen) {
         toStringWithMinLen(0, map, inputLen + 1, outPtr);
         DBG_OK("Max input value for len detected: %s -> %s", in, outPtr);
     } else {
+
         toStringWithMinLen(inputValue + 1, map, inputLen, outPtr);
     }
     free(map);
@@ -314,6 +303,7 @@ void nextPass(char* in, char* outPass) {
 
     int outlen = strlen(outPass);
     if (inlen - outlen < 0) {
+
         DBG_OK("Overflow detected from %d -> %d digits", inlen, outlen);
         DBG_OK("in -> %s, out -> %s", in, outPass);
     }
@@ -323,6 +313,7 @@ ulong getPasswordDiff(char* pw1, char* pw2) {
 
     ulong pw1Idx = toNumberIndefaultAlphabet(pw1);
     ulong pw2Idx = toNumberIndefaultAlphabet(pw2);
+
     return (pw1Idx < pw2Idx) ? pw2Idx - pw1Idx : pw1Idx - pw2Idx;
 }
 
@@ -334,7 +325,48 @@ void getPasswordAtRelativeOffset(char* offsetPw, ulong targetDifference, char* r
 
 
 }
+#define offsetFromPregenerated(offt) (offt<=1)?0:pregeneratedOffsets[offt-2]
 
+void getPasswordAt(ulong passwordIndex, char* result) {
+    Mapping *map = alphabetMapping;
+    if (passwordIndex <= 0) {
+        toStringWithMinLen(0, map, 1, result);
+        return;
+    }
+    if (passwordIndex > 0) {
+        int i = 0;
+        ulong tmp = 0;
+        int pos = 1;
+
+        while (1) {
+            if (pregeneratedOffsets[pos] > passwordIndex) {
+                if (pos > 0 && (pregeneratedOffsets[pos - 1] <= passwordIndex))
+                    pos--;
+                break;
+            }
+            pos++;
+        }
+        tmp = passwordIndex - pregeneratedOffsets[pos];
+        if (passwordIndex > 0 && tmp <= 0 && pos > 0) {
+            if (passwordIndex == pregeneratedOffsets[pos]) {
+                toStringWithMinLen(0, map, pos, result);
+            } else {
+                pos--;
+                tmp = (pregeneratedOffsets[pos + 1] - pregeneratedOffsets[pos]) - 1;
+                toStringWithMinLen(tmp, map, pos, result);
+            }
+        } else {
+            toStringWithMinLen(tmp, map, pos, result);
+        }
+    } else {
+
+        result[0] = getKey(map, 0);
+    }
+
+}
+
+
+/*
 void getPasswordAt(ulong passwordIndex, char* result) {
     Mapping *map = alphabetMapping;
 
@@ -374,6 +406,7 @@ void getPasswordAt(ulong passwordIndex, char* result) {
     }
 
 }
+ */
 
 /**
  * Create the default type of <code>PasswordGenerationContext</code> used by the brute force algorithm.
@@ -394,6 +427,7 @@ static PasswordGenerationContext* createDefaultContext() {
     result->type = DEFAULT;
     result->initData = initializeGlobals;
     result->clearData = freeGlobals;
+
     return result;
 }
 
@@ -416,6 +450,7 @@ static PasswordGenerationContext* createDefaultContextWithAlphabet(char* alphabe
     result->type = DEFAULT;
     result->initData = initializeGlobals;
     result->clearData = freeGlobals;
+
     return result;
 }
 
@@ -437,6 +472,7 @@ static PasswordGenerationContext* createContext(char* alphabet,
     result->type = 1000;
     result->initData = dataInitFunction;
     result->clearData = dataFreeFunction;
+
     return result;
 }
 
@@ -445,6 +481,7 @@ PasswordGenerationContext* createPasswordGenerationContextByType(int type) {
     switch (type) {
         case DEFAULT:
             result = createDefaultContext();
+
             break;
         default:
             DBG_OK("Error unknown type of password generation algorithm defined.");
