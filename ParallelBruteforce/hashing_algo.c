@@ -176,9 +176,9 @@ static uchar hexToBin(char c1, char c2) {
     return temp;
 }
 
-uchar* convertHashStringToBinary(HashAlgorithm *algo, char *hashString) {
+uchar* convertHashStringToBinary(HashAlgorithm *algo, char *hashString, uchar *hashBinary) {
     int i, j;
-    uchar *hashBinary = (uchar*) malloc(sizeof (uchar) * algo->hashSize);
+    //uchar *hashBinary = (uchar*) malloc(sizeof (uchar) * algo->hashSize);
     for (i = 0, j = 0; i < algo->hashSize; i++, j += 2) {
         hashBinary[i] = hexToBin(hashString[j], hashString[j + 1]);
     }

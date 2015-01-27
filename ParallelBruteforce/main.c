@@ -39,8 +39,9 @@ int checkPassword(void *ctx, char *password) {
     getHashFromString(algo, password, hashBuffer);
 
     for (i = 0; i < pwHashes->numHashes; i++) {
-        if (algo->equals(hashBuffer, pwHashes->hashes[i])) {
-            printf("The hash of %s was %s \n", password, algo->toString(pwHashes->hashes[i]));
+        uchar *checkedHash = getHash(pwHashes, threadID, i);
+        if (algo->equals(hashBuffer, checkedHash)) {
+            printf("The hash of %s was %s \n", password, algo->toString(checkedHash));
             fflush(stdout);
         }
     }
@@ -57,15 +58,18 @@ int checkPasswordObserved(void *ctx, char *password, hashFoundCallback ohHashFou
     HashAlgorithm *algo = pwHashes->algo[threadID];
 
     getHashFromString(algo, password, hashBuffer);
+    
+    
 
     for (i = 0; i < pwHashes->numHashes; i++) {
-        if (algo->equals(hashBuffer, pwHashes->hashes[i])) {
-            //            printf("The hash of %s was %s. Notifying server...\n", password, algo->toString(pwHashes->hashes[i]));
+        uchar *checkedHash = getHash(pwHashes, threadID, i);
+        if (algo->equals(hashBuffer, checkedHash)) {
+            //            printf("The hash of %s was %s. Notifying server...\n", password, algo->toString(checkedHash));
             fflush(stdout);
 #ifdef _OPENMP
             omp_set_lock(lock);
 #endif
-            ohHashFound(password, algo->toString(pwHashes->hashes[i]));
+            ohHashFound(password, algo->toString(checkedHash));
 #ifdef _OPENMP
             omp_unset_lock(lock);
 #endif
@@ -265,7 +269,7 @@ int main(int argc, char** argv) {
 
         struct timeval timeBefore, timeAfter;
         gettimeofday(&timeBefore, NULL);
-
+        //printHashes(pwHashes, rank);
 #ifdef _OPENMP
         initLock();
 #endif

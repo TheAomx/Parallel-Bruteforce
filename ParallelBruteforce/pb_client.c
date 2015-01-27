@@ -3,9 +3,7 @@
 void freePasswordHashes(PasswordHashes *pwHashes) {
     int i = 0;
 
-    for (i = 0; i < pwHashes->numHashes; i++) {
-        free(pwHashes->hashes[i]);
-    }
+	free(pwHashes->hashes);
 
     for (i = 0; i < pwHashes->numThreads; i++) {
         free(pwHashes->hashBuffer[i]);
@@ -27,7 +25,7 @@ PasswordGenTask* createClientTask(int pwGenAlgoType, char* start, char* end) {
 
 void printHashes(PasswordHashes *pwHashes, int rank) {
     for (int i = 0; i < pwHashes->numHashes; i++) {
-        printf("[%d] %s\n", rank, pwHashes->algo[0]->toString(pwHashes->hashes[i]));
+        printf("[%d] %s\n", rank, pwHashes->algo[0]->toString(getHash(pwHashes,0,i)));
     }
 }
 
@@ -46,6 +44,17 @@ static char** readLinesOfFile(MPI_File *in, int *linesFound) {
     sds *splittedString = sdssplitlen(fileBuffer, strlen(fileBuffer), seperator, strlen(seperator), linesFound);
     free(fileBuffer);
     return splittedString;
+}
+
+uchar* getHash(PasswordHashes *pwHashes, int threadID, int hashID){
+	uchar *beginPtr = pwHashes->hashes[threadID];
+        
+        if (hashID >= pwHashes->numHashes) {
+            DBG_ERR("hashID >= pwHashes->numHashes");
+            return NULL;
+        }
+
+	return beginPtr + hashID * pwHashes->algo[0]->hashSize;
 }
 
 PasswordHashes* generatePasswordHashes(MPI_File *in, unsigned int numThreads) {
@@ -83,7 +92,7 @@ PasswordHashes* generatePasswordHashes(MPI_File *in, unsigned int numThreads) {
 
     PasswordHashes *pwHashes = (PasswordHashes*) malloc(sizeof (PasswordHashes));
     pwHashes->numHashes = hashesFound;
-    pwHashes->hashes = (uchar**) malloc(sizeof (uchar*) * hashesFound);
+
     pwHashes->numThreads = numThreads;
 
     pwHashes->algo = (HashAlgorithm**) malloc(sizeof (HashAlgorithm*) * numThreads);
@@ -91,19 +100,32 @@ PasswordHashes* generatePasswordHashes(MPI_File *in, unsigned int numThreads) {
         pwHashes->algo[i] = createHashAlgorithm(lines[0]);
     }
 
+    pwHashes->hashes = (uchar**) malloc(sizeof (uchar*) * numThreads);
+
+    size_t hashArraySize = sizeof (uchar) * pwHashes->algo[0]->hashSize * hashesFound;
+	
+    for (i = 0; i < numThreads; i++) {
+        pwHashes->hashes[i] = (uchar*) malloc(hashArraySize);
+    }
+    
     pwHashes->hashBuffer = (uchar**) malloc(sizeof (uchar*) * numThreads);
+	
     for (i = 0; i < numThreads; i++) {
         pwHashes->hashBuffer[i] = (uchar*) malloc(sizeof (uchar) * pwHashes->algo[0]->hashSize);
     }
-
+	
     int j = 0;
 
     for (i = 1; i < linesFound; i++) {
         if (strcmp("", lines[i]) != 0) {
-            uchar *binaryHash = convertHashStringToBinary(pwHashes->algo[0], lines[i]);
-            pwHashes->hashes[j] = binaryHash;
+            uchar *binaryHash = getHash(pwHashes, 0, j);
+            convertHashStringToBinary(pwHashes->algo[0], lines[i], binaryHash);
             j++;
         }
+    }
+    
+    for (i = 1; i < numThreads; i++) {
+        memcpy(pwHashes->hashes[i], pwHashes->hashes[0], hashArraySize);
     }
 
     sdsfreesplitres(lines, linesFound);

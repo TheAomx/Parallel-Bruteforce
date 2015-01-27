@@ -40,6 +40,14 @@ extern "C" {
     };
     typedef struct PasswordHashes PasswordHashes;
 
+	/**
+     * Gets the hash of the hashID
+     * @param hashID
+     */
+	
+    uchar* getHash(PasswordHashes *pwHashes, int threadID, int hashID);
+
+
 
     /**
      * Print the array of hashes supplied.

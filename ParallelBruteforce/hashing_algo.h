@@ -126,7 +126,7 @@ extern "C" {
      * @param hashString
      * @return 
     */
-    uchar* convertHashStringToBinary(HashAlgorithm *algo, char *hashString);
+    uchar* convertHashStringToBinary(HashAlgorithm *algo, char *hashString, uchar *hashBinary);
 
 
 
