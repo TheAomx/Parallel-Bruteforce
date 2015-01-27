@@ -1,7 +1,7 @@
 #include "core_headers.h"
 
 void freePasswordHashes(PasswordHashes *pwHashes) {
-    int i = 0;
+    unsigned int i = 0;
 
 	free(pwHashes->hashes);
 
@@ -24,7 +24,7 @@ PasswordGenTask* createClientTask(int pwGenAlgoType, char* start, char* end) {
 };
 
 void printHashes(PasswordHashes *pwHashes, int rank) {
-    for (int i = 0; i < pwHashes->numHashes; i++) {
+    for (unsigned int i = 0; i < pwHashes->numHashes; i++) {
         printf("[%d] %s\n", rank, pwHashes->algo[0]->toString(getHash(pwHashes,0,i)));
     }
 }
@@ -46,7 +46,7 @@ static char** readLinesOfFile(MPI_File *in, int *linesFound) {
     return splittedString;
 }
 
-uchar* getHash(PasswordHashes *pwHashes, int threadID, int hashID){
+uchar* getHash(PasswordHashes *pwHashes, int threadID, unsigned int hashID){
 	uchar *beginPtr = pwHashes->hashes[threadID];
         
         if (hashID >= pwHashes->numHashes) {
@@ -58,10 +58,10 @@ uchar* getHash(PasswordHashes *pwHashes, int threadID, int hashID){
 }
 
 PasswordHashes* generatePasswordHashes(MPI_File *in, unsigned int numThreads) {
-    int linesFound = 0;
+    unsigned int linesFound = 0;
     sds *lines = readLinesOfFile(in, &linesFound);
     unsigned long hashesFound = 0;
-    int i;
+    unsigned int i;
 
     if (linesFound == 0) {
         DBG_ERR("linesFound == 0");

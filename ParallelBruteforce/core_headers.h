@@ -53,11 +53,7 @@ extern "C" {
 #endif
 
 
-    // Signed variables are for wimps 
-    typedef unsigned char uchar;
-    typedef unsigned int uint;
-    typedef unsigned long ulong;
-    typedef unsigned short ushort;
+#include "hash_types.h"
 
     /* System headers */
 #include <stdlib.h>
@@ -78,10 +74,6 @@ extern "C" {
 #include "openmp.h"
 #include "password_algo.h"
 #include "utils.h"
-#include "sha1.h"
-#include "sha256.h"
-#include "md5.h"
-#include "sha1_prop.h"
 #include "hashing_algo.h"
 #include "bruteforce.h"
 

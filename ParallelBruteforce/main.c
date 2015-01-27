@@ -29,7 +29,7 @@ void clearLock() {
 #endif
 
 int checkPassword(void *ctx, char *password) {
-    int i;
+    unsigned int i;
     PasswordHashes *pwHashes = (PasswordHashes*) ctx;
 
     int threadID = getThreadID();
@@ -50,7 +50,7 @@ int checkPassword(void *ctx, char *password) {
 }
 
 int checkPasswordObserved(void *ctx, char *password, hashFoundCallback ohHashFound) {
-    int i;
+    unsigned int i;
     PasswordHashes *pwHashes = (PasswordHashes*) ctx;
 
     int threadID = getThreadID();

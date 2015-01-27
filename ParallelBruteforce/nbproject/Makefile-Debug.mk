@@ -53,7 +53,7 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=-fopenmp
+CFLAGS=-fopenmp -Ofast -Wextra
 
 # CC Compiler Flags
 CCFLAGS=

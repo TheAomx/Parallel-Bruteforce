@@ -68,7 +68,7 @@
       <compileType>
         <cTool>
           <standard>3</standard>
-          <commandLine>-fopenmp</commandLine>
+          <commandLine>-fopenmp -Ofast -Wextra</commandLine>
         </cTool>
       </compileType>
       <item path="bruteforce.c" ex="false" tool="0" flavor2="0">

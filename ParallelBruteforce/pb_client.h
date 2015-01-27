@@ -45,7 +45,7 @@ extern "C" {
      * @param hashID
      */
 	
-    uchar* getHash(PasswordHashes *pwHashes, int threadID, int hashID);
+    uchar* getHash(PasswordHashes *pwHashes, int threadID, unsigned int hashID);
 
 
 

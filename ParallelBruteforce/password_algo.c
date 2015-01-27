@@ -97,10 +97,12 @@ void initializeGlobals(char* alphabet) {
 }
 
 void freeGlobals() {
-    if (alphabetMapping != NULL)
+    if (alphabetMapping != NULL) {
         free(alphabetMapping);
-    if (pregeneratedOffsets != NULL);
-    free(pregeneratedOffsets);
+    }
+    if (pregeneratedOffsets != NULL) {
+        free(pregeneratedOffsets);
+    }
 }
 
 /**
