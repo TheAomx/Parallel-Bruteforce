@@ -9,12 +9,24 @@
 #define	PB_CLIENT_H
 
 #include "core_headers.h"
-
+#include "uthash.h"
 
 #ifdef	__cplusplus
 extern "C" {
 #endif
 
+
+    /**
+     * Scructure representing an element of a hash list. The list is build up and searched using macros of "uthash.h"
+     */
+    struct HashTableEntry {
+    uchar* id; /* we'll use this field as the key */
+    uchar* hash;
+    UT_hash_handle handle; /* makes this structure hashable */
+};
+
+typedef struct HashTableEntry HashTableEntry;
+    
     /**
      * Structure containing a list of password hashes and the respecting hashing algorithm,
      *  which can be used to create such hashes.
@@ -37,7 +49,11 @@ extern "C" {
          * Array of hashes.
          */
         uchar **hashes;
+        
+        HashTableEntry** hashesHashTables;
     };
+    
+    
     typedef struct PasswordHashes PasswordHashes;
 
 	/**

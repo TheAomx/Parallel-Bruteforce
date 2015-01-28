@@ -7,9 +7,23 @@
         <developmentServer>localhost</developmentServer>
         <platform>2</platform>
       </toolsSet>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
-          <runcommandpicklistitem>sh'${OUTPUT_PATH}'</runcommandpicklistitem>
           <runcommandpicklistitem>sh -c "mpirun -np 10 --hostfile hosts '${OUTPUT_PATH}'"</runcommandpicklistitem>
           <runcommandpicklistitem>sh -c "mpirun -np 10 --hostfile hosts  '${OUTPUT_PATH}'"</runcommandpicklistitem>
           <runcommandpicklistitem>sh -c "mpirun -np 10 --hostfile hosts -nolocal --preload-binary   '${OUTPUT_PATH}'"</runcommandpicklistitem>
@@ -19,8 +33,9 @@
           <runcommandpicklistitem>sh -c "mpirun -np 1 '${OUTPUT_PATH}'"</runcommandpicklistitem>
           <runcommandpicklistitem>sh -c "mpirun -np 2 '${OUTPUT_PATH}' testHashesFileName"</runcommandpicklistitem>
           <runcommandpicklistitem>sh -c "mpirun -np 2 '${OUTPUT_PATH}'"</runcommandpicklistitem>
+          <runcommandpicklistitem>sh -c "mpirun -np 2 '${OUTPUT_PATH}' tbsha1"</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>sh -c "mpirun -np 2 '${OUTPUT_PATH}'"</runcommand>
+        <runcommand>sh -c "mpirun -np 2 '${OUTPUT_PATH}' tbsha1"</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>
@@ -34,13 +49,32 @@
         <developmentServer>localhost</developmentServer>
         <platform>2</platform>
       </toolsSet>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>sh -c "mpirun -np 10 --hostfile hosts -nolocal --preload-binary   '${OUTPUT_PATH}'"</runcommandpicklistitem>
           <runcommandpicklistitem>sh -c "mpirun -np 10 '${OUTPUT_PATH}'"</runcommandpicklistitem>
+          <runcommandpicklistitem>sh -c "mpirun -np 10 '${OUTPUT_PATH}' pbsha1"</runcommandpicklistitem>
+          <runcommandpicklistitem>sh -c "mpirun -np 2 '${OUTPUT_PATH}' pbsha1"</runcommandpicklistitem>
+          <runcommandpicklistitem>sh -c "mpirun -np 2 '${OUTPUT_PATH}'"</runcommandpicklistitem>
+          <runcommandpicklistitem>sh -c "mpirun -np 2 '${OUTPUT_PATH}' tbsha1"</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>sh -c "mpirun -np 10 '${OUTPUT_PATH}'"</runcommand>
+        <runcommand>sh -c "mpirun -np 2 '${OUTPUT_PATH}' tbsha1"</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>

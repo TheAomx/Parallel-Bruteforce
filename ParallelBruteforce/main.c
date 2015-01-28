@@ -28,27 +28,6 @@ void clearLock() {
 
 #endif
 
-int checkPassword(void *ctx, char *password) {
-    unsigned int i;
-    PasswordHashes *pwHashes = (PasswordHashes*) ctx;
-
-    int threadID = getThreadID();
-    uchar* hashBuffer = pwHashes->hashBuffer[threadID];
-    HashAlgorithm *algo = pwHashes->algo[threadID];
-
-    getHashFromString(algo, password, hashBuffer);
-
-    for (i = 0; i < pwHashes->numHashes; i++) {
-        uchar *checkedHash = getHash(pwHashes, threadID, i);
-        if (algo->equals(hashBuffer, checkedHash)) {
-            printf("The hash of %s was %s \n", password, algo->toString(checkedHash));
-            fflush(stdout);
-        }
-    }
-
-    return 0;
-}
-
 int checkPasswordObserved(void *ctx, char *password, hashFoundCallback ohHashFound) {
     unsigned int i;
     PasswordHashes *pwHashes = (PasswordHashes*) ctx;
@@ -58,8 +37,6 @@ int checkPasswordObserved(void *ctx, char *password, hashFoundCallback ohHashFou
     HashAlgorithm *algo = pwHashes->algo[threadID];
 
     getHashFromString(algo, password, hashBuffer);
-    
-    
 
     for (i = 0; i < pwHashes->numHashes; i++) {
         uchar *checkedHash = getHash(pwHashes, threadID, i);
@@ -89,6 +66,40 @@ void sendFoundPasswordAndHashToRoot(char* password, char* hash) {
     MPI_Send(&lenHash, 1, MPI_INT, 0, 4713, MPI_COMM_WORLD);
     MPI_Send(hash, lenHash, MPI_CHAR, 0, 4714, MPI_COMM_WORLD);
 
+}
+
+int checkPasswordObservedHashTable(void *ctx, char *password, hashFoundCallback ohHashFound) {
+    unsigned int i;
+    PasswordHashes *pwHashes = (PasswordHashes*) ctx;
+
+    int threadID = getThreadID();
+    uchar* hashBuffer = pwHashes->hashBuffer[threadID];
+    HashAlgorithm *algo = pwHashes->algo[threadID];
+    HashTableEntry** hashTables = pwHashes->hashesHashTables;
+    getHashFromString(algo, password, hashBuffer);
+
+    HashTableEntry *s;
+
+    HASH_FIND(handle, hashTables[threadID], hashBuffer, algo->hashSize, s);
+
+    if (s != NULL) {
+
+        char* hash = (char*) malloc(sizeof (char)*((algo->hashSize * 2) + 1));
+        uint idx;
+        for (idx = 0; idx < algo->hashSize; idx++) {
+            sprintf(hash + idx * 2, "%02x", s->hash[idx]);
+        }
+        hash[40] = '\0';
+#ifdef _OPENMP
+        omp_set_lock(lock);
+
+#endif
+        ohHashFound(password, hash);
+#ifdef _OPENMP
+        omp_unset_lock(lock);
+#endif
+    }
+    return 0;
 }
 
 int main(int argc, char** argv) {
@@ -196,18 +207,19 @@ int main(int argc, char** argv) {
             int hashLen;
             char* pwBuffer;
             char* hashBuffer;
-            printf("Waiting for cracked passwords!\n");
+            
 
             MPI_Recv(&pwLen, 1, MPI_INT, MPI_ANY_SOURCE, 4711, MPI_COMM_WORLD, &status);
-            pwBuffer = (char*) malloc(sizeof (char)*pwLen);
+            pwBuffer = (char*) malloc(sizeof (char)*(pwLen + 1));
             MPI_Recv(pwBuffer, pwLen, MPI_CHAR, status.MPI_SOURCE, 4712, MPI_COMM_WORLD, &status);
-
+            pwBuffer[pwLen] = '\0';
 
             MPI_Recv(&hashLen, 1, MPI_INT, status.MPI_SOURCE, 4713, MPI_COMM_WORLD, &status);
-            hashBuffer = (char*) malloc(sizeof (char)*hashLen);
+            hashBuffer = (char*) malloc(sizeof (char)*(hashLen + 1));
             MPI_Recv(hashBuffer, hashLen, MPI_CHAR, status.MPI_SOURCE, 4714, MPI_COMM_WORLD, &status);
 
-            printf("Password found: %s -> %s\n", pwBuffer, hashBuffer);
+            hashBuffer[hashLen] = '\0';
+            printf("Password found on client %d: %s -> %s\n", status.MPI_SOURCE, pwBuffer, hashBuffer);
             free(pwBuffer);
             free(hashBuffer);
 
@@ -274,7 +286,7 @@ int main(int argc, char** argv) {
         initLock();
 #endif
 
-        bruteforcePasswordTaskObserved(clientTaskInfo, pwHashes, checkPasswordObserved, sendFoundPasswordAndHashToRoot, passphraseBuffer);
+        bruteforcePasswordTaskObserved(clientTaskInfo, pwHashes, checkPasswordObservedHashTable, sendFoundPasswordAndHashToRoot, passphraseBuffer);
 #ifdef _OPENMP
         clearLock();
 #endif

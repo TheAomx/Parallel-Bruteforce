@@ -14,14 +14,14 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc
-CCC=g++
-CXX=g++
-FC=gfortran
+CC=mpicc
+CCC=mpic++
+CXX=mpic++
+FC=mpif90
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-Linux-x86
+CND_PLATFORM=OpenMPI-Linux-x86
 CND_DLIB_EXT=so
 CND_CONF=Release
 CND_DISTDIR=dist
@@ -53,7 +53,7 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=
+CFLAGS=-m64 -fopenmp -Ofast -Wextra
 
 # CC Compiler Flags
 CCFLAGS=
@@ -79,77 +79,77 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/parallelbruteforce: ${OBJECTFILES}
 ${OBJECTDIR}/bruteforce.o: bruteforce.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/bruteforce.o bruteforce.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/bruteforce.o bruteforce.c
 
 ${OBJECTDIR}/hashing_algo.o: hashing_algo.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/hashing_algo.o hashing_algo.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/hashing_algo.o hashing_algo.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
 
 ${OBJECTDIR}/md5.o: md5.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/md5.o md5.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/md5.o md5.c
 
 ${OBJECTDIR}/openmp.o: openmp.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/openmp.o openmp.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/openmp.o openmp.c
 
 ${OBJECTDIR}/password_algo.o: password_algo.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/password_algo.o password_algo.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/password_algo.o password_algo.c
 
 ${OBJECTDIR}/pb_client.o: pb_client.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pb_client.o pb_client.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pb_client.o pb_client.c
 
 ${OBJECTDIR}/pb_server.o: pb_server.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pb_server.o pb_server.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pb_server.o pb_server.c
 
 ${OBJECTDIR}/sds.o: sds.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sds.o sds.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sds.o sds.c
 
 ${OBJECTDIR}/sha1.o: sha1.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1.o sha1.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1.o sha1.c
 
 ${OBJECTDIR}/sha1_prop.o: sha1_prop.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1_prop.o sha1_prop.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1_prop.o sha1_prop.c
 
 ${OBJECTDIR}/sha2.o: sha2.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha2.o sha2.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha2.o sha2.c
 
 ${OBJECTDIR}/sha256.o: sha256.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha256.o sha256.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha256.o sha256.c
 
 ${OBJECTDIR}/sph_md5.o: sph_md5.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sph_md5.o sph_md5.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sph_md5.o sph_md5.c
 
 ${OBJECTDIR}/utils.o: utils.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/utils.o utils.c
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/utils.o utils.c
 
 # Subprojects
 .build-subprojects:
