@@ -1,5 +1,24 @@
 var searchData=
 [
-  ['bruteforcepasswordtask',['bruteforcePasswordTask',['../bruteforce_8c.html#a95c8fae318202ba28010825e96b3f73e',1,'bruteforcePasswordTask(PasswordGenTask *taskInfo, void *ctx, bruteforceCallback callback, char **passphraseBuffer):&#160;bruteforce.c'],['../bruteforce_8h.html#a95c8fae318202ba28010825e96b3f73e',1,'bruteforcePasswordTask(PasswordGenTask *taskInfo, void *ctx, bruteforceCallback callback, char **passphraseBuffer):&#160;bruteforce.c']]],
-  ['bruteforcepasswordtaskobserved',['bruteforcePasswordTaskObserved',['../bruteforce_8c.html#ac9c6f16d6ca726bfe52cd9c928be1387',1,'bruteforcePasswordTaskObserved(PasswordGenTask *taskInfo, void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer):&#160;bruteforce.c'],['../bruteforce_8h.html#ac9c6f16d6ca726bfe52cd9c928be1387',1,'bruteforcePasswordTaskObserved(PasswordGenTask *taskInfo, void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer):&#160;bruteforce.c']]]
+  ['sph_5fdec32be',['sph_dec32be',['../sph__types_8h.html#ac499dfa59338f9b0cdc6b401cbb968f2',1,'sph_types.h']]],
+  ['sph_5fdec32be_5faligned',['sph_dec32be_aligned',['../sph__types_8h.html#acbdf3e1e685a97b4964e5f172826fa79',1,'sph_types.h']]],
+  ['sph_5fdec32le',['sph_dec32le',['../sph__types_8h.html#a33b1d5331599e6c8926ba65bd03a1ec2',1,'sph_types.h']]],
+  ['sph_5fdec32le_5faligned',['sph_dec32le_aligned',['../sph__types_8h.html#aa552d4f0546f0147dc7aa114dfdc534f',1,'sph_types.h']]],
+  ['sph_5fenc32be',['sph_enc32be',['../sph__types_8h.html#a51f88dff3875a71fc9f6367f8a27ea73',1,'sph_types.h']]],
+  ['sph_5fenc32be_5faligned',['sph_enc32be_aligned',['../sph__types_8h.html#a087f0c922e83b6824a8eb2824c77a4aa',1,'sph_types.h']]],
+  ['sph_5fenc32le',['sph_enc32le',['../sph__types_8h.html#ac2371b8cc05f7846094fb25d2ef48364',1,'sph_types.h']]],
+  ['sph_5fenc32le_5faligned',['sph_enc32le_aligned',['../sph__types_8h.html#a622c02de136645c8c9baa61384d5db24',1,'sph_types.h']]],
+  ['sph_5fmd5',['sph_md5',['../sph__md5_8h.html#ad9574afdd7e5032e5f35822cb2352c30',1,'sph_md5.h']]],
+  ['sph_5fmd5_5faddbits_5fand_5fclose',['sph_md5_addbits_and_close',['../sph__md5_8h.html#aefa81f2ecc87355d7b62be132869068a',1,'sph_md5.c']]],
+  ['sph_5fmd5_5fclose',['sph_md5_close',['../sph__md5_8h.html#a20c7fe2207a2227e35777f656f47b601',1,'sph_md5.c']]],
+  ['sph_5fmd5_5fcomp',['sph_md5_comp',['../sph__md5_8h.html#a608c1a417a80bb035440dcc54a3cb4e7',1,'sph_md5.c']]],
+  ['sph_5fmd5_5finit',['sph_md5_init',['../sph__md5_8h.html#a11c804956989a231a726520b7f032bcb',1,'sph_md5.c']]],
+  ['sph_5fsha224',['sph_sha224',['../sph__sha2_8h.html#a540571a6342007b0210cbbcf8e456772',1,'sph_sha2.h']]],
+  ['sph_5fsha224_5faddbits_5fand_5fclose',['sph_sha224_addbits_and_close',['../sph__sha2_8h.html#a04f692701cc168c67912446bf6f7d021',1,'sha2.c']]],
+  ['sph_5fsha224_5fclose',['sph_sha224_close',['../sph__sha2_8h.html#a3e665e1086f936f8a3f188858a0ab6c6',1,'sha2.c']]],
+  ['sph_5fsha224_5fcomp',['sph_sha224_comp',['../sph__sha2_8h.html#aea62252fc83575b4985b25d3db2524d5',1,'sha2.c']]],
+  ['sph_5fsha224_5finit',['sph_sha224_init',['../sph__sha2_8h.html#a1649d37a216ae9b1f96712766371aecf',1,'sha2.c']]],
+  ['sph_5fsha256_5faddbits_5fand_5fclose',['sph_sha256_addbits_and_close',['../sph__sha2_8h.html#af861bfe37005e917ab09573ae0d3f2e5',1,'sha2.c']]],
+  ['sph_5fsha256_5fclose',['sph_sha256_close',['../sph__sha2_8h.html#a265fc523c5622b2d90eb9cc3fbadecd7',1,'sha2.c']]],
+  ['sph_5fsha256_5finit',['sph_sha256_init',['../sph__sha2_8h.html#a36cc20d50952638b7055d8d3a4bb86e6',1,'sha2.c']]]
 ];

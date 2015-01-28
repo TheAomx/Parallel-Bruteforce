@@ -70,6 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li class="current"><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -92,7 +93,7 @@ $(document).ready(function(){initNavTree('files.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -112,29 +113,38 @@ $(document).ready(function(){initNavTree('files.html','');});
 <tr id="row_1_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="bruteforce_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>bruteforce.c</b></td><td class="desc"></td></tr>
 <tr id="row_2_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="bruteforce_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>bruteforce.h</b></td><td class="desc"></td></tr>
 <tr id="row_3_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="core__headers_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>core_headers.h</b></td><td class="desc"></td></tr>
-<tr id="row_4_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="hashing__algo_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>hashing_algo.c</b></td><td class="desc"></td></tr>
-<tr id="row_5_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="hashing__algo_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>hashing_algo.h</b></td><td class="desc"></td></tr>
-<tr id="row_6_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="main_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>main.c</b></td><td class="desc"></td></tr>
-<tr id="row_7_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="md5_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>md5.c</b></td><td class="desc"></td></tr>
-<tr id="row_8_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="md5_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>md5.h</b></td><td class="desc"></td></tr>
-<tr id="row_9_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="openmp_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>openmp.c</b></td><td class="desc"></td></tr>
-<tr id="row_10_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="openmp_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>openmp.h</b></td><td class="desc"></td></tr>
-<tr id="row_11_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="password__algo_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>password_algo.c</b></td><td class="desc"></td></tr>
-<tr id="row_12_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="password__algo_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>password_algo.h</b></td><td class="desc"></td></tr>
-<tr id="row_13_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="pb__client_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>pb_client.c</b></td><td class="desc"></td></tr>
-<tr id="row_14_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="pb__client_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>pb_client.h</b></td><td class="desc"></td></tr>
-<tr id="row_15_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="pb__server_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>pb_server.c</b></td><td class="desc"></td></tr>
-<tr id="row_16_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="pb__server_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>pb_server.h</b></td><td class="desc"></td></tr>
-<tr id="row_17_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sds_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sds.c</b></td><td class="desc"></td></tr>
-<tr id="row_18_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sds_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sds.h</b></td><td class="desc"></td></tr>
-<tr id="row_19_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha1_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha1.c</b></td><td class="desc"></td></tr>
-<tr id="row_20_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha1_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha1.h</b></td><td class="desc"></td></tr>
-<tr id="row_21_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha1__prop_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha1_prop.c</b></td><td class="desc"></td></tr>
-<tr id="row_22_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha1__prop_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha1_prop.h</b></td><td class="desc"></td></tr>
-<tr id="row_23_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha256_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha256.c</b></td><td class="desc"></td></tr>
-<tr id="row_24_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha256_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha256.h</b></td><td class="desc"></td></tr>
-<tr id="row_25_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="utils_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>utils.c</b></td><td class="desc"></td></tr>
-<tr id="row_26_" class="even"><td class="entry"><img src="ftv2lastnode.png" alt="\" width="16" height="22" /><a href="utils_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>utils.h</b></td><td class="desc"></td></tr>
+<tr id="row_4_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="hash__types_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>hash_types.h</b></td><td class="desc"></td></tr>
+<tr id="row_5_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="hashing__algo_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>hashing_algo.c</b></td><td class="desc"></td></tr>
+<tr id="row_6_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="hashing__algo_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>hashing_algo.h</b></td><td class="desc"></td></tr>
+<tr id="row_7_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="main_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>main.c</b></td><td class="desc"></td></tr>
+<tr id="row_8_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="md5_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>md5.c</b></td><td class="desc"></td></tr>
+<tr id="row_9_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="md5_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>md5.h</b></td><td class="desc"></td></tr>
+<tr id="row_10_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="md__helper_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>md_helper.c</b></td><td class="desc"></td></tr>
+<tr id="row_11_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="openmp_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>openmp.c</b></td><td class="desc"></td></tr>
+<tr id="row_12_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="openmp_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>openmp.h</b></td><td class="desc"></td></tr>
+<tr id="row_13_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="password__algo_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>password_algo.c</b></td><td class="desc"></td></tr>
+<tr id="row_14_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="password__algo_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>password_algo.h</b></td><td class="desc"></td></tr>
+<tr id="row_15_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="pb__client_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>pb_client.c</b></td><td class="desc"></td></tr>
+<tr id="row_16_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="pb__client_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>pb_client.h</b></td><td class="desc"></td></tr>
+<tr id="row_17_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="pb__server_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>pb_server.c</b></td><td class="desc"></td></tr>
+<tr id="row_18_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="pb__server_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>pb_server.h</b></td><td class="desc"></td></tr>
+<tr id="row_19_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sds_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sds.c</b></td><td class="desc"></td></tr>
+<tr id="row_20_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sds_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sds.h</b></td><td class="desc"></td></tr>
+<tr id="row_21_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha1_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha1.c</b></td><td class="desc"></td></tr>
+<tr id="row_22_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha1_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha1.h</b></td><td class="desc"></td></tr>
+<tr id="row_23_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha1__prop_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha1_prop.c</b></td><td class="desc"></td></tr>
+<tr id="row_24_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha1__prop_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha1_prop.h</b></td><td class="desc"></td></tr>
+<tr id="row_25_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha1__prop__splashtop_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha1_prop_splashtop.c</b></td><td class="desc"></td></tr>
+<tr id="row_26_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha2_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha2.c</b></td><td class="desc"></td></tr>
+<tr id="row_27_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha256_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha256.c</b></td><td class="desc"></td></tr>
+<tr id="row_28_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sha256_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sha256.h</b></td><td class="desc"></td></tr>
+<tr id="row_29_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sph__md5_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>sph_md5.c</b></td><td class="desc"></td></tr>
+<tr id="row_30_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sph__md5_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="sph__md5_8h.html" target="_self">sph_md5.h</a></td><td class="desc"></td></tr>
+<tr id="row_31_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sph__sha2_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="sph__sha2_8h.html" target="_self">sph_sha2.h</a></td><td class="desc"></td></tr>
+<tr id="row_32_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="sph__types_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><a class="el" href="sph__types_8h.html" target="_self">sph_types.h</a></td><td class="desc"></td></tr>
+<tr id="row_33_"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="uthash_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>uthash.h</b></td><td class="desc"></td></tr>
+<tr id="row_34_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><a href="utils_8c_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>utils.c</b></td><td class="desc"></td></tr>
+<tr id="row_35_"><td class="entry"><img src="ftv2lastnode.png" alt="\" width="16" height="22" /><a href="utils_8h_source.html"><img src="ftv2doc.png" alt="*" width="24" height="22" /></a><b>utils.h</b></td><td class="desc"></td></tr>
 </table>
 </div><!-- directory -->
 </div><!-- contents -->
@@ -142,7 +152,7 @@ $(document).ready(function(){initNavTree('files.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Jan 26 2015 01:02:08 for Parallel Bruteforce by
+    <li class="footer">Generated on Wed Jan 28 2015 20:04:16 for Parallel Bruteforce by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

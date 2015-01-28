@@ -70,6 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -92,7 +93,7 @@ $(document).ready(function(){initNavTree('sha256_8h_source.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -116,29 +117,31 @@ $(document).ready(function(){initNavTree('sha256_8h_source.html','');});
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef __SHA256_H</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __SHA256_H</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#define SHA256_SIZE 32</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="struct_s_h_a256___c_t_x.html">   16</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    uchar data[64];</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    uint datalen;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    uint bitlen[2];</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    uint state[8];</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;} <a class="code" href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a>;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keywordtype">char</span>* sha256_toString(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> hash[]);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keywordtype">int</span> sha256_equal(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> hash1[], <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> hash2[]);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">void</span> sha256_init(<span class="keywordtype">void</span> *context);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">void</span> sha256_update(<span class="keywordtype">void</span> *context, uchar data[], uint len);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keywordtype">void</span> sha256_final(<span class="keywordtype">void</span> *context, uchar hash[]);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="struct_s_h_a256___c_t_x_html"><div class="ttname"><a href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a></div><div class="ttdef"><b>Definition:</b> <a href="sha256_8h_source.html#l00016">sha256.h:16</a></div></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;hash_types.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#define SHA256_SIZE 32</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="struct_s_h_a256___c_t_x.html">   15</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    uchar data[64];</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    uint datalen;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    uint bitlen[2];</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    uint state[8];</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;} <a class="code" href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a>;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keywordtype">char</span>* sha256_toString(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> hash[]);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keywordtype">int</span> sha256_equal(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> hash1[], <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> hash2[]);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keywordtype">void</span> sha256_init(<span class="keywordtype">void</span> *context);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">void</span> sha256_update(<span class="keywordtype">void</span> *context, uchar data[], uint len);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">void</span> sha256_final(<span class="keywordtype">void</span> *context, uchar hash[]);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="struct_s_h_a256___c_t_x_html"><div class="ttname"><a href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a></div><div class="ttdef"><b>Definition:</b> <a href="sha256_8h_source.html#l00015">sha256.h:15</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>sha256.h</b></li>
-    <li class="footer">Generated on Mon Jan 26 2015 01:02:08 for Parallel Bruteforce by
+    <li class="footer">Generated on Wed Jan 28 2015 20:04:16 for Parallel Bruteforce by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

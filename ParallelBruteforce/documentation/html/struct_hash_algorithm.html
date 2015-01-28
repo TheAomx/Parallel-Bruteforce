@@ -94,7 +94,7 @@ $(document).ready(function(){initNavTree('struct_hash_algorithm.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -135,7 +135,7 @@ Data Fields</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Encapsulates calculation, comparison and conversion of password hashes. </p>
 
-<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00035">35</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
+<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00036">36</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
 </div><h2 class="groupheader">Field Documentation</h2>
 <a class="anchor" id="a1f6d09b30c54854dfca659b7463ac207"></a>
 <div class="memitem">
@@ -148,7 +148,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>The hashing context used by the hashing functions. </p>
 
-<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00043">43</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
+<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00044">44</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
 
 </div>
 </div>
@@ -161,9 +161,9 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Callback for checking hash equality. </p>
+<p>Callback for checking hash equality. returns 1, if two hashes are equal. 0 if not. </p>
 
-<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00055">55</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
+<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00057">57</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
 
 </div>
 </div>
@@ -178,7 +178,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Callback for hash finalizing function. -&gt; this function will create the resulting hash. </p>
 
-<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00067">67</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
+<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00069">69</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
 
 </div>
 </div>
@@ -191,9 +191,9 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The size if hashes the algorithm will create. </p>
+<p>The size from the hashes in bytes the algorithm will create. </p>
 
-<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00047">47</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
+<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00048">48</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
 
 </div>
 </div>
@@ -208,7 +208,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>The type of algorithm implemented by this. </p>
 
-<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00039">39</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
+<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00040">40</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
 
 </div>
 </div>
@@ -221,9 +221,9 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Callback for initialization. </p>
+<p>Callback for initialization of hash context structure. </p>
 
-<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00059">59</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
+<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00061">61</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
 
 </div>
 </div>
@@ -238,7 +238,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Callback to convert hash to string. </p>
 
-<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00051">51</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
+<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00052">52</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
 
 </div>
 </div>
@@ -253,7 +253,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Callback for hash update function. </p>
 
-<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00063">63</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
+<p>Definition at line <a class="el" href="hashing__algo_8h_source.html#l00065">65</a> of file <a class="el" href="hashing__algo_8h_source.html">hashing_algo.h</a>.</p>
 
 </div>
 </div>
@@ -266,7 +266,7 @@ Data Fields</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="struct_hash_algorithm.html">HashAlgorithm</a></li>
-    <li class="footer">Generated on Mon Jan 26 2015 01:02:08 for Parallel Bruteforce by
+    <li class="footer">Generated on Wed Jan 28 2015 20:04:16 for Parallel Bruteforce by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>
