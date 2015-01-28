@@ -32,15 +32,15 @@ static void initHashTablesForThreads(PasswordHashes* hashes) {
             uchar *checkedHash = (uchar*) getHash(hashes, i, j);
 
             HashTableEntry* newEntry = (HashTableEntry*) malloc(sizeof (HashTableEntry));
-            newEntry->hash = (uchar*) malloc(sizeof (char) * hashSize + 1);
-            memcpy(newEntry->hash, checkedHash, sizeof (uchar) * hashSize + 1);
-            newEntry->id = (uchar*) malloc(sizeof (uchar) * hashSize + 1);
+            newEntry->hash = (uchar*) malloc(sizeof (uchar) * hashSize);
+            memcpy(newEntry->hash, checkedHash, sizeof (uchar) * hashSize);
 
-            memcpy(newEntry->id, checkedHash, sizeof (uchar) * hashSize + 1);
+            newEntry->id = (uchar*) malloc(sizeof (uchar) * hashSize);
+            memcpy(newEntry->id, checkedHash, sizeof (uchar) * hashSize);
 
             
             HASH_FIND(handle, currentRoot, checkedHash, algo->hashSize, checkEntry);
-            if (checkEntry == NULL)
+            if (checkEntry != NULL)
                 continue;
 
             HASH_ADD_KEYPTR(handle, currentRoot, newEntry->id, hashSize, newEntry);
