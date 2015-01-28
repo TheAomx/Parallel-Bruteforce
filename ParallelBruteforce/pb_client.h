@@ -20,10 +20,10 @@ extern "C" {
      * Scructure representing an element of a hash list. The list is build up and searched using macros of "uthash.h"
      */
     struct HashTableEntry {
-    uchar* id; /* we'll use this field as the key */
-    uchar* hash;
-    UT_hash_handle handle; /* makes this structure hashable */
-};
+        uchar* id; /* we'll use this field as the key */
+        uchar* hash;
+        UT_hash_handle handle; /* makes this structure hashable */
+    };
 
 typedef struct HashTableEntry HashTableEntry;
     

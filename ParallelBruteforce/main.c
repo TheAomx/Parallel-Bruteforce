@@ -83,16 +83,11 @@ int checkPasswordObservedHashTable(void *ctx, char *password, hashFoundCallback 
     HASH_FIND(handle, hashTables[threadID], hashBuffer, algo->hashSize, s);
 
     if (s != NULL) {
-
-        char* hash = (char*) malloc(sizeof (char)*((algo->hashSize * 2) + 1));
-        uint idx;
-        for (idx = 0; idx < algo->hashSize; idx++) {
-            sprintf(hash + idx * 2, "%02x", s->hash[idx]);
-        }
-        hash[40] = '\0';
 #ifdef _OPENMP
         omp_set_lock(lock);
-
+        char *hash = algo->toString(s->hash);
+#else
+        char *hash = algo->toString(s->hash);
 #endif
         ohHashFound(password, hash);
 #ifdef _OPENMP
