@@ -9,7 +9,7 @@
 
 #include "core_headers.h"
 
-#if 1
+#if 0
 
 
 #ifdef _OPENMP
@@ -321,6 +321,27 @@ int main(int argc, char** argv) {
 
     return 0;
 }
+#endif
+
+#if 1
+
+int main (int argc, char **argv) {
+    char *alphabet = "abcd";
+    //char *alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    PasswordGenerationContext* context = createDefaultContextWithAlphabet(alphabet);
+    initializeGlobals(alphabet);
+    ulong numpass= context->passwordDiff("a","ddd");
+    char result[MAX_PASSWORD];
+    memset(result, 0, MAX_PASSWORD);
+    DBG_OK("need to check %lu pws!", numpass);
+#if 1
+    for(ulong i =0; i<numpass+1;i++){
+        context->passwordAt(i,result);
+        printf("%s\n",result);
+    }
+#endif
+}
+
 #endif
 
 #if 0

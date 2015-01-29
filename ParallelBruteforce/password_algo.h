@@ -186,6 +186,7 @@ extern "C" {
      */
     PasswordGenTask* createClientTask(int pwGenAlgoType, char* start, char* end);
 
+    PasswordGenerationContext* createDefaultContextWithAlphabet(char* alphabet);
 
     /**
      * Create a user defined password generation context.
