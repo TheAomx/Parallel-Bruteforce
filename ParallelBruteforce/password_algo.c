@@ -339,12 +339,6 @@ static inline int getPasswordLength(ulong passwordIndex) {
     return passwordLength;
 }
 
-
-/* is true for example a, aa, aaa, if the alphabet is "abcdef", which means the first pw in the alphabet in the current pwLength*/
-static inline int isFirstPasswordInCurrentLength(ulong passwordIndex, int passwordLength) {
-    return passwordIndex == pregeneratedOffsets[passwordLength];
-}
-
 void getPasswordAt(ulong passwordIndex, char* result) {
     Mapping *map = alphabetMapping;
     int i = 0;
