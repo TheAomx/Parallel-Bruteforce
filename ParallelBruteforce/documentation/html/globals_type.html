@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>ParallelBruteforce: File Members</title>
+<title>Parallel Bruteforce: Globals</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -28,10 +28,12 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="ApplicationIconSmall.png"/></td>
   <td style="padding-left: 0.5em;">
-   <div id="projectname">ParallelBruteforce
-   &#160;<span id="projectnumber">1.0</span>
+   <div id="projectname">Parallel Bruteforce
+   &#160;<span id="projectnumber">1.0.FINAL</span>
    </div>
+   <div id="projectbrief">Program using OpenMPI and OpenMP to perform disturbed and parallel brute force hashing attack.</div>
   </td>
  </tr>
  </tbody>
@@ -45,7 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="annotated.html"><span>Classes</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -68,17 +70,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li class="current"><a href="globals.html"><span>File&#160;Members</span></a></li>
+      <li class="current"><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
   <div id="navrow3" class="tabs2">
     <ul class="tablist">
       <li><a href="globals.html"><span>All</span></a></li>
       <li><a href="globals_func.html"><span>Functions</span></a></li>
-      <li><a href="globals_vars.html"><span>Variables</span></a></li>
       <li class="current"><a href="globals_type.html"><span>Typedefs</span></a></li>
-      <li><a href="globals_enum.html"><span>Enumerations</span></a></li>
-      <li><a href="globals_eval.html"><span>Enumerator</span></a></li>
       <li><a href="globals_defs.html"><span>Macros</span></a></li>
     </ul>
   </div>
@@ -102,7 +101,7 @@ $(document).ready(function(){initNavTree('globals_type.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -113,95 +112,8 @@ $(document).ready(function(){initNavTree('globals_type.html','');});
 
 <div class="contents">
 &#160;<ul>
-<li>bruteforceCallback
-: <a class="el" href="bruteforce_8h.html#ab4d0cb9b5e791a2468d16da8358ddf44">bruteforce.h</a>
-</li>
-<li>bruteforceCallbackObserved
-: <a class="el" href="bruteforce_8h.html#a7457cd6dae8b617d13793034cf78db1e">bruteforce.h</a>
-</li>
-<li>ClientTask
-: <a class="el" href="pb__server_8h.html#a928e511739ca8f3137b21ffabf27e923">pb_server.h</a>
-</li>
-<li>FileReader
-: <a class="el" href="utils_8h.html#acf3a713782dc1f05bd1907e5fc9a4a43">utils.h</a>
-</li>
-<li>hash_equals_fct
-: <a class="el" href="hashing__algo_8h.html#a54fc2c232f315fb0db61960c18e89ed6">hashing_algo.h</a>
-</li>
-<li>hash_final_fct
-: <a class="el" href="hashing__algo_8h.html#a1ad2e6b1cc979aeb5b396337a11a9a4c">hashing_algo.h</a>
-</li>
-<li>hash_init_fct
-: <a class="el" href="hashing__algo_8h.html#a9f71c9bd7bcc79e0c6edb75990cde7e6">hashing_algo.h</a>
-</li>
-<li>hash_len
-: <a class="el" href="hashing__algo_8h.html#a04048cfaa7240fc2853e2cd866425164">hashing_algo.h</a>
-</li>
-<li>hash_toString_fct
-: <a class="el" href="hashing__algo_8h.html#a4a04f1ab6a1138ec46df0642e35ece46">hashing_algo.h</a>
-</li>
-<li>hash_update_fct
-: <a class="el" href="hashing__algo_8h.html#ac0eb08d168576735b24109837e2f97bd">hashing_algo.h</a>
-</li>
-<li>HashAlgorithm
-: <a class="el" href="hashing__algo_8h.html#a0166d960a59c1a671a2b04d5d3ac405c">hashing_algo.h</a>
-</li>
-<li>hashFoundCallback
-: <a class="el" href="bruteforce_8h.html#a64edf51d293fd41dd2eb9cef6f2fd17a">bruteforce.h</a>
-</li>
-<li>Mapping
-: <a class="el" href="password__algo_8h.html#a43f3608366857174aac080a3b6a85ea1">password_algo.h</a>
-</li>
-<li>PasswordAbsDiffCallback
-: <a class="el" href="password__algo_8h.html#a7e18353d88460051db273708d3df9e8e">password_algo.h</a>
-</li>
-<li>PasswordAtIndexCallback
-: <a class="el" href="password__algo_8h.html#ab6ed4a3718b37f438f52b3efeeb888f8">password_algo.h</a>
-</li>
-<li>PasswordAtRelativeIndexCallback
-: <a class="el" href="password__algo_8h.html#a1f8809b22377a599a2ac3acdb037b0b5">password_algo.h</a>
-</li>
-<li>PasswordCountCallback
-: <a class="el" href="password__algo_8h.html#a730e9c872b42811183dcfa182877633f">password_algo.h</a>
-</li>
-<li>PasswordDataFreeCallback
-: <a class="el" href="password__algo_8h.html#a1046902ac2ab2ec4f8d6ce08c7ef3aee">password_algo.h</a>
-</li>
-<li>PasswordDataInitCallback
-: <a class="el" href="password__algo_8h.html#a99b21e598916bc7a8a7103262ba1710a">password_algo.h</a>
-</li>
-<li>PasswordGenerationContext
-: <a class="el" href="password__algo_8h.html#a8beb05556711704994678545c74e6d8e">password_algo.h</a>
-</li>
-<li>PasswordGenTask
-: <a class="el" href="password__algo_8h.html#ace6f6871743abf69ee28155d315d53d3">password_algo.h</a>
-</li>
-<li>PasswordHashes
-: <a class="el" href="pb__client_8h.html#a9ab5c0ebf44da2ec6ba7283a84654be4">pb_client.h</a>
-</li>
-<li>PasswordValueCallback
-: <a class="el" href="password__algo_8h.html#aa2dca09d5618b86e01b67161d1b0df44">password_algo.h</a>
-</li>
-<li>PwGenAlgoType
-: <a class="el" href="password__algo_8h.html#a6b0d24fd53b0e1c364fb34a4262a2dcb">password_algo.h</a>
-</li>
-<li>sds
-: <a class="el" href="sds_8h.html#ad69abac3df4532879db9642c95f5ef6f">sds.h</a>
-</li>
-<li>ServerContext
-: <a class="el" href="pb__server_8h.html#a2d485602b6c36f41981502a4f7d2ad7b">pb_server.h</a>
-</li>
-<li>uchar
-: <a class="el" href="core__headers_8h.html#a65f85814a8290f9797005d3b28e7e5fc">core_headers.h</a>
-</li>
-<li>uint
-: <a class="el" href="core__headers_8h.html#a91ad9478d81a7aaf2593e8d9c3d06a14">core_headers.h</a>
-</li>
-<li>ulong
-: <a class="el" href="core__headers_8h.html#a718b4eb2652c286f4d42dc18a8e71a1a">core_headers.h</a>
-</li>
-<li>ushort
-: <a class="el" href="core__headers_8h.html#ab95f123a6c9bcfee6a343170ef8c5f69">core_headers.h</a>
+<li>sph_sha256_context
+: <a class="el" href="sph__sha2_8h.html#a2f3807c484f9d9458294ac49c8167ae2">sph_sha2.h</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -209,7 +121,7 @@ $(document).ready(function(){initNavTree('globals_type.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Jan 25 2015 20:23:40 for ParallelBruteforce by
+    <li class="footer">Generated on Wed Jan 28 2015 20:04:16 for Parallel Bruteforce by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

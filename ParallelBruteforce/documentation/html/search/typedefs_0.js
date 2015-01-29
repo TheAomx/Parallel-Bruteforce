@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['bruteforcecallback',['bruteforceCallback',['../bruteforce_8h.html#ab4d0cb9b5e791a2468d16da8358ddf44',1,'bruteforce.h']]],
-  ['bruteforcecallbackobserved',['bruteforceCallbackObserved',['../bruteforce_8h.html#a7457cd6dae8b617d13793034cf78db1e',1,'bruteforce.h']]]
+  ['sph_5fsha256_5fcontext',['sph_sha256_context',['../sph__sha2_8h.html#a2f3807c484f9d9458294ac49c8167ae2',1,'sph_sha2.h']]]
 ];

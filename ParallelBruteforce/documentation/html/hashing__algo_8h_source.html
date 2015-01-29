@@ -70,6 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -92,7 +93,7 @@ $(document).ready(function(){initNavTree('hashing__algo_8h_source.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -120,7 +121,7 @@ $(document).ready(function(){initNavTree('hashing__algo_8h_source.html','');});
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;core_headers.h&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;hash_types.h&quot;</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">enum</span> HashTypes {</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        SHA1, SHA256, MD5</div>
@@ -133,55 +134,59 @@ $(document).ready(function(){initNavTree('hashing__algo_8h_source.html','');});
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">typedef</span> void (*hash_final_fct)(<span class="keywordtype">void</span> *ctx, uchar hash[]);</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">typedef</span> int (*hash_len)(<span class="keywordtype">void</span> *ctx);</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html">   35</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> {</div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#a433eb2ec88b771fb8d6b9dccff780534">   39</a></span>&#160;        <span class="keyword">enum</span> HashTypes <a class="code" href="struct_hash_algorithm.html#a433eb2ec88b771fb8d6b9dccff780534">hashType</a>;</div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#a1f6d09b30c54854dfca659b7463ac207">   43</a></span>&#160;        <span class="keywordtype">void</span> *<a class="code" href="struct_hash_algorithm.html#a1f6d09b30c54854dfca659b7463ac207">ctx</a>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#a10ecfcbd16c4b1ac928fed85fe09defe">   47</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="struct_hash_algorithm.html#a10ecfcbd16c4b1ac928fed85fe09defe">hashSize</a>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#ad05fabc69d3c52fc1d13389dae798457">   51</a></span>&#160;        hash_toString_fct <a class="code" href="struct_hash_algorithm.html#ad05fabc69d3c52fc1d13389dae798457">toString</a>;</div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#a2cf9bcb357b856e4312358cce3627a9b">   55</a></span>&#160;        hash_equals_fct <a class="code" href="struct_hash_algorithm.html#a2cf9bcb357b856e4312358cce3627a9b">equals</a>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#a2d1908c6a68596e566e41abc9bb35ebd">   59</a></span>&#160;        hash_init_fct <a class="code" href="struct_hash_algorithm.html#a2d1908c6a68596e566e41abc9bb35ebd">init</a>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#aabb92e4b97bc21c16c31c924facb17a8">   63</a></span>&#160;        hash_update_fct <a class="code" href="struct_hash_algorithm.html#aabb92e4b97bc21c16c31c924facb17a8">update</a>;</div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#a9e7eb7621b9d2a0023370a31453debc8">   67</a></span>&#160;        hash_final_fct <span class="keyword">final</span>;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    };</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> <a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a>;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html">   36</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> {</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#a433eb2ec88b771fb8d6b9dccff780534">   40</a></span>&#160;        <span class="keyword">enum</span> HashTypes <a class="code" href="struct_hash_algorithm.html#a433eb2ec88b771fb8d6b9dccff780534">hashType</a>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#a1f6d09b30c54854dfca659b7463ac207">   44</a></span>&#160;        <span class="keywordtype">void</span> *<a class="code" href="struct_hash_algorithm.html#a1f6d09b30c54854dfca659b7463ac207">ctx</a>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#a10ecfcbd16c4b1ac928fed85fe09defe">   48</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="struct_hash_algorithm.html#a10ecfcbd16c4b1ac928fed85fe09defe">hashSize</a>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#ad05fabc69d3c52fc1d13389dae798457">   52</a></span>&#160;        hash_toString_fct <a class="code" href="struct_hash_algorithm.html#ad05fabc69d3c52fc1d13389dae798457">toString</a>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#a2cf9bcb357b856e4312358cce3627a9b">   57</a></span>&#160;        hash_equals_fct <a class="code" href="struct_hash_algorithm.html#a2cf9bcb357b856e4312358cce3627a9b">equals</a>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#a2d1908c6a68596e566e41abc9bb35ebd">   61</a></span>&#160;        hash_init_fct <a class="code" href="struct_hash_algorithm.html#a2d1908c6a68596e566e41abc9bb35ebd">init</a>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#aabb92e4b97bc21c16c31c924facb17a8">   65</a></span>&#160;        hash_update_fct <a class="code" href="struct_hash_algorithm.html#aabb92e4b97bc21c16c31c924facb17a8">update</a>;</div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="struct_hash_algorithm.html#a9e7eb7621b9d2a0023370a31453debc8">   69</a></span>&#160;        hash_final_fct <span class="keyword">final</span>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    };</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">int</span> isSupportedHashAlgorithm(<span class="keywordtype">char</span> *line) {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">return</span> (strcmp(line, <span class="stringliteral">&quot;SHA1&quot;</span>) == 0 || strcmp(line, <span class="stringliteral">&quot;SHA256&quot;</span>) == 0 || strcmp(line, <span class="stringliteral">&quot;SHA1_PROP&quot;</span>) == 0 || strcmp(line, <span class="stringliteral">&quot;MD5&quot;</span>) == 0);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a>* createHashAlgorithm(<span class="keywordtype">char</span> *hashAlgorithm);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">void</span> freeHashAlgo(<a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> *algo);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">void</span> getHashFromFile(<a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> *algo, <span class="keywordtype">char</span> *filename, uchar *hash);</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordtype">void</span> getHashFromString(<a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> *algo, <span class="keywordtype">char</span> *<span class="keywordtype">string</span>, uchar *hash);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">void</span> getHashFromStringIter(<a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> *algo, <span class="keywordtype">char</span> *<span class="keywordtype">string</span>, uchar *hash, <span class="keywordtype">int</span> numIterations);</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    uchar* convertHashStringToBinary(<a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> *algo, sds hashString);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#ifdef  __cplusplus</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">/* HASHING_ALGO_H */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor"></span></div>
-<div class="ttc" id="struct_hash_algorithm_html_aabb92e4b97bc21c16c31c924facb17a8"><div class="ttname"><a href="struct_hash_algorithm.html#aabb92e4b97bc21c16c31c924facb17a8">HashAlgorithm::update</a></div><div class="ttdeci">hash_update_fct update</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00063">hashing_algo.h:63</a></div></div>
-<div class="ttc" id="struct_hash_algorithm_html_a433eb2ec88b771fb8d6b9dccff780534"><div class="ttname"><a href="struct_hash_algorithm.html#a433eb2ec88b771fb8d6b9dccff780534">HashAlgorithm::hashType</a></div><div class="ttdeci">enum HashTypes hashType</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00039">hashing_algo.h:39</a></div></div>
-<div class="ttc" id="struct_hash_algorithm_html_a2d1908c6a68596e566e41abc9bb35ebd"><div class="ttname"><a href="struct_hash_algorithm.html#a2d1908c6a68596e566e41abc9bb35ebd">HashAlgorithm::init</a></div><div class="ttdeci">hash_init_fct init</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00059">hashing_algo.h:59</a></div></div>
-<div class="ttc" id="struct_hash_algorithm_html"><div class="ttname"><a href="struct_hash_algorithm.html">HashAlgorithm</a></div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00035">hashing_algo.h:35</a></div></div>
-<div class="ttc" id="struct_hash_algorithm_html_a10ecfcbd16c4b1ac928fed85fe09defe"><div class="ttname"><a href="struct_hash_algorithm.html#a10ecfcbd16c4b1ac928fed85fe09defe">HashAlgorithm::hashSize</a></div><div class="ttdeci">unsigned int hashSize</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00047">hashing_algo.h:47</a></div></div>
-<div class="ttc" id="struct_hash_algorithm_html_a2cf9bcb357b856e4312358cce3627a9b"><div class="ttname"><a href="struct_hash_algorithm.html#a2cf9bcb357b856e4312358cce3627a9b">HashAlgorithm::equals</a></div><div class="ttdeci">hash_equals_fct equals</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00055">hashing_algo.h:55</a></div></div>
-<div class="ttc" id="struct_hash_algorithm_html_a1f6d09b30c54854dfca659b7463ac207"><div class="ttname"><a href="struct_hash_algorithm.html#a1f6d09b30c54854dfca659b7463ac207">HashAlgorithm::ctx</a></div><div class="ttdeci">void * ctx</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00043">hashing_algo.h:43</a></div></div>
-<div class="ttc" id="struct_hash_algorithm_html_ad05fabc69d3c52fc1d13389dae798457"><div class="ttname"><a href="struct_hash_algorithm.html#ad05fabc69d3c52fc1d13389dae798457">HashAlgorithm::toString</a></div><div class="ttdeci">hash_toString_fct toString</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00051">hashing_algo.h:51</a></div></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> <a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">int</span> isSupportedHashAlgorithm(<span class="keywordtype">char</span> *line) {</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordflow">return</span> (strcmp(line, <span class="stringliteral">&quot;SHA1&quot;</span>) == 0 || strcmp(line, <span class="stringliteral">&quot;SHA256&quot;</span>) == 0 || strcmp(line, <span class="stringliteral">&quot;SHA256_SPH&quot;</span>) == 0 || strcmp(line, <span class="stringliteral">&quot;SHA1_PROP&quot;</span>) == 0 || strcmp(line, <span class="stringliteral">&quot;MD5&quot;</span>) == 0 || strcmp(line, <span class="stringliteral">&quot;MD5_SPH&quot;</span>) == 0);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    }</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a>* createHashAlgorithm(<span class="keywordtype">char</span> *hashAlgorithm);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">void</span> freeHashAlgo(<a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> *algo);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">void</span> getHashFromFile(<a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> *algo, <span class="keywordtype">char</span> *filename, uchar *hash);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keywordtype">void</span> getHashFromString(<a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> *algo, <span class="keywordtype">char</span> *<span class="keywordtype">string</span>, uchar *hash);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">void</span> getHashFromStringIter(<a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> *algo, <span class="keywordtype">char</span> *<span class="keywordtype">string</span>, uchar *hash, <span class="keywordtype">int</span> numIterations);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    uchar* convertHashStringToBinary(<a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> *algo, <span class="keywordtype">char</span> *hashString, uchar *hashBinary);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#ifdef  __cplusplus</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">/* HASHING_ALGO_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="preprocessor"></span></div>
+<div class="ttc" id="struct_hash_algorithm_html_aabb92e4b97bc21c16c31c924facb17a8"><div class="ttname"><a href="struct_hash_algorithm.html#aabb92e4b97bc21c16c31c924facb17a8">HashAlgorithm::update</a></div><div class="ttdeci">hash_update_fct update</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00065">hashing_algo.h:65</a></div></div>
+<div class="ttc" id="struct_hash_algorithm_html_a433eb2ec88b771fb8d6b9dccff780534"><div class="ttname"><a href="struct_hash_algorithm.html#a433eb2ec88b771fb8d6b9dccff780534">HashAlgorithm::hashType</a></div><div class="ttdeci">enum HashTypes hashType</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00040">hashing_algo.h:40</a></div></div>
+<div class="ttc" id="struct_hash_algorithm_html_a2d1908c6a68596e566e41abc9bb35ebd"><div class="ttname"><a href="struct_hash_algorithm.html#a2d1908c6a68596e566e41abc9bb35ebd">HashAlgorithm::init</a></div><div class="ttdeci">hash_init_fct init</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00061">hashing_algo.h:61</a></div></div>
+<div class="ttc" id="struct_hash_algorithm_html"><div class="ttname"><a href="struct_hash_algorithm.html">HashAlgorithm</a></div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00036">hashing_algo.h:36</a></div></div>
+<div class="ttc" id="struct_hash_algorithm_html_a10ecfcbd16c4b1ac928fed85fe09defe"><div class="ttname"><a href="struct_hash_algorithm.html#a10ecfcbd16c4b1ac928fed85fe09defe">HashAlgorithm::hashSize</a></div><div class="ttdeci">unsigned int hashSize</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00048">hashing_algo.h:48</a></div></div>
+<div class="ttc" id="struct_hash_algorithm_html_a2cf9bcb357b856e4312358cce3627a9b"><div class="ttname"><a href="struct_hash_algorithm.html#a2cf9bcb357b856e4312358cce3627a9b">HashAlgorithm::equals</a></div><div class="ttdeci">hash_equals_fct equals</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00057">hashing_algo.h:57</a></div></div>
+<div class="ttc" id="struct_hash_algorithm_html_a1f6d09b30c54854dfca659b7463ac207"><div class="ttname"><a href="struct_hash_algorithm.html#a1f6d09b30c54854dfca659b7463ac207">HashAlgorithm::ctx</a></div><div class="ttdeci">void * ctx</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00044">hashing_algo.h:44</a></div></div>
+<div class="ttc" id="struct_hash_algorithm_html_ad05fabc69d3c52fc1d13389dae798457"><div class="ttname"><a href="struct_hash_algorithm.html#ad05fabc69d3c52fc1d13389dae798457">HashAlgorithm::toString</a></div><div class="ttdeci">hash_toString_fct toString</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00052">hashing_algo.h:52</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>hashing_algo.h</b></li>
-    <li class="footer">Generated on Mon Jan 26 2015 01:02:08 for Parallel Bruteforce by
+    <li class="footer">Generated on Wed Jan 28 2015 20:04:15 for Parallel Bruteforce by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>
