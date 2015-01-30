@@ -38,6 +38,7 @@ static void freeStats ( BruteforceProgressStats **stats) {
     
     while (stats[i] != NULL) {
         free(stats[i]);
+        i++;
     }
     
     free(stats);
