@@ -190,27 +190,22 @@ static inline void toString(ulong number, Mapping* mapping, char* out, char null
  * @param out
  */
 static inline void toStringWithMinLen(ulong number, Mapping* mapping, int minLen, char* out) {
-    Mapping *map = mapping;
-    if (number == 0) {
-        memset(out, nullChar, sizeof (char)*minLen);
-        return;
-    }
-    int outlen = 0;
-    toString(number, map, out, nullChar, &outlen);
-
-    if (outlen < minLen) {
-        int lenDif = minLen - outlen;
-        char* tmp = (char*) malloc(sizeof (char)*outlen);
-
-        memcpy(tmp, out, outlen);
-        //            strncpy(tmp, out, outlen);
-        memset(out, '\0', sizeof (char)*minLen);
-        memset(out, nullChar, sizeof (char)*minLen);
-        memcpy((out + (lenDif)), tmp, outlen);
-        //            strncpy((out + (lenDif)), tmp, outlen);
-        free(tmp);
-    }
+    int i = 0;
+    int j = minLen-1;
+    ulong numTmp = number;
+    int remNum;
     
+     while (numTmp != 0 || i < minLen) {
+         if (j < 0) {
+             DBG_ERR("j < 0 at toStringWithMinLen, fatal error.");
+         }
+        remNum = numTmp % alphabetLength;
+        numTmp /= alphabetLength;
+        out[j] = mapping[remNum].c;
+        
+        j--;
+        i++;
+    }
 }
 
 
@@ -310,8 +305,6 @@ void nextPass(char* in, char* outPass) {
 ulong getPasswordDiff(char* beginPW, char *endPW) {
     ulong beginPWAsNumber = toNumberIndefaultAlphabet(beginPW);
     ulong endPWAsNumber = toNumberIndefaultAlphabet(endPW);
-    
-    DBG_OK("beginPW as number: %lu, endPW as number: %lu", beginPWAsNumber, endPWAsNumber);
 
     return (beginPWAsNumber < endPWAsNumber) ? endPWAsNumber - beginPWAsNumber : beginPWAsNumber - endPWAsNumber;
 }
