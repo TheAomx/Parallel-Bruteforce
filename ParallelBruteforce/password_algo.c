@@ -338,7 +338,7 @@ void getPasswordAt(ulong passwordIndex, char* result) {
     ulong relativeIndex = 0;
     
     int passwordLength = getPasswordLength(passwordIndex);
-    relativeIndex = passwordIndex - pregeneratedOffsets[passwordLength];
+    relativeIndex = passwordIndex - getOffset(passwordLength);
 
     toStringWithMinLen(relativeIndex, map, passwordLength, result);
 }

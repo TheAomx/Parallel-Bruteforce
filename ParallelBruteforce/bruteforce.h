@@ -12,6 +12,17 @@
 
 #include "core_headers.h"
 
+struct BruteforceProgressStats {
+    double time;
+    char takeTimeOffset;
+    double timeDiff;
+    double kiloHashesPerSecond;
+    ulong checkedLast;
+    ulong pwDiff;
+};
+
+typedef struct BruteforceProgressStats BruteforceProgressStats;
+
 /**
  * Simple callback to be used with bruteforcePasswordTask function.
  */

@@ -7,21 +7,49 @@
 
 #include "core_headers.h"
 
-static void printProgess(ulong currentPasswordIndex, int numThreads, ulong numPasswords, char *currentPassphrase) {
-    const ulong perfCounterCheckIntervall = 10000000;
-#ifdef _OPENMP
-    static double time = 0;
-    static char takeTimeOffset = 1;
-    static double timeDiff;
-    static double kiloHashesPerSecond = 0;
-    static ulong checkedLast = 0;
-    static ulong pwDiff = 0;
-#endif
+static BruteforceProgressStats* createStats() {
+    BruteforceProgressStats* stats = (BruteforceProgressStats*) malloc(sizeof(BruteforceProgressStats));
     
+    stats->time = 0;
+    stats->takeTimeOffset = 1;
+    stats->timeDiff;
+    stats->kiloHashesPerSecond = 0;
+    stats->checkedLast = 0;
+    stats->pwDiff = 0;
+        
+    return stats;
+}
+
+static BruteforceProgressStats** createStatsForThreads (int numThreads) {
+    int i = 0;
+    BruteforceProgressStats** stats = (BruteforceProgressStats**) malloc(sizeof(BruteforceProgressStats*) * (numThreads+1));
+    
+    for (i = 0; i < numThreads; i++) {
+        stats[i] = createStats();
+    }
+    
+    stats[i] = NULL;
+    
+    return stats;
+}
+
+static void freeStats ( BruteforceProgressStats **stats) {
+    int i = 0;
+    
+    while (stats[i] != NULL) {
+        free(stats[i]);
+    }
+    
+    free(stats);
+}
+
+static void printProgess(BruteforceProgressStats *stats, int numThreads, ulong currentPasswordIndex, ulong numPasswords, char *currentPassphrase) {
+    const ulong perfCounterCheckIntervall = 10000000;
+
     #ifdef _OPENMP
-    if (takeTimeOffset == 1) {
-        time = omp_get_wtime();
-        takeTimeOffset = 0;
+    if (stats->takeTimeOffset == 1) {
+        stats->time = omp_get_wtime();
+        stats->takeTimeOffset = 0;
     }
     #endif
     
@@ -34,22 +62,22 @@ static void printProgess(ulong currentPasswordIndex, int numThreads, ulong numPa
         percentFinished *= 100.0;
 
 #ifdef _OPENMP
-        timeDiff = omp_get_wtime() - time;
-        takeTimeOffset = 1;
-        pwDiff = checkedPws - checkedLast;
-        if (currentPasswordIndex == 0 || pwDiff <= 0) {
-            kiloHashesPerSecond = 0.0;
-            timeDiff = 0.0;
+        stats->timeDiff = omp_get_wtime() - stats->time;
+        stats->takeTimeOffset = 1;
+        stats->pwDiff = checkedPws - stats->checkedLast;
+        if (currentPasswordIndex == 0 || stats->pwDiff <= 0) {
+            stats->kiloHashesPerSecond = 0.0;
+            stats->timeDiff = 0.0;
         } else {
-            kiloHashesPerSecond = (((double) pwDiff) * (1.0 / timeDiff)) / 1000.0;
+            stats->kiloHashesPerSecond = (((double) stats->pwDiff) * (1.0 / stats->timeDiff)) / 1000.0;
 
         }
-        printf("[%d] %.2f%% %s, %.3f msec(per %ld hashes) -> %.3f kHashes/s.\n", threadID, percentFinished, currentPassphrase, timeDiff * 1000.0, perfCounterCheckIntervall, kiloHashesPerSecond);
+        printf("[%d] %.2f%% %s, %.3f msec(per %ld hashes) -> %.3f kHashes/s.\n", threadID, percentFinished, currentPassphrase, stats->timeDiff * 1000.0, perfCounterCheckIntervall, stats->kiloHashesPerSecond);
 #else
         printf("[%d] %.2f%% %s\n", threadID, percentFinished, currentPassphrase);
 #endif
         fflush(stdout);
-        checkedLast = checkedPws;
+        stats->checkedLast = checkedPws;
     }
 }
 
@@ -72,6 +100,8 @@ void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCall
 
     PasswordHashes* pwHashes = (PasswordHashes*) ctx;
     int numThreads = pwHashes->numThreads;
+        
+    BruteforceProgressStats **statsData = createStatsForThreads(numThreads);
 
     //DBG_OK("           %s(%ld)      ->      %s(%ld)    :%ld   ", tmpPwd,(pwGenType->valueOf(tmpPwd)),tmpPwd2,(pwGenType->valueOf(tmpPwd2)),i);
     ulong count = context->passwordDiff(taskInfo->startPassword, taskInfo->endPassword);
@@ -89,8 +119,9 @@ void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCall
         context->passwordAt(i + offset, currentPassphrase);
         callback((void*) ctx, currentPassphrase);
 
-        printProgess(i, numThreads, count, currentPassphrase);
+        printProgess(statsData[threadID], numThreads, i, count, currentPassphrase);
     }
+    freeStats(statsData);
 }
 
 void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer) {
@@ -106,6 +137,8 @@ void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, brutef
 
     PasswordHashes* pwHashes = (PasswordHashes*) ctx;
     int numThreads = pwHashes->numThreads;
+    
+    BruteforceProgressStats **statsData = createStatsForThreads(numThreads);
 
 
     context->initData(context->alphabet);
@@ -125,8 +158,9 @@ void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, brutef
         context->passwordAt(i + offset, currentPassphrase);
         callback((void*) ctx, currentPassphrase, onHashFound);
 
-        printProgess(i, numThreads, count, currentPassphrase);
+        printProgess(statsData[threadID], numThreads, i, count, currentPassphrase);
 
     }
+    freeStats(statsData);
     context->clearData();
 }
