@@ -32,13 +32,6 @@ char* sha1_toString(unsigned char hash[]) {
 
 int sha1_equal(unsigned char hash1[], unsigned char hash2[]) {
     return memcmp(hash1, hash2, SHA1_SIZE) == 0;
-    /*int i = 0;
-    for (i = 0; i < SHA1_SIZE; i++) {
-            if (hash1[i] != hash2[i]) {
-                    return 0;
-            }
-    }
-    return 1;*/
 }
 
 static void sha1_transform(SHA1_CTX *ctx, uchar data[]) {

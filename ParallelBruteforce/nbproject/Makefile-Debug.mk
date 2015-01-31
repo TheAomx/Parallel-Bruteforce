@@ -35,20 +35,20 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/HashAlgos/hashing_algo.o \
+	${OBJECTDIR}/HashAlgos/md5.o \
+	${OBJECTDIR}/HashAlgos/sha1.o \
+	${OBJECTDIR}/HashAlgos/sha1_prop.o \
+	${OBJECTDIR}/HashAlgos/sha2.o \
+	${OBJECTDIR}/HashAlgos/sha256.o \
+	${OBJECTDIR}/HashAlgos/sph_md5.o \
 	${OBJECTDIR}/bruteforce.o \
-	${OBJECTDIR}/hashing_algo.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/md5.o \
 	${OBJECTDIR}/openmp.o \
 	${OBJECTDIR}/password_algo.o \
 	${OBJECTDIR}/pb_client.o \
 	${OBJECTDIR}/pb_server.o \
 	${OBJECTDIR}/sds.o \
-	${OBJECTDIR}/sha1.o \
-	${OBJECTDIR}/sha1_prop.o \
-	${OBJECTDIR}/sha2.o \
-	${OBJECTDIR}/sha256.o \
-	${OBJECTDIR}/sph_md5.o \
 	${OBJECTDIR}/utils.o
 
 
@@ -74,27 +74,52 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/parallelbruteforce: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/parallelbruteforce ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/parallelbruteforce ${OBJECTFILES} ${LDLIBSOPTIONS} -lrt
+
+${OBJECTDIR}/HashAlgos/hashing_algo.o: HashAlgos/hashing_algo.c 
+	${MKDIR} -p ${OBJECTDIR}/HashAlgos
+	${RM} "$@.d"
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/HashAlgos/hashing_algo.o HashAlgos/hashing_algo.c
+
+${OBJECTDIR}/HashAlgos/md5.o: HashAlgos/md5.c 
+	${MKDIR} -p ${OBJECTDIR}/HashAlgos
+	${RM} "$@.d"
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/HashAlgos/md5.o HashAlgos/md5.c
+
+${OBJECTDIR}/HashAlgos/sha1.o: HashAlgos/sha1.c 
+	${MKDIR} -p ${OBJECTDIR}/HashAlgos
+	${RM} "$@.d"
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/HashAlgos/sha1.o HashAlgos/sha1.c
+
+${OBJECTDIR}/HashAlgos/sha1_prop.o: HashAlgos/sha1_prop.c 
+	${MKDIR} -p ${OBJECTDIR}/HashAlgos
+	${RM} "$@.d"
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/HashAlgos/sha1_prop.o HashAlgos/sha1_prop.c
+
+${OBJECTDIR}/HashAlgos/sha2.o: HashAlgos/sha2.c 
+	${MKDIR} -p ${OBJECTDIR}/HashAlgos
+	${RM} "$@.d"
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/HashAlgos/sha2.o HashAlgos/sha2.c
+
+${OBJECTDIR}/HashAlgos/sha256.o: HashAlgos/sha256.c 
+	${MKDIR} -p ${OBJECTDIR}/HashAlgos
+	${RM} "$@.d"
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/HashAlgos/sha256.o HashAlgos/sha256.c
+
+${OBJECTDIR}/HashAlgos/sph_md5.o: HashAlgos/sph_md5.c 
+	${MKDIR} -p ${OBJECTDIR}/HashAlgos
+	${RM} "$@.d"
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/HashAlgos/sph_md5.o HashAlgos/sph_md5.c
 
 ${OBJECTDIR}/bruteforce.o: bruteforce.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/bruteforce.o bruteforce.c
 
-${OBJECTDIR}/hashing_algo.o: hashing_algo.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/hashing_algo.o hashing_algo.c
-
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
-
-${OBJECTDIR}/md5.o: md5.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/md5.o md5.c
 
 ${OBJECTDIR}/openmp.o: openmp.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -120,31 +145,6 @@ ${OBJECTDIR}/sds.o: sds.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sds.o sds.c
-
-${OBJECTDIR}/sha1.o: sha1.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1.o sha1.c
-
-${OBJECTDIR}/sha1_prop.o: sha1_prop.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha1_prop.o sha1_prop.c
-
-${OBJECTDIR}/sha2.o: sha2.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha2.o sha2.c
-
-${OBJECTDIR}/sha256.o: sha256.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sha256.o sha256.c
-
-${OBJECTDIR}/sph_md5.o: sph_md5.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sph_md5.o sph_md5.c
 
 ${OBJECTDIR}/utils.o: utils.c 
 	${MKDIR} -p ${OBJECTDIR}

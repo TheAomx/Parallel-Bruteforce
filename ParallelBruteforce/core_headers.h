@@ -53,7 +53,7 @@ extern "C" {
 #endif
 
 
-#include "hash_types.h"
+#include "HashAlgos/hash_types.h"
 
     /* System headers */
 #include <stdlib.h>
@@ -74,7 +74,7 @@ extern "C" {
 #include "openmp.h"
 #include "password_algo.h"
 #include "utils.h"
-#include "hashing_algo.h"
+#include "HashAlgos/hashing_algo.h"
 #include "bruteforce.h"
 
 
