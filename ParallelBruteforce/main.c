@@ -186,7 +186,7 @@ int main(int argc, char** argv) {
             MPI_Recv(hashBuffer, hashLen, MPI_CHAR, status.MPI_SOURCE, 4714, MPI_COMM_WORLD, &status);
 
             hashBuffer[hashLen] = '\0';
-            printf("Password found on client %d: %s -> %s\n", status.MPI_SOURCE, pwBuffer, hashBuffer);
+            printf("%sPassword found on client %d: %s -> %s%s\n",KGRN, status.MPI_SOURCE, pwBuffer, hashBuffer, KNRM);
             free(pwBuffer);
             free(hashBuffer);
 
