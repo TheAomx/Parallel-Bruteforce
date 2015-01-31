@@ -11,23 +11,6 @@
 
 #if 1
 
-
-#ifdef _OPENMP
-omp_lock_t* lock = NULL;
-
-void initLock() {
-    lock = (omp_lock_t*) malloc(sizeof (omp_lock_t));
-    omp_init_lock(lock);
-}
-
-void clearLock() {
-    omp_destroy_lock(lock);
-    free(lock);
-}
-
-
-#endif
-
 int checkPasswordObserved(void *ctx, char *password, hashFoundCallback ohHashFound) {
     unsigned int i;
     PasswordHashes *pwHashes = (PasswordHashes*) ctx;
@@ -43,13 +26,9 @@ int checkPasswordObserved(void *ctx, char *password, hashFoundCallback ohHashFou
         if (algo->equals(hashBuffer, checkedHash)) {
             //            printf("The hash of %s was %s. Notifying server...\n", password, algo->toString(checkedHash));
             fflush(stdout);
-#ifdef _OPENMP
-            omp_set_lock(lock);
-#endif
+            lockMutex();
             ohHashFound(password, algo->toString(checkedHash));
-#ifdef _OPENMP
-            omp_unset_lock(lock);
-#endif
+            releaseMutex();
 
         }
     }
@@ -83,16 +62,9 @@ int checkPasswordObservedHashTable(void *ctx, char *password, hashFoundCallback 
     HASH_FIND(handle, hashTables[threadID], hashBuffer, algo->hashSize, s);
 
     if (s != NULL) {
-#ifdef _OPENMP
-        omp_set_lock(lock);
-        char *hash = algo->toString(s->hash);
-#else
-        char *hash = algo->toString(s->hash);
-#endif
-        ohHashFound(password, hash);
-#ifdef _OPENMP
-        omp_unset_lock(lock);
-#endif
+        lockMutex();
+        ohHashFound(password, algo->toString(s->hash));
+        releaseMutex();
     }
     return 0;
 }
@@ -277,14 +249,11 @@ int main(int argc, char** argv) {
         struct timeval timeBefore, timeAfter;
         gettimeofday(&timeBefore, NULL);
         //printHashes(pwHashes, rank);
-#ifdef _OPENMP
-        initLock();
-#endif
 
+        initLock();
         bruteforcePasswordTaskObserved(clientTaskInfo, pwHashes, checkPasswordObservedHashTable, sendFoundPasswordAndHashToRoot, passphraseBuffer);
-#ifdef _OPENMP
         clearLock();
-#endif
+        
         gettimeofday(&timeAfter, NULL);
         printf("needed %ld secs %ld usecs\n", (ulong) (timeAfter.tv_sec - timeBefore.tv_sec), (ulong) (timeAfter.tv_usec - timeBefore.tv_usec));
     }

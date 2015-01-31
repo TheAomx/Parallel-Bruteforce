@@ -11,6 +11,11 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+    
+    void initLock();
+    void clearLock();
+    void lockMutex();
+    void releaseMutex();
     /**
      * Retrieves the current thread number associated with the callers thread
      * @return 

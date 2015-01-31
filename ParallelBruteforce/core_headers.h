@@ -64,7 +64,6 @@ extern "C" {
 #include <sys/time.h>
 #include <time.h>
 #include <mpi.h>
-#include <omp.h>
     /* Application headers */
 #ifdef _OPENMP 
 //#define PROFILE_ALGOS
