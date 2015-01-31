@@ -1,4 +1,11 @@
-#include <omp.h>
+
+
+#ifdef _OPENMP
+    #include <omp.h>
+#else
+    #include <sys/time.h>
+    #include <stdlib.h>
+#endif
 
 #include "openmp.h"
 
@@ -30,5 +37,19 @@ void setNumThreads(int numThreads) {
 #ifdef _OPENMP 
     omp_set_num_threads(numThreads);
 #endif
+}
+
+double getElapsedTime () {
+    double elapsedTime = 0.00;
+    
+#ifdef _OPENMP 
+    elapsedTime = omp_get_wtime();
+#else
+    struct timeval timeStruct;
+    gettimeofday(&timeStruct, NULL);
+    elapsedTime = (double) timeStruct.tv_sec;
+    elapsedTime += (double) timeStruct.tv_usec * 0.0000001;
+#endif
+    return elapsedTime;
 }
 

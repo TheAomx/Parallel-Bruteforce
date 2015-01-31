@@ -32,6 +32,12 @@ extern "C" {
      * @param numThreads
      */
     void setNumThreads(int numThreads);
+   
+    /**
+     * Gets a relative time of elapsed seconds from a certain starting point as a double.
+     * @return time elapsed from starting point, e.g. 2.3123f
+     */
+    double getElapsedTime();
 
 
 #ifdef	__cplusplus

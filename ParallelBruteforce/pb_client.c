@@ -29,7 +29,7 @@ static void initHashTablesForThreads(PasswordHashes* hashes) {
         HashAlgorithm *algo = hashes->algo[i];
         uint hashSize = algo->hashSize;
         for (uint j = 0; j < hashes->numHashes; j++) {
-            uchar *checkedHash = (uchar*) getHash(hashes, i, j);
+            uchar *checkedHash = (uchar*) getHash(hashes, 0, j);
 
             HashTableEntry* newEntry = (HashTableEntry*) malloc(sizeof (HashTableEntry));
             newEntry->hash = (uchar*) malloc(sizeof (uchar) * hashSize);
@@ -166,10 +166,7 @@ PasswordHashes* generatePasswordHashes(MPI_File *in, unsigned int numThreads) {
             j++;
         }
     }
-
-    for (i = 1; i < numThreads; i++) {
-        memcpy(pwHashes->hashes[i], pwHashes->hashes[0], hashArraySize);
-    }
+    
     initHashTablesForThreads(pwHashes);
 
     sdsfreesplitres(lines, linesFound);
