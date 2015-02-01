@@ -8,6 +8,17 @@
 
 #ifndef UTILS_H
 #define UTILS_H
+
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 /**
  * Callback function pointer used to update data (the hash value) from streaming input.
  * @param buffer A buffer of data with minimum length of <code>bytesRead</code>
@@ -29,5 +40,12 @@ void readFile(char *filename, FileReader callback, void *ctx);
  * @return  <code>result = base^exp </code>
  */
 unsigned long pow_ul(unsigned long base, unsigned long exp);
+
+/**
+ * Retrieves the current systems CPU count without using OMP methods.
+ * (So the value returned is not influenced )
+ * @return 
+ */
+long getCpuCount();
 
 #endif

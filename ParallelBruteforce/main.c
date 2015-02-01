@@ -235,7 +235,7 @@ int main(int argc, char** argv) {
 
 
         int i = 0;
-        int numThreads = getNumCores();
+	int numThreads = getCpuCount();
         setNumThreads(numThreads);
         pwHashes = generatePasswordHashes(&fh, numThreads);
         printf("child process with %d threads!\n", numThreads);

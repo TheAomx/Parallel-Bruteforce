@@ -1,4 +1,4 @@
-CFLAGS = -Wall -fopenmp
+CFLAGS = -Wall -fopenmp -Ofast
 LIBS = 
 PROG = sha1
 

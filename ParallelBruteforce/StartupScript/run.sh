@@ -41,7 +41,6 @@ prefix="/usr"
 tempDir="/tmp"
 mpiHostFileName="mpi_hostfile"
 
-
 numProcessors=0;
 localExecution=0;
 array[0]="0"
@@ -157,7 +156,6 @@ while [  $counter -lt $(($numProcessors)) ]; do
   fi
   let counter=counter+1 
 done
-
 
 
 
