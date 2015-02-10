@@ -35,6 +35,19 @@ void readFile(char *filename, FileReader callback, void *ctx) {
     fclose(file);
 }
 
+void appendToFile(char* fileName, char* text){
+    FILE *file;
+    file=fopen(fileName, "a");
+    
+    if(!file) {
+        perror("Error opening file.");
+        return;
+    }
+        fprintf(file, "%s\n", text);
+    
+    fclose(file);
+}
+
 unsigned long pow_ul(unsigned long base, unsigned long exp) {
     unsigned long t = 1;
     unsigned long i = 0;
@@ -47,8 +60,6 @@ unsigned long pow_ul(unsigned long base, unsigned long exp) {
 
 long getCpuCount() {
     long nprocs = -1;
-    //    long result = 1;
-    //    long nprocs_max = -1;
 #ifdef _WIN32
 #ifndef _SC_NPROCESSORS_ONLN
     SYSTEM_INFO info;
@@ -64,12 +75,6 @@ long getCpuCount() {
             strerror(errno));
         return 1L;
     }
-    //    nprocs_max = sysconf(_SC_NPROCESSORS_CONF);
-    //    if (nprocs_max < 1) {
-    //        fprintf(stderr, "Could not determine number of CPUs configured:\n%s\n",
-    //            strerror(errno));
-    //        return 1L;
-    //    }
     printf("%ld processors online\n", nprocs);
 
    

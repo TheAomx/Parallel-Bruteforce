@@ -48,4 +48,12 @@ unsigned long pow_ul(unsigned long base, unsigned long exp);
  */
 long getCpuCount();
 
+/**
+ * Appends the given 'text' to a file with the given 'fileName'
+ * @param fileName The file name.
+ * @param text The text to append to the file.
+ */
+void appendToFile(char* fileName, char* text);
+
+
 #endif

@@ -69,6 +69,43 @@ int checkPasswordObservedHashTable(void *ctx, char *password, hashFoundCallback 
     return 0;
 }
 
+void printFoundPwToFile(char* password, char* hash) {
+    sds textLine = sdsnew(password);
+
+    textLine = sdscat(textLine, " -> ");
+    textLine = sdscat(textLine, hash);
+    appendToFile("found.txt", textLine);
+
+    sdsfree(textLine);
+}
+
+char* getTime() {
+    time_t current_time;
+    struct tm * time_info;
+    char timeString[15];
+
+    time(&current_time);
+    time_info = localtime(&current_time);
+
+    strftime(timeString, sizeof (timeString), "%e.%m,%H:%M:%S", time_info);
+    return timeString;
+}
+
+void writeTimeToFile(char* prefix) {
+    sds result = sdsnew(prefix);
+    result = sdscat(result, getTime());
+    appendToFile("found.txt", result);
+    sdsfree(result);
+}
+
+void printEndTimeToFile() {
+    writeTimeToFile("Bruteforce end: ");
+}
+
+void printStartTimeToFile() {
+    writeTimeToFile("Bruteforce start: ");
+}
+
 int main(int argc, char** argv) {
 
     int nTasks, rank;
@@ -157,10 +194,10 @@ int main(int argc, char** argv) {
 
 
         pwHashes = generatePasswordHashes(&fh, 1);
-        //printHashes(pwHashes, rank);
+
         DBG_OK("Sent all data to clients ... now going to receive cracked hashes");
 
-        //MPI_Bcast(&fh,1,, 0,MPI_COMM_WORLD);
+
 
         for (int i = nTasks - 1; i <= 0; i) {
             free((context->tasks + i));
@@ -168,13 +205,15 @@ int main(int argc, char** argv) {
         }
         ulong hashesToReceive = pwHashes->numHashes;
 
+        printStartTimeToFile();
+
         for (ulong hashesFound = 0; hashesFound < hashesToReceive; hashesFound++) {
             MPI_Status status;
             int pwLen;
             int hashLen;
             char* pwBuffer;
             char* hashBuffer;
-            
+
 
             MPI_Recv(&pwLen, 1, MPI_INT, MPI_ANY_SOURCE, 4711, MPI_COMM_WORLD, &status);
             pwBuffer = (char*) malloc(sizeof (char)*(pwLen + 1));
@@ -186,15 +225,20 @@ int main(int argc, char** argv) {
             MPI_Recv(hashBuffer, hashLen, MPI_CHAR, status.MPI_SOURCE, 4714, MPI_COMM_WORLD, &status);
 
             hashBuffer[hashLen] = '\0';
-            printf("%sPassword found on client %d: %s -> %s%s\n",KGRN, status.MPI_SOURCE, pwBuffer, hashBuffer, KNRM);
+
+            printf("%sPassword found on client %d: %s -> %s%s\n", KGRN, status.MPI_SOURCE, pwBuffer, hashBuffer, KNRM);
+            printFoundPwToFile(pwBuffer, hashBuffer);
             free(pwBuffer);
             free(hashBuffer);
 
 
         }
         free(context);
+        
+        printEndTimeToFile();
         /*If we reach here, we have found any password, so we can terminate MPI execution environment.*/
-        MPI_Abort(MPI_COMM_WORLD, MPI_SUCCESS);
+        if (MPI_Abort(MPI_COMM_WORLD, MPI_SUCCESS) == -1)
+            exit(EXIT_SUCCESS);
 
     } else {
         MPI_Status status;
@@ -235,7 +279,7 @@ int main(int argc, char** argv) {
 
 
         int i = 0;
-	int numThreads = getCpuCount();
+        int numThreads = getCpuCount();
         setNumThreads(numThreads);
         pwHashes = generatePasswordHashes(&fh, numThreads);
         printf("child process with %d threads!\n", numThreads);
@@ -253,7 +297,7 @@ int main(int argc, char** argv) {
         initLock();
         bruteforcePasswordTaskObserved(clientTaskInfo, pwHashes, checkPasswordObservedHashTable, sendFoundPasswordAndHashToRoot, passphraseBuffer);
         clearLock();
-        
+
         gettimeofday(&timeAfter, NULL);
         printf("needed %ld secs %ld usecs\n", (ulong) (timeAfter.tv_sec - timeBefore.tv_sec), (ulong) (timeAfter.tv_usec - timeBefore.tv_usec));
     }
@@ -294,19 +338,19 @@ int main(int argc, char** argv) {
 
 #if 0
 
-int main (int argc, char **argv) {
+int main(int argc, char **argv) {
     char *alphabet = "abcd";
     //char *alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     PasswordGenerationContext* context = createDefaultContextWithAlphabet(alphabet);
     initializeGlobals(alphabet);
-    ulong numpass= context->passwordDiff("a","dddd");
+    ulong numpass = context->passwordDiff("a", "dddd");
     char result[MAX_PASSWORD];
     memset(result, 0, MAX_PASSWORD);
     DBG_OK("need to check %lu pws!", numpass);
 #if 1
-    for(ulong i =0; i<numpass+1;i++){
-        context->passwordAt(i,result);
-        printf("%s\n",result);
+    for (ulong i = 0; i < numpass + 1; i++) {
+        context->passwordAt(i, result);
+        printf("%s\n", result);
     }
 #endif
 }

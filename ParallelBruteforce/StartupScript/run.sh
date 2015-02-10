@@ -16,9 +16,7 @@ echo "			      192.168.42.23"
 echo "			      # next definition uses different kind of user"
 echo "			      user@192.168.24.32"
 echo "			    ---------------------------------------------------"
-echo "			    Note that each host defined in <mpi_hosts_file>"
-echo "			    also has to be defined in this file in order to"
-echo -e "			    transmit required binaries and resources.\n\n"
+echo -e "			    \n\n"
 echo "	hash_list_file:	    path to a file which defines the list of hashes to"
 echo "			    find a password for."
 echo "			    One hash or hash type identifier per line."
@@ -40,6 +38,7 @@ binaryName="parallelbruteforce"
 prefix="/usr"
 tempDir="/tmp"
 mpiHostFileName="mpi_hostfile"
+numCores=grep -c ^processor /proc/cpuinfo
 
 numProcessors=0;
 localExecution=0;
@@ -51,19 +50,17 @@ nolocalCounter=0;
 
 
 # parameter presence checks
-# echo $# 
-
 if [ $# -eq 0 ]
   then
     printUsage
-    echo -e "Error cause:   no parameter specified\n\n"
+    echo -e "Error cause:   no parameters\n\n"
     exit -1
 fi
 
 if ! [ $# -eq 2 ]
   then
     printUsage
-    echo -e "Error cause:   wrong number of parameters specified\n\n"
+    echo -e "Error cause:   wrong number of parameters (! = 2)\n\n"
     exit -1
 fi
 
@@ -84,28 +81,28 @@ fi
 if ! [ -e $1 ] 
   then
     printUsage
-    echo -e "Error cause:   scp_host_file not present\n\n"
+    echo -e "Error cause:   scp_host_file does not exist\n\n"
     exit -1
 fi
 
 if ! [ -e $2 ]
   then
     printUsage
-    echo -e "Error cause:   hash_list_file not present\n\n"
+    echo -e "Error cause:   hash_list_file does not exist\n\n"
     exit -1
 fi
 
 if ! [ -f $1 ]
   then
     printUsage
-    echo -e "Error cause:   scp_host_file not a regular file\n\n"
+    echo -e "Error cause:   scp_host_file is not a regular file\n\n"
     exit -1
 fi
 
 if ! [ -f $2 ]
   then
     printUsage
-    echo -e "Error cause:   hash_list_file not a regular file\n\n"
+    echo -e "Error cause:   hash_list_file is not a regular file\n\n"
     exit -1
 fi
 
@@ -123,25 +120,16 @@ while read line
 do   
 case "$line" in \#*) continue ;; 
 esac
-#     echo -e "$line"
       array[numProcessors]=$line
       numProcessors=$(($numProcessors+1));
       if [ $line = "localhost" ]
       then
 	localExecution=1;
       else
-	echo "$line slots=1 max-slots=1" >> $mpiHostFileName
+	echo "$line slots=1" >> $mpiHostFileName
       fi
     
 done <$1
-
-# echo -e "number of clients = $numProcessors"
-# echo "List of hosts: ${array[*]}"
-
-# if [ localExecution = 1 ]
-# then
-#   echo "Local execution enabled"
-# fi
 
 counter=0
 while [  $counter -lt $(($numProcessors)) ]; do
@@ -156,8 +144,6 @@ while [  $counter -lt $(($numProcessors)) ]; do
   fi
   let counter=counter+1 
 done
-
-
 
 remoteProcNum=$numProcessors
 if [ $localExecution = 1 ]
