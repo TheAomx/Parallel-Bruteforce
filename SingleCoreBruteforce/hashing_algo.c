@@ -18,7 +18,7 @@
 #include "sha256.h"
 #include "sph_sha2.h"
 #include "sha1_prop.h"
-#include "../Utils/utils.h"
+#include "utils.h"
 
 void freeHashAlgo(HashAlgorithm *algo) {
     free(algo->ctx);

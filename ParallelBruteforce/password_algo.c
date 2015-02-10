@@ -4,7 +4,14 @@
  *
  * Created on 22. Januar 2015, 21:11
  */
-#include "core_headers.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "password_algo.h"
+#include "utils.h"
+#include "debug_macros.h"
 
 /**
  * The default alphabet used.

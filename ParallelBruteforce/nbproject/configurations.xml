@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>bruteforce.h</itemPath>
       <itemPath>core_headers.h</itemPath>
+      <itemPath>debug_macros.h</itemPath>
       <itemPath>HashAlgos/hash_types.h</itemPath>
       <itemPath>HashAlgos/hashing_algo.h</itemPath>
       <itemPath>HashAlgos/md5.h</itemPath>
@@ -113,6 +114,8 @@
       </item>
       <item path="core_headers.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="debug_macros.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="openmp.c" ex="false" tool="0" flavor2="0">
@@ -202,6 +205,8 @@
       <item path="bruteforce.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="core_headers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="debug_macros.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
