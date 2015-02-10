@@ -87,7 +87,7 @@ static char getKey(Mapping* mappings, int val) {
 void initializeGlobals(char* alphabet) {
     alphabetLength = strlen(alphabet);
     DBG_OK("Initializing password generation with alphabet: %s, %d", alphabet, alphabetLength);
-    alphabetMapping = getMapping(defaultAlphabet);
+    alphabetMapping = getMapping(alphabet);
     nullChar = getKey(alphabetMapping, 0);
     pregeneratedOffsets = (ulong*) malloc(sizeof (ulong) * MAX_PASSWORD);
     ulong result = 0;

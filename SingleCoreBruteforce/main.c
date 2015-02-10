@@ -8,8 +8,9 @@
 
 #include "hashing_algo.h"
 #include "sha256.h"
-#include "../Utils/utils.h"
-#include "../Utils/bruteforce.h"
+#include "password_algo.h"
+#include "utils.h"
+#include "bruteforce.h"
 
 unsigned long counter = 0;
 unsigned long needToCheck = 0;
@@ -45,7 +46,7 @@ int checkPassword (void *ctx, char *password, uchar *toBreakHash) {
 	return 0;
 }
 
-void handleAlarm(int signal) {
+void handleAlarm(int signalNum) {
 	static unsigned long counterBefore;
 	static unsigned long counterNow;
 
@@ -54,6 +55,7 @@ void handleAlarm(int signal) {
 	
 	double curProcess = ((double)counterNow / (double) needToCheck);
 	
+	signal(SIGALRM, handleAlarm );
 	alarm(1);
 	
 	printf("%s %lu pws/s total:  %.2f%%\n", currentPassword, counterNow - counterBefore, curProcess*100);
@@ -61,9 +63,10 @@ void handleAlarm(int signal) {
 
 
 int main (int argc, char **argv) {
-	unsigned int passwordSearchLength = 6;
-	char passphrase[]={"zaaa"};
-	char alphabet[] = {"abcdefghiklmnopqrstuvwxyzABCDEFGHIKLMOPQRSTUVXYZ123456789"};
+	unsigned int passwordSearchLength = 8;
+	char passphrase[]={"99999999"};
+	//char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMOPQRSTUVXYZ0123456789"};
+	char alphabet[] = {"0123456789"};
 	char *hashAlgos[]={"SHA1", "SHA1_PROP", "MD5", "MD5_SPH", "SHA256", "SHA256_SPH"};
 	int numHashAlgos = sizeof(hashAlgos)/sizeof(char*);
 	char *randomHashAlgo;
@@ -93,15 +96,17 @@ int main (int argc, char **argv) {
 	//getHashFromFile(algo, "main.c", hashBuffer);
 	printf("generated hash is %s\n", algo->toString(hashBuffer));
 	
-#if 1
 	signal(SIGALRM, handleAlarm );
 
 	alarm(1);
 	
-	/* recursive bruteforce type */
-	bruteforcePasswordAll(algo, hashBuffer, checkPassword, alphabet, passwordSearchLength);
+	/* passwordAt bruteforce type */
+	bruteforcePasswordAt(algo, hashBuffer, checkPassword, alphabet, passwordSearchLength);
+	
+	/* recursive bruteforce type 
+	bruteforcePasswordAll(algo, hashBuffer, checkPassword, alphabet, passwordSearchLength);*/
 	/* iterative version: 
-	bruteforcePasswordAll(&sha_context, toBreakHash, checkPasswordSHA1, alphabet, passwordSearchLength); */
-#endif
+	bruteforcePasswordIter(algo, hashBuffer, checkPassword, alphabet, passwordSearchLength); */
+
 	return 0;
 }

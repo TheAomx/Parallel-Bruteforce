@@ -14,7 +14,8 @@ void bruteforcePasswordAt(void *ctx, uchar *toBreakHash, bruteforceCallback call
 	
 	ulong count = calcNumPasswords(strlen(alphabet), maxPasswordLength);	
 	
-	char currentPassphrase[maxPasswordLength];
+	char currentPassphrase[MAX_PASSWORD];
+	memset(currentPassphrase, 0, MAX_PASSWORD);
     
     for (ulong i = 0; i <= count; i++) {
         context->passwordAt(i, currentPassphrase);
