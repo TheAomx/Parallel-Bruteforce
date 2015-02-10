@@ -70,7 +70,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -93,7 +92,7 @@ $(document).ready(function(){initNavTree('pb__client_8c_source.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -135,21 +134,21 @@ $(document).ready(function(){initNavTree('pb__client_8c_source.html','');});
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <a class="code" href="struct_hash_table_entry.html">HashTableEntry</a>* checkEntry;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; numThreads; i++) {</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <a class="code" href="struct_hash_table_entry.html">HashTableEntry</a>* currentRoot = NULL;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a> *algo = hashes-&gt;<a class="code" href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">algo</a>[i];</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        uint hashSize = algo-&gt;<a class="code" href="struct_hash_algorithm.html#a10ecfcbd16c4b1ac928fed85fe09defe">hashSize</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        HashAlgorithm *algo = hashes-&gt;<a class="code" href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">algo</a>[i];</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        uint hashSize = algo-&gt;hashSize;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordflow">for</span> (uint j = 0; j &lt; hashes-&gt;<a class="code" href="struct_password_hashes.html#aef08781650f7b0f0bb4ba285a20d1ead">numHashes</a>; j++) {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            uchar *checkedHash = (uchar*) getHash(hashes, i, j);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            uchar *checkedHash = (uchar*) getHash(hashes, 0, j);</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            <a class="code" href="struct_hash_table_entry.html">HashTableEntry</a>* newEntry = (<a class="code" href="struct_hash_table_entry.html">HashTableEntry</a>*) malloc(<span class="keyword">sizeof</span> (<a class="code" href="struct_hash_table_entry.html">HashTableEntry</a>));</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            newEntry-&gt;hash = (uchar*) malloc(<span class="keyword">sizeof</span> (<span class="keywordtype">char</span>) * hashSize + 1);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            memcpy(newEntry-&gt;hash, checkedHash, sizeof (uchar) * hashSize + 1);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            newEntry-&gt;id = (uchar*) malloc(<span class="keyword">sizeof</span> (uchar) * hashSize + 1);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            memcpy(newEntry-&gt;id, checkedHash, sizeof (uchar) * hashSize + 1);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            newEntry-&gt;hash = (uchar*) malloc(<span class="keyword">sizeof</span> (uchar) * hashSize);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            memcpy(newEntry-&gt;hash, checkedHash, sizeof (uchar) * hashSize);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            newEntry-&gt;id = (uchar*) malloc(<span class="keyword">sizeof</span> (uchar) * hashSize);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            memcpy(newEntry-&gt;id, checkedHash, sizeof (uchar) * hashSize);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            HASH_FIND(handle, currentRoot, checkedHash, algo-&gt;<a class="code" href="struct_hash_algorithm.html#a10ecfcbd16c4b1ac928fed85fe09defe">hashSize</a>, checkEntry);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <span class="keywordflow">if</span> (checkEntry == NULL)</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            HASH_FIND(handle, currentRoot, checkedHash, algo-&gt;hashSize, checkEntry);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <span class="keywordflow">if</span> (checkEntry != NULL)</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                <span class="keywordflow">continue</span>;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            HASH_ADD_KEYPTR(handle, currentRoot, newEntry-&gt;id, hashSize, newEntry);</div>
@@ -177,7 +176,7 @@ $(document).ready(function(){initNavTree('pb__client_8c_source.html','');});
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keywordtype">void</span> printHashes(<a class="code" href="struct_password_hashes.html">PasswordHashes</a> *pwHashes, <span class="keywordtype">int</span> rank) {</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; pwHashes-&gt;<a class="code" href="struct_password_hashes.html#aef08781650f7b0f0bb4ba285a20d1ead">numHashes</a>; i++) {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        printf(<span class="stringliteral">&quot;[%d] %s\n&quot;</span>, rank, pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">algo</a>[0]-&gt;<a class="code" href="struct_hash_algorithm.html#ad05fabc69d3c52fc1d13389dae798457">toString</a>(getHash(pwHashes, 0, i)));</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        printf(<span class="stringliteral">&quot;[%d] %s\n&quot;</span>, rank, pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">algo</a>[0]-&gt;toString(getHash(pwHashes, 0, i)));</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
@@ -206,7 +205,7 @@ $(document).ready(function(){initNavTree('pb__client_8c_source.html','');});
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">return</span> beginPtr + hashID * pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">algo</a>[0]-&gt;<a class="code" href="struct_hash_algorithm.html#a10ecfcbd16c4b1ac928fed85fe09defe">hashSize</a>;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">return</span> beginPtr + hashID * pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">algo</a>[0]-&gt;hashSize;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;}</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<a class="code" href="struct_password_hashes.html">PasswordHashes</a>* generatePasswordHashes(MPI_File *in, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numThreads) {</div>
@@ -247,14 +246,14 @@ $(document).ready(function(){initNavTree('pb__client_8c_source.html','');});
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    pwHashes-&gt;numThreads = numThreads;</div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">algo</a> = (<a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a>**) malloc(<span class="keyword">sizeof</span> (<a class="code" href="struct_hash_algorithm.html">HashAlgorithm</a>*) * numThreads);</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">algo</a> = (HashAlgorithm**) malloc(<span class="keyword">sizeof</span> (HashAlgorithm*) * numThreads);</div>
 <div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordflow">for</span> (i = 0; i &lt; numThreads; i++) {</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">algo</a>[i] = createHashAlgorithm(lines[0]);</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    }</div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a2a9ae35d99e2df00043a78dc54539a88">hashes</a> = (uchar**) malloc(<span class="keyword">sizeof</span> (uchar*) * numThreads);</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keywordtype">size_t</span> hashArraySize = <span class="keyword">sizeof</span> (uchar) * pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">algo</a>[0]-&gt;<a class="code" href="struct_hash_algorithm.html#a10ecfcbd16c4b1ac928fed85fe09defe">hashSize</a> * hashesFound;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keywordtype">size_t</span> hashArraySize = <span class="keyword">sizeof</span> (uchar) * pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">algo</a>[0]-&gt;hashSize * hashesFound;</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    for (i = 0; i &lt; numThreads; i++) {</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a2a9ae35d99e2df00043a78dc54539a88">hashes</a>[i] = (uchar*) malloc(hashArraySize);</div>
@@ -263,7 +262,7 @@ $(document).ready(function(){initNavTree('pb__client_8c_source.html','');});
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    pwHashes-&gt;hashBuffer = (uchar**) malloc(<span class="keyword">sizeof</span> (uchar*) * numThreads);</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordflow">for</span> (i = 0; i &lt; numThreads; i++) {</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        pwHashes-&gt;hashBuffer[i] = (uchar*) malloc(<span class="keyword">sizeof</span> (uchar) * pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">algo</a>[0]-&gt;<a class="code" href="struct_hash_algorithm.html#a10ecfcbd16c4b1ac928fed85fe09defe">hashSize</a>);</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        pwHashes-&gt;hashBuffer[i] = (uchar*) malloc(<span class="keyword">sizeof</span> (uchar) * pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">algo</a>[0]-&gt;hashSize);</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    }</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keywordtype">int</span> j = 0;</div>
@@ -275,20 +274,15 @@ $(document).ready(function(){initNavTree('pb__client_8c_source.html','');});
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            j++;</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        }</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    }</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="keywordflow">for</span> (i = 1; i &lt; numThreads; i++) {</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        memcpy(pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a2a9ae35d99e2df00043a78dc54539a88">hashes</a>[i], pwHashes-&gt;<a class="code" href="struct_password_hashes.html#a2a9ae35d99e2df00043a78dc54539a88">hashes</a>[0], hashArraySize);</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    }</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    initHashTablesForThreads(pwHashes);</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    sdsfreesplitres(lines, linesFound);</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keywordflow">return</span> pwHashes;</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;}</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    </div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    initHashTablesForThreads(pwHashes);</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    sdsfreesplitres(lines, linesFound);</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordflow">return</span> pwHashes;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;}</div>
 <div class="ttc" id="struct_password_gen_task_html"><div class="ttname"><a href="struct_password_gen_task.html">PasswordGenTask</a></div><div class="ttdef"><b>Definition:</b> <a href="password__algo_8h_source.html#l00101">password_algo.h:101</a></div></div>
 <div class="ttc" id="struct_hash_table_entry_html"><div class="ttname"><a href="struct_hash_table_entry.html">HashTableEntry</a></div><div class="ttdef"><b>Definition:</b> <a href="pb__client_8h_source.html#l00022">pb_client.h:22</a></div></div>
-<div class="ttc" id="struct_hash_algorithm_html"><div class="ttname"><a href="struct_hash_algorithm.html">HashAlgorithm</a></div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00036">hashing_algo.h:36</a></div></div>
-<div class="ttc" id="struct_hash_algorithm_html_a10ecfcbd16c4b1ac928fed85fe09defe"><div class="ttname"><a href="struct_hash_algorithm.html#a10ecfcbd16c4b1ac928fed85fe09defe">HashAlgorithm::hashSize</a></div><div class="ttdeci">unsigned int hashSize</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00048">hashing_algo.h:48</a></div></div>
 <div class="ttc" id="struct_password_hashes_html_a6373a15bdfe2c88d5e998fb0a803003c"><div class="ttname"><a href="struct_password_hashes.html#a6373a15bdfe2c88d5e998fb0a803003c">PasswordHashes::algo</a></div><div class="ttdeci">HashAlgorithm ** algo</div><div class="ttdef"><b>Definition:</b> <a href="pb__client_8h_source.html#l00039">pb_client.h:39</a></div></div>
 <div class="ttc" id="struct_password_hashes_html_a2a9ae35d99e2df00043a78dc54539a88"><div class="ttname"><a href="struct_password_hashes.html#a2a9ae35d99e2df00043a78dc54539a88">PasswordHashes::hashes</a></div><div class="ttdeci">uchar ** hashes</div><div class="ttdef"><b>Definition:</b> <a href="pb__client_8h_source.html#l00051">pb_client.h:51</a></div></div>
 <div class="ttc" id="struct_password_gen_task_html_a3722f6aaadc332dbaefa14cfed78754d"><div class="ttname"><a href="struct_password_gen_task.html#a3722f6aaadc332dbaefa14cfed78754d">PasswordGenTask::startPassword</a></div><div class="ttdeci">char * startPassword</div><div class="ttdef"><b>Definition:</b> <a href="password__algo_8h_source.html#l00105">password_algo.h:105</a></div></div>
@@ -296,7 +290,6 @@ $(document).ready(function(){initNavTree('pb__client_8c_source.html','');});
 <div class="ttc" id="struct_password_gen_task_html_abf4a3140a051c370ebde667e7b685758"><div class="ttname"><a href="struct_password_gen_task.html#abf4a3140a051c370ebde667e7b685758">PasswordGenTask::endPassword</a></div><div class="ttdeci">char * endPassword</div><div class="ttdef"><b>Definition:</b> <a href="password__algo_8h_source.html#l00109">password_algo.h:109</a></div></div>
 <div class="ttc" id="structpassword_generation_context_html"><div class="ttname"><a href="structpassword_generation_context.html">passwordGenerationContext</a></div><div class="ttdef"><b>Definition:</b> <a href="password__algo_8h_source.html#l00057">password_algo.h:57</a></div></div>
 <div class="ttc" id="struct_password_hashes_html"><div class="ttname"><a href="struct_password_hashes.html">PasswordHashes</a></div><div class="ttdef"><b>Definition:</b> <a href="pb__client_8h_source.html#l00035">pb_client.h:35</a></div></div>
-<div class="ttc" id="struct_hash_algorithm_html_ad05fabc69d3c52fc1d13389dae798457"><div class="ttname"><a href="struct_hash_algorithm.html#ad05fabc69d3c52fc1d13389dae798457">HashAlgorithm::toString</a></div><div class="ttdeci">hash_toString_fct toString</div><div class="ttdef"><b>Definition:</b> <a href="hashing__algo_8h_source.html#l00052">hashing_algo.h:52</a></div></div>
 <div class="ttc" id="struct_password_gen_task_html_a181bd9a0cc10d9e7e4685d5518525442"><div class="ttname"><a href="struct_password_gen_task.html#a181bd9a0cc10d9e7e4685d5518525442">PasswordGenTask::generationContext</a></div><div class="ttdeci">PasswordGenerationContext * generationContext</div><div class="ttdef"><b>Definition:</b> <a href="password__algo_8h_source.html#l00113">password_algo.h:113</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -304,7 +297,7 @@ $(document).ready(function(){initNavTree('pb__client_8c_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>pb_client.c</b></li>
-    <li class="footer">Generated on Wed Jan 28 2015 20:04:15 for Parallel Bruteforce by
+    <li class="footer">Generated on Tue Feb 10 2015 14:56:40 for Parallel Bruteforce by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['startpass',['startPass',['../structclient_task.html#aa0e902f143d6b81355c303e4cca6a1bb',1,'clientTask']]],
-  ['startpassword',['startPassword',['../struct_password_gen_task.html#a3722f6aaadc332dbaefa14cfed78754d',1,'PasswordGenTask::startPassword()'],['../struct_server_context.html#a3722f6aaadc332dbaefa14cfed78754d',1,'ServerContext::startPassword()']]]
+  ['tasks',['tasks',['../struct_server_context.html#afcc8052370da82506e4f6138968873a6',1,'ServerContext']]],
+  ['type',['type',['../structpassword_generation_context.html#ac765329451135abec74c45e1897abf26',1,'passwordGenerationContext::type()'],['../struct_server_context.html#ac765329451135abec74c45e1897abf26',1,'ServerContext::type()']]]
 ];

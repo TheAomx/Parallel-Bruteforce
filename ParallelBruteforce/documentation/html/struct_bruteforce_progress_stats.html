@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Parallel Bruteforce: HashTableEntry Struct Reference</title>
+<title>Parallel Bruteforce: BruteforceProgressStats Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -86,7 +86,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function(){initNavTree('struct_hash_table_entry.html','');});
+$(document).ready(function(){initNavTree('struct_bruteforce_progress_stats.html','');});
 </script>
 <div id="doc-content">
 <!-- window showing the filter options -->
@@ -107,37 +107,43 @@ $(document).ready(function(){initNavTree('struct_hash_table_entry.html','');});
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
-<div class="title">HashTableEntry Struct Reference</div>  </div>
+<div class="title">BruteforceProgressStats Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="pb__client_8h_source.html">pb_client.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a045d0777d97bf8411d9e69f0decf4b0e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a045d0777d97bf8411d9e69f0decf4b0e"></a>
-<a class="el" href="struct_u_t__hash__handle.html">UT_hash_handle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>handle</b></td></tr>
-<tr class="separator:a045d0777d97bf8411d9e69f0decf4b0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6a797c22cfe7f974f696a2e8d1f75dc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af6a797c22cfe7f974f696a2e8d1f75dc"></a>
-uchar *&#160;</td><td class="memItemRight" valign="bottom"><b>hash</b></td></tr>
-<tr class="separator:af6a797c22cfe7f974f696a2e8d1f75dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac095484b283213489fb018b2efe1d20f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac095484b283213489fb018b2efe1d20f"></a>
-uchar *&#160;</td><td class="memItemRight" valign="bottom"><b>id</b></td></tr>
-<tr class="separator:ac095484b283213489fb018b2efe1d20f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae506534bf4968d2b4f4c6de7dfa04d56"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae506534bf4968d2b4f4c6de7dfa04d56"></a>
+ulong&#160;</td><td class="memItemRight" valign="bottom"><b>checkedLast</b></td></tr>
+<tr class="separator:ae506534bf4968d2b4f4c6de7dfa04d56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9de9825de468e54f80ead86baddf4996"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9de9825de468e54f80ead86baddf4996"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>kiloHashesPerSecond</b></td></tr>
+<tr class="separator:a9de9825de468e54f80ead86baddf4996"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04be84ce51fe6c8c5a7e8f15e8388ff0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a04be84ce51fe6c8c5a7e8f15e8388ff0"></a>
+ulong&#160;</td><td class="memItemRight" valign="bottom"><b>pwDiff</b></td></tr>
+<tr class="separator:a04be84ce51fe6c8c5a7e8f15e8388ff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b0441694bd7860cc9fd3bd9709cf0cc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6b0441694bd7860cc9fd3bd9709cf0cc"></a>
+char&#160;</td><td class="memItemRight" valign="bottom"><b>takeTimeOffset</b></td></tr>
+<tr class="separator:a6b0441694bd7860cc9fd3bd9709cf0cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2d5aa7fce1a14d8bddfb2c333ea9679"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab2d5aa7fce1a14d8bddfb2c333ea9679"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>time</b></td></tr>
+<tr class="separator:ab2d5aa7fce1a14d8bddfb2c333ea9679"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85cd78ca6354aa28ff4fa2edf32f4350"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a85cd78ca6354aa28ff4fa2edf32f4350"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>timeDiff</b></td></tr>
+<tr class="separator:a85cd78ca6354aa28ff4fa2edf32f4350"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Scructure representing an element of a hash list. The list is build up and searched using macros of "uthash.h" </p>
-
-<p>Definition at line <a class="el" href="pb__client_8h_source.html#l00022">22</a> of file <a class="el" href="pb__client_8h_source.html">pb_client.h</a>.</p>
+<div class="textblock">
+<p>Definition at line <a class="el" href="bruteforce_8h_source.html#l00015">15</a> of file <a class="el" href="bruteforce_8h_source.html">bruteforce.h</a>.</p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/home/ertai/Development/ParalleleSysteme/Code/Parallel-Bruteforce/ParallelBruteforce/<a class="el" href="pb__client_8h_source.html">pb_client.h</a></li>
+<li>/home/ertai/Development/ParalleleSysteme/Code/Parallel-Bruteforce/ParallelBruteforce/<a class="el" href="bruteforce_8h_source.html">bruteforce.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="struct_hash_table_entry.html">HashTableEntry</a></li>
+    <li class="navelem"><a class="el" href="struct_bruteforce_progress_stats.html">BruteforceProgressStats</a></li>
     <li class="footer">Generated on Tue Feb 10 2015 14:56:40 for Parallel Bruteforce by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>

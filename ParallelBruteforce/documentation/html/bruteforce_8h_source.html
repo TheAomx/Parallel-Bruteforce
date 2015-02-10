@@ -70,7 +70,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -93,7 +92,7 @@ $(document).ready(function(){initNavTree('bruteforce_8h_source.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -121,28 +120,40 @@ $(document).ready(function(){initNavTree('bruteforce_8h_source.html','');});
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;core_headers.h&quot;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">typedef</span> void (*hashFoundCallback)(<span class="keywordtype">char</span>* password, <span class="keywordtype">char</span>* hash);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">typedef</span> int (*bruteforceCallbackObserved) (<span class="keywordtype">void</span> *ctx, <span class="keywordtype">char</span> *password, hashFoundCallback onHashFound);</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="struct_bruteforce_progress_stats.html">   15</a></span>&#160;<span class="keyword">struct </span><a class="code" href="struct_bruteforce_progress_stats.html">BruteforceProgressStats</a> {</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">double</span> time;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">char</span> takeTimeOffset;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">double</span> timeDiff;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">double</span> kiloHashesPerSecond;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    ulong checkedLast;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    ulong pwDiff;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;};</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_bruteforce_progress_stats.html">BruteforceProgressStats</a> <a class="code" href="struct_bruteforce_progress_stats.html">BruteforceProgressStats</a>;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">typedef</span> int (*bruteforceCallback) (<span class="keywordtype">void</span> *ctx, <span class="keywordtype">char</span> *password);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">void</span> bruteforcePasswordTask(<a class="code" href="struct_password_gen_task.html">PasswordGenTask</a>* taskInfo,<span class="keywordtype">void</span> *ctx, bruteforceCallback callback, <span class="keywordtype">char</span> **passphraseBuffer);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">void</span> bruteforcePasswordTaskObserved(<a class="code" href="struct_password_gen_task.html">PasswordGenTask</a>* taskInfo,<span class="keywordtype">void</span> *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, <span class="keywordtype">char</span> **passphraseBuffer);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">typedef</span> void (*hashFoundCallback)(<span class="keywordtype">char</span>* password, <span class="keywordtype">char</span>* hash);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">typedef</span> int (*bruteforceCallbackObserved) (<span class="keywordtype">void</span> *ctx, <span class="keywordtype">char</span> *password, hashFoundCallback onHashFound);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">typedef</span> int (*bruteforceCallback) (<span class="keywordtype">void</span> *ctx, <span class="keywordtype">char</span> *password);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keywordtype">void</span> bruteforcePasswordTask(<a class="code" href="struct_password_gen_task.html">PasswordGenTask</a>* taskInfo,<span class="keywordtype">void</span> *ctx, bruteforceCallback callback, <span class="keywordtype">char</span> **passphraseBuffer);</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keywordtype">void</span> bruteforcePasswordTaskObserved(<a class="code" href="struct_password_gen_task.html">PasswordGenTask</a>* taskInfo,<span class="keywordtype">void</span> *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, <span class="keywordtype">char</span> **passphraseBuffer);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="struct_password_gen_task_html"><div class="ttname"><a href="struct_password_gen_task.html">PasswordGenTask</a></div><div class="ttdef"><b>Definition:</b> <a href="password__algo_8h_source.html#l00101">password_algo.h:101</a></div></div>
+<div class="ttc" id="struct_bruteforce_progress_stats_html"><div class="ttname"><a href="struct_bruteforce_progress_stats.html">BruteforceProgressStats</a></div><div class="ttdef"><b>Definition:</b> <a href="bruteforce_8h_source.html#l00015">bruteforce.h:15</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>bruteforce.h</b></li>
-    <li class="footer">Generated on Wed Jan 28 2015 20:04:15 for Parallel Bruteforce by
+    <li class="footer">Generated on Tue Feb 10 2015 14:56:40 for Parallel Bruteforce by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

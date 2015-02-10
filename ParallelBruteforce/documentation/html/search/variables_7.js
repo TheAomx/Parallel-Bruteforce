@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['nextpassword',['nextPassword',['../structpassword_generation_context.html#a7a33730919cf6f5e73149ce492f9c3e7',1,'passwordGenerationContext']]],
-  ['numclients',['numClients',['../struct_server_context.html#a547581576c445dfdb127df601ad7b993',1,'ServerContext']]],
-  ['numhashes',['numHashes',['../struct_password_hashes.html#aef08781650f7b0f0bb4ba285a20d1ead',1,'PasswordHashes']]],
-  ['numpass',['numPass',['../structclient_task.html#a2788cfcff6228f3ec852d9a3310f2274',1,'clientTask']]],
-  ['numpasswords',['numPasswords',['../struct_server_context.html#a259208afe1a38abe7f0c8399786039ea',1,'ServerContext']]]
+  ['passwordat',['passwordAt',['../structpassword_generation_context.html#ad21f7400334213a068d7e2e7f56a0b25',1,'passwordGenerationContext']]],
+  ['passwordatrelative',['passwordAtRelative',['../structpassword_generation_context.html#a9ebdc12e1a3304e3c9e6a8ff69169c49',1,'passwordGenerationContext']]],
+  ['passworddiff',['passwordDiff',['../structpassword_generation_context.html#a4ea2aea1f765eb4385af9297353bff7c',1,'passwordGenerationContext']]],
+  ['pwalgotype',['pwAlgoType',['../structclient_task.html#adbe4a70d39b49a2e1f0ed9c3bd6f84ba',1,'clientTask']]]
 ];

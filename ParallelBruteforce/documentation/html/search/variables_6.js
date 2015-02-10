@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['init',['init',['../struct_hash_algorithm.html#a2d1908c6a68596e566e41abc9bb35ebd',1,'HashAlgorithm']]],
-  ['initdata',['initData',['../structpassword_generation_context.html#ae8e09a8f79eadbc01489bbcc3b9ac0d7',1,'passwordGenerationContext']]]
+  ['nextpassword',['nextPassword',['../structpassword_generation_context.html#a7a33730919cf6f5e73149ce492f9c3e7',1,'passwordGenerationContext']]],
+  ['numclients',['numClients',['../struct_server_context.html#a547581576c445dfdb127df601ad7b993',1,'ServerContext']]],
+  ['numhashes',['numHashes',['../struct_password_hashes.html#aef08781650f7b0f0bb4ba285a20d1ead',1,'PasswordHashes']]],
+  ['numpass',['numPass',['../structclient_task.html#a2788cfcff6228f3ec852d9a3310f2274',1,'clientTask']]],
+  ['numpasswords',['numPasswords',['../struct_server_context.html#a259208afe1a38abe7f0c8399786039ea',1,'ServerContext']]]
 ];
