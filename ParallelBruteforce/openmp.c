@@ -1,5 +1,6 @@
 #ifdef _OPENMP
     #include <omp.h>
+    #include <stdlib.h>
 #else
     #include <sys/time.h>
     #include <stdlib.h>

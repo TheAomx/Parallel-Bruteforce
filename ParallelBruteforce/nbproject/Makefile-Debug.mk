@@ -42,6 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/HashAlgos/sha2.o \
 	${OBJECTDIR}/HashAlgos/sha256.o \
 	${OBJECTDIR}/HashAlgos/sph_md5.o \
+	${OBJECTDIR}/attack_types.o \
 	${OBJECTDIR}/bruteforce.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/openmp.o \
@@ -110,6 +111,11 @@ ${OBJECTDIR}/HashAlgos/sph_md5.o: HashAlgos/sph_md5.c
 	${MKDIR} -p ${OBJECTDIR}/HashAlgos
 	${RM} "$@.d"
 	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/HashAlgos/sph_md5.o HashAlgos/sph_md5.c
+
+${OBJECTDIR}/attack_types.o: attack_types.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/attack_types.o attack_types.c
 
 ${OBJECTDIR}/bruteforce.o: bruteforce.c 
 	${MKDIR} -p ${OBJECTDIR}

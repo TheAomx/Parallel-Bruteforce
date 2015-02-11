@@ -8,8 +8,11 @@
 #ifndef PB_CLIENT_H
 #define	PB_CLIENT_H
 
-#include "core_headers.h"
+#include <mpi.h>
+
+#include "bruteforce.h"
 #include "uthash.h"
+#include "HashAlgos/hashing_algo.h"
 
 #ifdef	__cplusplus
 extern "C" {
@@ -24,8 +27,28 @@ extern "C" {
         uchar* hash;
         UT_hash_handle handle; /* makes this structure hashable */
     };
-
-typedef struct HashTableEntry HashTableEntry;
+    typedef struct HashTableEntry HashTableEntry;
+    
+    typedef struct ThreadContext ThreadContext;
+    typedef struct AttackStrategy AttackStrategy;
+    
+    typedef void* (*HashFileParser)(ThreadContext *threadContext, char **data, unsigned int numLines);
+    typedef void (*HashDataFreeMethod) (ThreadContext *threadContext);
+    
+    struct AttackStrategy {
+        HashFileParser hashFileParser;
+        HashDataFreeMethod free;
+        bruteforceCallbackObserved bruteforceMethod;
+        void *attackData;
+    };
+    
+    struct ThreadContext {
+        unsigned int numThreads;
+        unsigned long numHashes;
+        uchar **hashBuffer;
+        AttackStrategy *attackStrategy;
+    };
+   
     
     /**
      * Structure containing a list of password hashes and the respecting hashing algorithm,
@@ -33,24 +56,10 @@ typedef struct HashTableEntry HashTableEntry;
      * 
      */
     struct PasswordHashes {
-        /**
-         * Array of hash algorithms.
-         */
         HashAlgorithm **algo;
-        /**
-         * Number of hashes within this structure.
-         */
-        unsigned long numHashes;
-
-        unsigned int numThreads;
-
-        uchar **hashBuffer;
-        /**
-         * Array of hashes.
-         */
-        uchar **hashes;
         
-        HashTableEntry** hashesHashTables;
+        uchar **hashes;
+        HashTableEntry **hashesHashTables;
     };
     
     
@@ -61,31 +70,17 @@ typedef struct HashTableEntry HashTableEntry;
      * @param hashID
      */
 	
-    uchar* getHash(PasswordHashes *pwHashes, int threadID, unsigned int hashID);
-
-
+    uchar* getHash(ThreadContext *context, PasswordHashes *pwHashes, int threadID, unsigned int hashID);
 
     /**
      * Print the array of hashes supplied.
      * @param pwHashes
      * @param rank
      */
-    void printHashes(PasswordHashes *pwHashes, int rank);
-
-    /**
-     * Create an instance of <code>PasswordHashes</code> from the supplied file.
-     * @param in
-     * @param numThreads
-     * @return 
-     */
-    PasswordHashes* generatePasswordHashes(MPI_File *in, unsigned int numThreads);
-
-
-    /**
-     * Frees up previously allocated <code>PasswordHashes</code>.
-     * @param pwHashes
-     */
-    void freePasswordHashes(PasswordHashes *pwHashes);
+    void printHashes(ThreadContext *context, int rank);
+    
+    ThreadContext* createThreadContext(MPI_File *in, unsigned int numThreads);
+    void freeThreadContext(ThreadContext *context);
 
 
 

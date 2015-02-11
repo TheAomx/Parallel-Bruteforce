@@ -10,7 +10,7 @@
 #ifndef BRUTEFORCE_H
 #define BRUTEFORCE_H
 
-#include "core_headers.h"
+#include "password_algo.h"
 
 struct BruteforceProgressStats {
     double time;

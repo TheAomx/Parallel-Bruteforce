@@ -1,7 +1,19 @@
 #include "core_headers.h"
 #include "uthash.h"
+#include "attack_types.h"
 
-void freePasswordHashes(PasswordHashes *pwHashes) {
+void freeThreadContext(ThreadContext *context) {
+    unsigned int i = 0;
+    
+    context->attackStrategy->free(context);
+    
+    for (i = 0; i < context->numThreads; i++) {
+        free(context->hashBuffer[i]);
+    }
+    free(context->attackStrategy);
+    free(context->hashBuffer);
+    free(context);
+#if 0
     unsigned int i = 0;
 
     for (i = 0; i < pwHashes->numThreads; i++) {
@@ -18,18 +30,18 @@ void freePasswordHashes(PasswordHashes *pwHashes) {
     free(pwHashes->hashes);
 
     free(pwHashes);
+#endif
 }
 
-static void initHashTablesForThreads(PasswordHashes* hashes) {
-    int numThreads = hashes->numThreads;
+static void initHashTablesForThreads(ThreadContext *context, PasswordHashes* hashes, int numThreads) {
     hashes->hashesHashTables = (HashTableEntry**) malloc(sizeof (HashTableEntry*) * numThreads);
     HashTableEntry* checkEntry;
     for (int i = 0; i < numThreads; i++) {
         HashTableEntry* currentRoot = NULL;
         HashAlgorithm *algo = hashes->algo[i];
         uint hashSize = algo->hashSize;
-        for (uint j = 0; j < hashes->numHashes; j++) {
-            uchar *checkedHash = (uchar*) getHash(hashes, 0, j);
+        for (uint j = 0; j < context->numHashes; j++) {
+            uchar *checkedHash = (uchar*) getHash(context, hashes, 0, j);
 
             HashTableEntry* newEntry = (HashTableEntry*) malloc(sizeof (HashTableEntry));
             newEntry->hash = (uchar*) malloc(sizeof (uchar) * hashSize);
@@ -72,9 +84,9 @@ PasswordGenTask* createClientTaskWithAlpha(char*alphabet, int pwGenAlgoType, cha
     return result;
 }
 
-void printHashes(PasswordHashes *pwHashes, int rank) {
-    for (unsigned int i = 0; i < pwHashes->numHashes; i++) {
-        printf("[%d] %s\n", rank, pwHashes->algo[0]->toString(getHash(pwHashes, 0, i)));
+void printHashes(ThreadContext *context, int rank) {
+    for (unsigned int i = 0; i < context->numHashes; i++) {
+        //printf("[%d] %s\n", rank, pwHashes->algo[0]->toString(getHash(pwHashes, 0, i)));
     }
 }
 
@@ -95,10 +107,10 @@ static char** readLinesOfFile(MPI_File *in, int *linesFound) {
     return splittedString;
 }
 
-uchar* getHash(PasswordHashes *pwHashes, int threadID, unsigned int hashID) {
+uchar* getHash(ThreadContext *context, PasswordHashes *pwHashes, int threadID, unsigned int hashID) {
     uchar *beginPtr = pwHashes->hashes[threadID];
 
-    if (hashID >= pwHashes->numHashes) {
+    if (hashID >= context->numHashes) {
         DBG_ERR("hashID >= pwHashes->numHashes");
         return NULL;
     }
@@ -106,23 +118,33 @@ uchar* getHash(PasswordHashes *pwHashes, int threadID, unsigned int hashID) {
     return beginPtr + hashID * pwHashes->algo[0]->hashSize;
 }
 
-PasswordHashes* generatePasswordHashes(MPI_File *in, unsigned int numThreads) {
-    unsigned int linesFound = 0;
-    sds *lines = readLinesOfFile(in, &linesFound);
+void freePasswordAlgo (ThreadContext *threadContext) {
+    unsigned int i;
+    PasswordHashes *pwHashes = (PasswordHashes*) threadContext->attackStrategy->attackData;
+    
+    for (i = 0; i < threadContext->numThreads; i++) {
+        HashTableEntry* root = pwHashes->hashesHashTables[i];
+        HashTableEntry *iter, *tmp;
+
+        HASH_ITER(handle, root, iter, tmp) {
+            HASH_DELETE(handle, root, iter);
+            free(iter);
+        }
+        freeHashAlgo(pwHashes->algo[i]);
+    }
+    
+    free(pwHashes->hashes);
+    free(pwHashes);
+}
+
+static void* generatePasswordHashes(ThreadContext *threadContext, char **lines, unsigned int numLines) {
+   
     unsigned long hashesFound = 0;
     unsigned int i;
 
-    if (linesFound == 0) {
-        DBG_ERR("linesFound == 0");
-        return NULL;
-    }
+    unsigned int numThreads = threadContext->numThreads;
 
-    if (numThreads == 0) {
-        DBG_ERR("numThreads == 0");
-        return NULL;
-    }
-
-    for (i = 1; i < linesFound; i++) {
+    for (i = 1; i < numLines; i++) {
         sdstrim(lines[i], " \t");
         if (strcmp("", lines[i]) != 0) {
             hashesFound++;
@@ -140,42 +162,76 @@ PasswordHashes* generatePasswordHashes(MPI_File *in, unsigned int numThreads) {
     }
 
     PasswordHashes *pwHashes = (PasswordHashes*) malloc(sizeof (PasswordHashes));
-    pwHashes->numHashes = hashesFound;
-
-    pwHashes->numThreads = numThreads;
+    threadContext->numHashes = hashesFound;
 
     pwHashes->algo = (HashAlgorithm**) malloc(sizeof (HashAlgorithm*) * numThreads);
     for (i = 0; i < numThreads; i++) {
         pwHashes->algo[i] = createHashAlgorithm(lines[0]);
     }
+        
+    unsigned int hashSize = pwHashes->algo[0]->hashSize;
 
-    pwHashes->hashes = (uchar**) malloc(sizeof (uchar*) * numThreads);
-
-    size_t hashArraySize = sizeof (uchar) * pwHashes->algo[0]->hashSize * hashesFound;
-
+    pwHashes->hashes = (uchar**) malloc(sizeof(uchar*) * numThreads);
+    size_t hashArraySize = sizeof(uchar) * hashSize * hashesFound;
+    
     for (i = 0; i < numThreads; i++) {
         pwHashes->hashes[i] = (uchar*) malloc(hashArraySize);
     }
 
-    pwHashes->hashBuffer = (uchar**) malloc(sizeof (uchar*) * numThreads);
+    threadContext->hashBuffer = (uchar**) malloc(sizeof (uchar*) * numThreads);
 
     for (i = 0; i < numThreads; i++) {
-        pwHashes->hashBuffer[i] = (uchar*) malloc(sizeof (uchar) * pwHashes->algo[0]->hashSize);
+        threadContext->hashBuffer[i] = (uchar*) malloc(sizeof (uchar) * pwHashes->algo[0]->hashSize);
     }
 
     int j = 0;
 
-    for (i = 1; i < linesFound; i++) {
+    for (i = 1; i < numLines; i++) {
         if (strcmp("", lines[i]) != 0) {
-            uchar *binaryHash = getHash(pwHashes, 0, j);
+            uchar *binaryHash = getHash(threadContext, pwHashes, 0, j);
             convertHashStringToBinary(pwHashes->algo[0], lines[i], binaryHash);
             j++;
         }
     }
     
-    initHashTablesForThreads(pwHashes);
-
-    sdsfreesplitres(lines, linesFound);
+    initHashTablesForThreads(threadContext, pwHashes, numThreads);
 
     return pwHashes;
+}
+
+
+AttackStrategy* createNormalHashingAttack() {
+    AttackStrategy *attack = (AttackStrategy*) malloc(sizeof(AttackStrategy));
+    attack->hashFileParser = generatePasswordHashes;
+    attack->bruteforceMethod = checkPasswordObservedHashTable;
+    attack->free = freePasswordAlgo;
+    
+    return attack;
+    
+}
+
+ThreadContext* createThreadContext(MPI_File *in, unsigned int numThreads) {
+    unsigned int linesFound = 0;
+    sds *lines = readLinesOfFile(in, &linesFound);
+    
+    if (linesFound == 0) {
+        DBG_ERR("linesFound == 0");
+        return NULL;
+    }
+    
+    if (numThreads == 0) {
+        DBG_ERR("numThreads == 0");
+        return NULL;
+    }
+     
+    ThreadContext *context = (ThreadContext*) malloc(sizeof(ThreadContext));
+    context->numThreads = numThreads;
+        
+    context->attackStrategy = createNormalHashingAttack();
+    
+    // parse the actual content of the file with the hashFileParser of the attack
+    context->attackStrategy->attackData = context->attackStrategy->hashFileParser(context, lines, linesFound);
+    
+    sdsfreesplitres(lines, linesFound);
+    return context;
 }

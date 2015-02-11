@@ -7,7 +7,8 @@
 
 #ifndef PASSWORD_ALGO_H
 #define	PASSWORD_ALGO_H
-#include "core_headers.h"
+#include "password_algo.h"
+#include "HashAlgos/hash_types.h"
 #ifdef	__cplusplus
 extern "C" {
 #endif

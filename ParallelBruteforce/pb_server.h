@@ -10,7 +10,9 @@
 
 #ifndef PB_SERVER_H
 #define	PB_SERVER_H
-#include "core_headers.h"
+#include "pb_server.h"
+#include "password_algo.h"
+
 #ifdef	__cplusplus
 extern "C" {
 #endif

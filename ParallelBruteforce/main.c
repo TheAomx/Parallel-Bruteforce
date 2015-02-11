@@ -11,31 +11,6 @@
 
 #if 1
 
-int checkPasswordObserved(void *ctx, char *password, hashFoundCallback ohHashFound) {
-    unsigned int i;
-    PasswordHashes *pwHashes = (PasswordHashes*) ctx;
-
-    int threadID = getThreadID();
-    uchar* hashBuffer = pwHashes->hashBuffer[threadID];
-    HashAlgorithm *algo = pwHashes->algo[threadID];
-
-    getHashFromString(algo, password, hashBuffer);
-
-    for (i = 0; i < pwHashes->numHashes; i++) {
-        uchar *checkedHash = getHash(pwHashes, threadID, i);
-        if (algo->equals(hashBuffer, checkedHash)) {
-            //            printf("The hash of %s was %s. Notifying server...\n", password, algo->toString(checkedHash));
-            fflush(stdout);
-            lockMutex();
-            ohHashFound(password, algo->toString(checkedHash));
-            releaseMutex();
-
-        }
-    }
-
-    return 0;
-}
-
 void sendFoundPasswordAndHashToRoot(char* password, char* hash) {
     int lenPw = strlen(password);
     int lenHash = strlen(hash);
@@ -45,28 +20,6 @@ void sendFoundPasswordAndHashToRoot(char* password, char* hash) {
     MPI_Send(&lenHash, 1, MPI_INT, 0, 4713, MPI_COMM_WORLD);
     MPI_Send(hash, lenHash, MPI_CHAR, 0, 4714, MPI_COMM_WORLD);
 
-}
-
-int checkPasswordObservedHashTable(void *ctx, char *password, hashFoundCallback ohHashFound) {
-    unsigned int i;
-    PasswordHashes *pwHashes = (PasswordHashes*) ctx;
-
-    int threadID = getThreadID();
-    uchar* hashBuffer = pwHashes->hashBuffer[threadID];
-    HashAlgorithm *algo = pwHashes->algo[threadID];
-    HashTableEntry** hashTables = pwHashes->hashesHashTables;
-    getHashFromString(algo, password, hashBuffer);
-
-    HashTableEntry *s;
-
-    HASH_FIND(handle, hashTables[threadID], hashBuffer, algo->hashSize, s);
-
-    if (s != NULL) {
-        lockMutex();
-        ohHashFound(password, algo->toString(s->hash));
-        releaseMutex();
-    }
-    return 0;
 }
 
 void printFoundPwToFile(char* password, char* hash) {
@@ -79,10 +32,10 @@ void printFoundPwToFile(char* password, char* hash) {
     sdsfree(textLine);
 }
 
-char* getTime() {
+sds getTime() {
     time_t current_time;
     struct tm * time_info;
-    char timeString[15];
+    sds timeString = sdsnewlen(NULL, 15);
 
     time(&current_time);
     time_info = localtime(&current_time);
@@ -93,9 +46,11 @@ char* getTime() {
 
 void writeTimeToFile(char* prefix) {
     sds result = sdsnew(prefix);
-    result = sdscat(result, getTime());
+    sds timeAsString = getTime();
+    result = sdscat(result, timeAsString);
     appendToFile("found.txt", result);
     sdsfree(result);
+    sdsfree(timeAsString);
 }
 
 void printEndTimeToFile() {
@@ -132,7 +87,7 @@ int main(int argc, char** argv) {
         printf("MPI_File_open failed");
         exit(EXIT_FAILURE);
     }
-    PasswordHashes *pwHashes;
+    ThreadContext *threadContext;
     if (rank == 0) {
         char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.+=&"};
         /*
@@ -212,7 +167,7 @@ int main(int argc, char** argv) {
         /*Wait until all clients received the data.*/
         MPI_Barrier(MPI_COMM_WORLD);
         
-        pwHashes = generatePasswordHashes(&fh, 1);
+        threadContext = createThreadContext(&fh, 1);
 
         DBG_OK("Sent all data to clients ... now going to receive cracked hashes");
 
@@ -222,7 +177,7 @@ int main(int argc, char** argv) {
             free((context->tasks + i));
 
         }
-        ulong hashesToReceive = pwHashes->numHashes;
+        ulong hashesToReceive = threadContext->numHashes;
 
         printStartTimeToFile();
 
@@ -307,7 +262,7 @@ int main(int argc, char** argv) {
         int i = 0;
         int numThreads = getCpuCount();
         setNumThreads(numThreads);
-        pwHashes = generatePasswordHashes(&fh, numThreads);
+        threadContext = createThreadContext(&fh, numThreads);
         printf("child process with %d threads!\n", numThreads);
 
         char **passphraseBuffer = (char**) malloc(sizeof (char*) * numThreads);
@@ -321,13 +276,13 @@ int main(int argc, char** argv) {
         //printHashes(pwHashes, rank);
 
         initLock();
-        bruteforcePasswordTaskObserved(clientTaskInfo, pwHashes, checkPasswordObservedHashTable, sendFoundPasswordAndHashToRoot, passphraseBuffer);
+        bruteforcePasswordTaskObserved(clientTaskInfo, threadContext, threadContext->attackStrategy->bruteforceMethod, sendFoundPasswordAndHashToRoot, passphraseBuffer);
         clearLock();
 
         gettimeofday(&timeAfter, NULL);
         printf("needed %ld secs %ld usecs\n", (ulong) (timeAfter.tv_sec - timeBefore.tv_sec), (ulong) (timeAfter.tv_usec - timeBefore.tv_usec));
     }
-
+    freeThreadContext(threadContext);
 
     MPI_Finalize();
     return 0;

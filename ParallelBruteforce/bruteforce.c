@@ -82,9 +82,9 @@ static void printProgess(BruteforceProgressStats *stats, int numThreads, ulong c
 void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCallback callback, char **passphraseBuffer) {
     PasswordGenerationContext* context = taskInfo->generationContext;
     int len = strlen(taskInfo->startPassword);
-    PasswordHashes* pwHashes = (PasswordHashes*) ctx;
+    ThreadContext* threadContext = (ThreadContext*) ctx;
     
-    int numThreads = pwHashes->numThreads;
+    int numThreads = threadContext->numThreads;
     BruteforceProgressStats **statsData = createStatsForThreads(numThreads);
 
     ulong count = context->passwordDiff(taskInfo->startPassword, taskInfo->endPassword);
@@ -108,7 +108,7 @@ void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCall
 void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer) {
     PasswordGenerationContext* context = taskInfo->generationContext;
     int len = strlen(taskInfo->startPassword);
-    PasswordHashes* pwHashes = (PasswordHashes*) ctx;
+    ThreadContext* pwHashes = (ThreadContext*) ctx;
     
     int numThreads = pwHashes->numThreads;
     BruteforceProgressStats **statsData = createStatsForThreads(numThreads);
