@@ -134,14 +134,14 @@ int main(int argc, char** argv) {
     }
     PasswordHashes *pwHashes;
     if (rank == 0) {
-        char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.+=&$"};
+        char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.+=&"};
         /*
          * Calculate and initialize server side information about the job. 
          * The created context also holds the information about the work, each 
          * client will do.
          */
         ServerContext* context = initializeWithAlphaAndPW(alphabet,hashFile, nTasks - 1, "a", "000000");
-        DBG_OK("Test");
+        
         printServerContext(context);
 
 
