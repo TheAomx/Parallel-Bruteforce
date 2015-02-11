@@ -45,7 +45,7 @@ static void freeStats ( BruteforceProgressStats **stats) {
 }
 
 static void printProgess(BruteforceProgressStats *stats, int numThreads, ulong currentPasswordIndex, ulong numPasswords, char *currentPassphrase) {
-    const ulong perfCounterCheckIntervall = 10000000;
+    const ulong perfCounterCheckIntervall = 50000000;
 
     if (stats->takeTimeOffset == 1) {
         stats->time = getElapsedTime();

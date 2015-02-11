@@ -58,7 +58,7 @@ static void createClientTasks(int numTasks, long numPasswords, char* startPW, ch
 }
 
 static void initServerContext(char* hashesFileName, char* start, char* end, int numWorkers, ulong numPasswords, ServerContext* out, PwGenAlgoType pwGenAlgo) {
-    DBG_OK("Test");
+    
     out->startPassword = start;
     out->endPassword = end;
     out->numClients = numWorkers;
@@ -71,7 +71,10 @@ static void initServerContext(char* hashesFileName, char* start, char* end, int 
 }
 
 ServerContext* initializeWithPW(char* hashesFileName, int numWorkers, char* startPW, char* endPW) {
-    initializeGlobals(defaultAlphabet);
+    return initializeWithAlphaAndPW(defaultAlphabet,hashesFileName,numWorkers,startPW,endPW);
+}
+ServerContext* initializeWithAlphaAndPW(char* alphabet, char* hashesFileName, int numWorkers, char* startPW, char* endPW) {
+    initializeGlobals(alphabet);
     ulong numPWD = getPasswordDiff(startPW, endPW);
     ServerContext* result = (ServerContext*) malloc(sizeof (ServerContext));
     initServerContext(hashesFileName, startPW, endPW, numWorkers, numPWD, result, DEFAULT);
@@ -80,7 +83,10 @@ ServerContext* initializeWithPW(char* hashesFileName, int numWorkers, char* star
 }
 
 ServerContext* initializeWithLenght(char* hashesFileName, int numWorkers, char* startPW, ulong numPasswords) {
-    initializeGlobals(defaultAlphabet);
+    return initializeWithAlphaAndLenght(defaultAlphabet,hashesFileName,numWorkers,startPW,numPasswords);
+}
+ServerContext* initializeWithAlphaAndLenght(char* alphabet, char* hashesFileName, int numWorkers, char* startPW, ulong numPasswords) {
+    initializeGlobals(alphabet);
     ulong startValue = toNumberIndefaultAlphabet(startPW);
     char* tmp = (char*) malloc(sizeof (char)*MAX_PASSWORD);
     memset(tmp, '\0', sizeof (char)*MAX_PASSWORD);

@@ -7,9 +7,7 @@
 
 #ifndef PASSWORD_ALGO_H
 #define	PASSWORD_ALGO_H
-
-#include "HashAlgos/hash_types.h"
-
+#include "core_headers.h"
 #ifdef	__cplusplus
 extern "C" {
 #endif
@@ -188,7 +186,22 @@ extern "C" {
      */
     PasswordGenTask* createClientTask(int pwGenAlgoType, char* start, char* end);
 
+    PasswordGenTask* createClientTaskWithAlpha(char* alphabet,int pwGenAlgoType, char* start, char* end);
+    
+    /**
+     * Creates the DEFAULT generation context and uses the supplied alphabet.
+     * @param alphabet The alphabet to use for job calculation.
+     * @return 
+     */
     PasswordGenerationContext* createDefaultContextWithAlphabet(char* alphabet);
+    
+    /**
+     * Creates the DEFAULT generation context and uses the supplied alphabet.
+     * @param alphabet The alphabet to use for job calculation.
+     * @param type The type of context to create.
+     * @return 
+     */
+    PasswordGenerationContext* createContextWithAlphabet(char* alphabet, int type);
 
     /**
      * Create a user defined password generation context.

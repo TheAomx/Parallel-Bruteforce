@@ -134,13 +134,13 @@ int main(int argc, char** argv) {
     }
     PasswordHashes *pwHashes;
     if (rank == 0) {
-
+        char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.+=&$"};
         /*
          * Calculate and initialize server side information about the job. 
          * The created context also holds the information about the work, each 
          * client will do.
          */
-        ServerContext* context = initializeWithPW(hashFile, nTasks - 1, "a", "000000");
+        ServerContext* context = initializeWithAlphaAndPW(alphabet,hashFile, nTasks - 1, "a", "000000");
         DBG_OK("Test");
         printServerContext(context);
 
@@ -182,6 +182,7 @@ int main(int argc, char** argv) {
 
         /*Wait until all clients received the data.*/
         MPI_Barrier(MPI_COMM_WORLD);
+        
         DBG_OK("Sending algo id");
         /* Send the password generation algorithm identifier. Tag parameter -> 3*/
         for (int i = 1; i < nTasks; i++) {
@@ -193,6 +194,24 @@ int main(int argc, char** argv) {
         MPI_Barrier(MPI_COMM_WORLD);
 
 
+        DBG_OK("Sending alphabet");
+        
+        int alphaLengthValues[nTasks - 1];
+        sds alphabetBuffer[nTasks - 1];
+        
+        /* Send the password generation algorithm identifier. Tag parameter -> 3*/
+        for (int i = 1; i < nTasks; i++) {
+      
+            alphaLengthValues[i-1]=strlen(alphabet);
+            alphabetBuffer[i-1]=sdsnew(alphabet);
+            MPI_Send(&alphaLengthValues[i - 1], 1, MPI_INT, i, 6, MPI_COMM_WORLD);
+
+            MPI_Send(alphabetBuffer[i - 1], alphaLengthValues[i - 1], MPI_CHAR, i, 7, MPI_COMM_WORLD);
+        }
+
+        /*Wait until all clients received the data.*/
+        MPI_Barrier(MPI_COMM_WORLD);
+        
         pwHashes = generatePasswordHashes(&fh, 1);
 
         DBG_OK("Sent all data to clients ... now going to receive cracked hashes");
@@ -243,12 +262,14 @@ int main(int argc, char** argv) {
     } else {
         MPI_Status status;
 
-        int startPwLen, endPwLen, hashFileNameLen, pwAlgoValue;
+        int startPwLen, endPwLen, hashFileNameLen, pwAlgoValue, alphabetLen;
 
         char* hashFileName = (char*) malloc(sizeof (char)*MAX_FILENAME_LEN);
+        char* alpha = (char*) malloc(sizeof (char)*MAX_ALPHA_LEN);
         char* endPass = (char*) malloc(sizeof (char)*MAX_PASSWORD);
         char* startPass = (char*) malloc(sizeof (char)*MAX_PASSWORD);
         memset(hashFileName, '\0', sizeof (char)*MAX_FILENAME_LEN);
+        memset(alpha, '\0', sizeof (char)*MAX_FILENAME_LEN);
         memset(endPass, '\0', sizeof (char)*MAX_PASSWORD);
         memset(startPass, '\0', sizeof (char)*MAX_PASSWORD);
 
@@ -272,8 +293,13 @@ int main(int argc, char** argv) {
         MPI_Recv(&pwAlgoValue, 1, MPI_INT, 0, 5, MPI_COMM_WORLD, &status);
 
         MPI_Barrier(MPI_COMM_WORLD);
+        
+        MPI_Recv(&alphabetLen, 1, MPI_INT, 0, 6, MPI_COMM_WORLD, &status);
+        MPI_Recv(alpha, alphabetLen, MPI_CHAR, 0, 7, MPI_COMM_WORLD, &status);
 
-        DBG_OK("Received data from server. Hash filename: %s\n          start: %s, end: %s, pwAlgoType:%d", hashFileName, startPass, endPass, pwAlgoValue);
+        MPI_Barrier(MPI_COMM_WORLD);
+
+        DBG_OK("Received data from server. Hash filename: %s\n          start: %s, end: %s, pwAlgoType:%d\n          alphabet: %s", hashFileName, startPass, endPass, pwAlgoValue,alpha);
 
         PasswordGenTask* clientTaskInfo = createClientTask(pwAlgoValue, startPass, endPass);
 

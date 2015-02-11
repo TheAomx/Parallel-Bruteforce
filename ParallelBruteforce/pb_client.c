@@ -50,10 +50,6 @@ static void initHashTablesForThreads(PasswordHashes* hashes) {
 
     }
 
-    //    for (int i = 0; i < numThreads; i++) {
-    //        int size = HASH_CNT(handle, hashes->hashesHashTables[i]);
-    //        DBG_OK("Initialized with: %d elements", size);
-    //    }
 }
 
 PasswordGenTask* createClientTask(int pwGenAlgoType, char* start, char* end) {
@@ -64,7 +60,17 @@ PasswordGenTask* createClientTask(int pwGenAlgoType, char* start, char* end) {
     result->endPassword = end;
     result->generationContext = genContext;
     return result;
-};
+}
+
+PasswordGenTask* createClientTaskWithAlpha(char*alphabet, int pwGenAlgoType, char* start, char* end) {
+    PasswordGenTask* result = NULL;
+    PasswordGenerationContext* genContext = createContextWithAlphabet(alphabet,pwGenAlgoType);
+    result = (PasswordGenTask*) malloc(sizeof (PasswordGenTask));
+    result->startPassword = start;
+    result->endPassword = end;
+    result->generationContext = genContext;
+    return result;
+}
 
 void printHashes(PasswordHashes *pwHashes, int rank) {
     for (unsigned int i = 0; i < pwHashes->numHashes; i++) {

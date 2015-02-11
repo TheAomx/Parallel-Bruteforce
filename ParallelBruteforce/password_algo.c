@@ -4,14 +4,7 @@
  *
  * Created on 22. Januar 2015, 21:11
  */
-
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "password_algo.h"
-#include "utils.h"
-#include "debug_macros.h"
+#include "core_headers.h"
 
 /**
  * The default alphabet used.
@@ -87,7 +80,7 @@ static char getKey(Mapping* mappings, int val) {
 void initializeGlobals(char* alphabet) {
     alphabetLength = strlen(alphabet);
     DBG_OK("Initializing password generation with alphabet: %s, %d", alphabet, alphabetLength);
-    alphabetMapping = getMapping(alphabet);
+    alphabetMapping = getMapping(defaultAlphabet);
     nullChar = getKey(alphabetMapping, 0);
     pregeneratedOffsets = (ulong*) malloc(sizeof (ulong) * MAX_PASSWORD);
     ulong result = 0;
@@ -370,6 +363,20 @@ static PasswordGenerationContext* createDefaultContext() {
     result->initData = initializeGlobals;
     result->clearData = freeGlobals;
 
+    return result;
+}
+
+PasswordGenerationContext* createContextWithAlphabet(char* alphabet, int type){
+     PasswordGenerationContext* result = NULL;
+    switch (type) {
+        case DEFAULT:
+            result = createDefaultContextWithAlphabet(alphabet);
+
+            break;
+        default:
+            DBG_OK("Error unknown type of password generation algorithm defined.");
+            exit(EXIT_FAILURE);
+    }
     return result;
 }
 
