@@ -82,7 +82,7 @@ int checkPasswordObservedHashTableWithSalt(void *ctx, char *password, hashFoundC
     
     DBG_OK("in checkPasswordObservedHashTableWithSalt before loop");
     
-    for (i = 3; i < 4; i++) {
+    for (i = 0; i < context->numHashes; i++) {
         sds saltAndPassword = sdsnew(pwHashes->saltValues[i]);
         sdstolower(saltAndPassword);
         saltAndPassword = sdscat(saltAndPassword, password);
