@@ -12,7 +12,6 @@
 extern "C" {
 #endif
 
-
 /* ansi color codes used at the dbg macros for coloured output. */
 
 #define KNRM  "\x1B[0m"

@@ -12,8 +12,7 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
-#define DEBUG 1
+    
 #define MAX_FILENAME_LEN 130
 #define MAX_ALPHA_LEN 200
 

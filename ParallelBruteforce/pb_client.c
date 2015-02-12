@@ -120,12 +120,16 @@ void freePasswordAlgo (ThreadContext *threadContext) {
     free(pwHashes);
 }
 
+static inline int isEmptyLine(char *line) {
+    return strcmp("", line) == 0;
+}
+
+
 static unsigned long getNumHashes(char **lines, unsigned int startIndex, unsigned int numLines) {
     unsigned long hashesFound = 0;
     unsigned int i;
     for (i = startIndex; i < numLines; i++) {
-        //sdstrim(lines[i], " \t");
-        if (strcmp("", lines[i]) != 0) {
+        if (!isEmptyLine(lines[i])) {
             hashesFound++;
         }
     }
@@ -175,7 +179,7 @@ static void* generatePasswordHashes(ThreadContext *threadContext, char **lines, 
     int j = 0;
 
     for (i = 1; i < numLines; i++) {
-        if (strcmp("", lines[i]) != 0) {
+        if (!isEmptyLine(lines[i])) {
             uchar *binaryHash = getHash(threadContext, pwHashes, 0, j);
             convertHashStringToBinary(pwHashes->algo[0], lines[i], binaryHash);
             j++;
@@ -210,10 +214,6 @@ void freePasswordHashesAndSalt (ThreadContext *threadContext) {
     for (i = 0; i < threadContext->numHashes; i++) {
         sdsfree(pwHashes->saltValues[i]);
     }
-}
-
-static inline int isEmptyLine(char *line) {
-    return strcmp("", line) == 0;
 }
 
 static void* generatePasswordHashesAndSalt(ThreadContext *threadContext, char **lines, unsigned int numLines) {
