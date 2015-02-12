@@ -188,7 +188,28 @@ static void* generatePasswordHashes(ThreadContext *threadContext, char **lines, 
 }
 
 void freePasswordHashesAndSalt (ThreadContext *threadContext) {
+    unsigned long i;
+    PasswordHashesWithSalt *pwHashes = (PasswordHashesWithSalt*) threadContext->attackStrategy->attackData;
     
+    for (i = 0; i < threadContext->numThreads; i++) {
+        free(pwHashes->algo[i]);
+        free(threadContext->hashBuffer[i]);
+    }
+    
+    HashTableEntry* root = pwHashes->hashTable;
+    HashTableEntry *iter, *tmp;
+    
+    HASH_ITER(handle, root, iter, tmp) {
+        HASH_DELETE(handle, root, iter);
+        free(iter);
+    }
+    
+    free(pwHashes->algo);
+    free(threadContext->hashBuffer);
+    
+    for (i = 0; i < threadContext->numHashes; i++) {
+        sdsfree(pwHashes->saltValues[i]);
+    }
 }
 
 static inline int isEmptyLine(char *line) {
@@ -214,18 +235,14 @@ static void* generatePasswordHashesAndSalt(ThreadContext *threadContext, char **
     }
     
     PasswordHashesWithSalt *pwHashes = (PasswordHashesWithSalt*) malloc(sizeof (PasswordHashesWithSalt));
+    threadContext->hashBuffer = (uchar**) malloc(sizeof (uchar*) * numThreads);
     
     threadContext->numHashes = hashesFound;
     
     pwHashes->algo = (HashAlgorithm**) malloc(sizeof (HashAlgorithm*) * numThreads);
     for (i = 0; i < numThreads; i++) {
         pwHashes->algo[i] = createHashAlgorithm(lines[0]);
-    }
-
-    threadContext->hashBuffer = (uchar**) malloc(sizeof (uchar*) * numThreads);
-
-    for (i = 0; i < numThreads; i++) {
-        threadContext->hashBuffer[i] = (uchar*) malloc(sizeof (uchar) * pwHashes->algo[0]->hashSize);
+        threadContext->hashBuffer[i] = (uchar*) malloc(sizeof (uchar) * pwHashes->algo[i]->hashSize);
     }
     
     pwHashes->saltValues = (sds*) malloc(sizeof(sds*) * hashesFound);
