@@ -11,6 +11,7 @@
 #include "attack_types.h"
 #include "pb_client.h"
 #include "openmp.h"
+#include "debug_macros.h"
 
 
 int checkPasswordObserved(void *ctx, char *password, hashFoundCallback ohHashFound) {
@@ -61,5 +62,42 @@ int checkPasswordObservedHashTable(void *ctx, char *password, hashFoundCallback 
         ohHashFound(password, algo->toString(s->hash));
         releaseMutex();
     }
+    return 0;
+}
+
+int checkPasswordObservedHashTableWithSalt(void *ctx, char *password, hashFoundCallback ohHashFound) {
+    ThreadContext *context = (ThreadContext*) ctx;
+    AttackStrategy *strategy = context->attackStrategy;
+    PasswordHashesWithSalt *pwHashes = (PasswordHashesWithSalt*) strategy->attackData;
+    
+    int threadID = getThreadID();
+    uchar* hashBuffer = context->hashBuffer[threadID];
+    HashAlgorithm *algo = pwHashes->algo[threadID];
+    
+    HashTableEntry* hashTable = pwHashes->hashTable;
+    
+    HashTableEntry *s;
+    
+    unsigned long i;
+    
+    DBG_OK("in checkPasswordObservedHashTableWithSalt before loop");
+    
+    for (i = 3; i < 4; i++) {
+        sds saltAndPassword = sdsnew(pwHashes->saltValues[i]);
+        sdstolower(saltAndPassword);
+        saltAndPassword = sdscat(saltAndPassword, password);
+        getHashFromString(algo, saltAndPassword, hashBuffer);
+        
+        HASH_FIND(handle, hashTable, hashBuffer, algo->hashSize, s);
+
+        if (s != NULL) {
+            lockMutex();
+            ohHashFound(password, algo->toString(hashBuffer));
+            releaseMutex();
+        }
+        
+        sdsfree(saltAndPassword);
+    }
+    
     return 0;
 }

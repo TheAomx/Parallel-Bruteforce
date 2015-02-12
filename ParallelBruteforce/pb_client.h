@@ -12,6 +12,7 @@
 
 #include "bruteforce.h"
 #include "uthash.h"
+#include "sds.h"
 #include "HashAlgos/hashing_algo.h"
 
 #ifdef	__cplusplus
@@ -60,10 +61,17 @@ extern "C" {
         
         uchar **hashes;
         HashTableEntry **hashesHashTables;
-    };
-    
-    
+    };  
     typedef struct PasswordHashes PasswordHashes;
+    
+    struct PasswordHashesWithSalt {
+        HashAlgorithm **algo;
+        
+        sds *saltValues;
+        HashTableEntry *hashTable;
+    };
+    typedef struct PasswordHashesWithSalt PasswordHashesWithSalt;
+
 
 	/**
      * Gets the hash of the hashID

@@ -16,6 +16,8 @@ extern "C" {
 
 int checkPasswordObservedHashTable(void *ctx, char *password, hashFoundCallback ohHashFound);
 
+int checkPasswordObservedHashTableWithSalt(void *ctx, char *password, hashFoundCallback ohHashFound);
+
 
 #ifdef	__cplusplus
 }

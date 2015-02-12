@@ -7,7 +7,6 @@
 #endif
 
 #include "openmp.h"
-#include "bruteforce.h"
 
 #ifdef _OPENMP
     omp_lock_t* lock = NULL;

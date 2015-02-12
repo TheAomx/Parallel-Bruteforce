@@ -108,9 +108,9 @@ void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCall
 void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer) {
     PasswordGenerationContext* context = taskInfo->generationContext;
     int len = strlen(taskInfo->startPassword);
-    ThreadContext* pwHashes = (ThreadContext*) ctx;
+    ThreadContext* threadContext = (ThreadContext*) ctx;
     
-    int numThreads = pwHashes->numThreads;
+    int numThreads = threadContext->numThreads;
     BruteforceProgressStats **statsData = createStatsForThreads(numThreads);
     context->initData(context->alphabet);
 
