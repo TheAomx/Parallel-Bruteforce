@@ -58,7 +58,7 @@ static void createClientTasks(int numTasks, long numPasswords, char* startPW, ch
 }
 
 static void initServerContext(char* hashesFileName, char* start, char* end, int numWorkers, ulong numPasswords, ServerContext* out, PwGenAlgoType pwGenAlgo) {
-    
+
     out->startPassword = start;
     out->endPassword = end;
     out->numClients = numWorkers;
@@ -71,8 +71,9 @@ static void initServerContext(char* hashesFileName, char* start, char* end, int 
 }
 
 ServerContext* initializeWithPW(char* hashesFileName, int numWorkers, char* startPW, char* endPW) {
-    return initializeWithAlphaAndPW(defaultAlphabet,hashesFileName,numWorkers,startPW,endPW);
+    return initializeWithAlphaAndPW(defaultAlphabet, hashesFileName, numWorkers, startPW, endPW);
 }
+
 ServerContext* initializeWithAlphaAndPW(char* alphabet, char* hashesFileName, int numWorkers, char* startPW, char* endPW) {
     initializeGlobals(alphabet);
     ulong numPWD = getPasswordDiff(startPW, endPW);
@@ -83,8 +84,9 @@ ServerContext* initializeWithAlphaAndPW(char* alphabet, char* hashesFileName, in
 }
 
 ServerContext* initializeWithLenght(char* hashesFileName, int numWorkers, char* startPW, ulong numPasswords) {
-    return initializeWithAlphaAndLenght(defaultAlphabet,hashesFileName,numWorkers,startPW,numPasswords);
+    return initializeWithAlphaAndLenght(defaultAlphabet, hashesFileName, numWorkers, startPW, numPasswords);
 }
+
 ServerContext* initializeWithAlphaAndLenght(char* alphabet, char* hashesFileName, int numWorkers, char* startPW, ulong numPasswords) {
     initializeGlobals(alphabet);
     ulong startValue = toNumberIndefaultAlphabet(startPW);
@@ -102,6 +104,10 @@ static void printClientTask(ClientTask task) {
     printf("      Client task configuration:\n         Start: %s, end: %s, count: %ld\n", task.startPass, task.endPass, task.numPass);
 }
 
+static sds printClientTaskToString(ClientTask task, int i) {
+    return sdscatprintf(sdsnew(""), "      Task %d:\n         Start: %s, end: %s, count: %ld\n", i, task.startPass, task.endPass, task.numPass);
+}
+
 void printServerContext(ServerContext* ctx) {
     printf("\nServer context with %d clients\n", ctx->numClients);
     printf("   Operation is to check %ld passwords. Each client will have to generate at least %ld passwords\n", ctx->numPasswords, ctx->tasks[0].numPass);
@@ -113,4 +119,21 @@ void printServerContext(ServerContext* ctx) {
     printf("   Each client will use %s algorithm to generate new passwords.\n", PW_GEN_TYPE_TO_STRING(ctx->type));
     printf("   Target hashes are pulled from file with name %s.\n\n", ctx->hashesFileName);
     fflush(stdout);
+}
+
+void appendServerContextToFile(char* file, ServerContext* ctx, char* alphabet) {
+    sds text = sdsnew("\nBruteforce-Attack using: ");
+    text = sdscatprintf(text, "%d MPI clients.\n", ctx->numClients);
+    text = sdscatprintf(text, "   Operation is to check %ld passwords.\n", ctx->numPasswords);
+    text = sdscat(text, "   Each password will use the alphabet:\n");
+    text = sdscatprintf(text, "      %s\n", alphabet);
+    text = sdscatprintf(text, "   Start password is: %s, end is: %s\nClient configurations:\n", ctx->startPassword, ctx->endPassword);
+    text = sdscatprintf(text, "   Each client will use %s algorithm to generate new passwords.\n", PW_GEN_TYPE_TO_STRING(ctx->type));
+    text = sdscatprintf(text, "   Target hashes are pulled from file with name '%s'.\n", ctx->hashesFileName);
+    for (int i = 0; i < ctx->numClients; i++) {
+        text = sdscat(text, printClientTaskToString(ctx->tasks[i], i));
+    }
+    
+    appendToFile(file, text);
+    sdsfree(text);
 }

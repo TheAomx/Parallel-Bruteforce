@@ -116,6 +116,13 @@ extern "C" {
      * @param ctx
      */
     void printServerContext(ServerContext* ctx);
+    
+    /**
+     * Append information about the bruteforce job to the given file.
+     * @param file
+     * @param ctx
+     */
+    void appendServerContextToFile(char* file, ServerContext* ctx, char* alphabet);
 
 
 
