@@ -44,7 +44,7 @@ static void freeStats ( BruteforceProgressStats **stats) {
     free(stats);
 }
 
-static void printProgess(BruteforceProgressStats *stats, int numThreads, ulong currentPasswordIndex, ulong numPasswords, char *currentPassphrase) {
+static void printProgess(int mpiRank,BruteforceProgressStats *stats, int numThreads, ulong currentPasswordIndex, ulong numPasswords, char *currentPassphrase) {
     const ulong perfCounterCheckIntervall = 50000000;
 
     if (stats->takeTimeOffset == 1) {
@@ -72,14 +72,14 @@ static void printProgess(BruteforceProgressStats *stats, int numThreads, ulong c
 
         }
         
-        printf("[%d] %.2f%% %s, %.3f msec(per %ld hashes) -> %.3f kHashes/s.\n", threadID, percentFinished, currentPassphrase, stats->timeDiff * 1000.0, perfCounterCheckIntervall, stats->kiloHashesPerSecond);
+        printf("[%d][%d] %.2f%% %s, %.3f msec(per %ld hashes) -> %.3f kHashes/s.\n",mpiRank, threadID, percentFinished, currentPassphrase, stats->timeDiff * 1000.0, perfCounterCheckIntervall, stats->kiloHashesPerSecond);
         fflush(stdout);
         
         stats->checkedLast = checkedPws;
     }
 }
 
-void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCallback callback, char **passphraseBuffer) {
+void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCallback callback, char **passphraseBuffer, int mpiRank) {
     PasswordGenerationContext* context = taskInfo->generationContext;
     int len = strlen(taskInfo->startPassword);
     ThreadContext* threadContext = (ThreadContext*) ctx;
@@ -100,12 +100,12 @@ void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCall
         context->passwordAt(i + offset, currentPassphrase);
         callback((void*) ctx, currentPassphrase);
 
-        printProgess(statsData[threadID], numThreads, i, count, currentPassphrase);
+        printProgess(mpiRank,statsData[threadID], numThreads, i, count, currentPassphrase);
     }
     freeStats(statsData);
 }
 
-void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer) {
+void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer, int mpiRank) {
     PasswordGenerationContext* context = taskInfo->generationContext;
     int len = strlen(taskInfo->startPassword);
     ThreadContext* threadContext = (ThreadContext*) ctx;
@@ -127,7 +127,7 @@ void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, brutef
         context->passwordAt(i + offset, currentPassphrase);
         callback((void*) ctx, currentPassphrase, onHashFound);
 
-        printProgess(statsData[threadID], numThreads, i, count, currentPassphrase);
+        printProgess(mpiRank,statsData[threadID], numThreads, i, count, currentPassphrase);
 
     }
     freeStats(statsData);

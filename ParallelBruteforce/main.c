@@ -8,11 +8,14 @@
 #include <mpi.h>
 
 #include "core_headers.h"
+#include "debug_macros.h"
 
 #if 1
 
-const char* CLIENT_FINISH_MESSAGE="MPI_BRUTEFORCE_CLIENT_FINISH";
 
+
+const char* CLIENT_FINISH_MESSAGE = "MPI_BRUTEFORCE_CLIENT_FINISH";
+static int rank;
 #define FOUND_PASSWORD_FILE_NAME "stats.txt"
 
 void sendFoundPasswordAndHashToRoot(char* password, char* hash) {
@@ -25,11 +28,11 @@ void sendFoundPasswordAndHashToRoot(char* password, char* hash) {
     MPI_Send(hash, lenHash, MPI_CHAR, 0, 4714, MPI_COMM_WORLD);
 }
 
-void sendClientFinishMessageToRoot(){
-    int messageLen=strlen(CLIENT_FINISH_MESSAGE);
+void sendClientFinishMessageToRoot() {
+    int messageLen = strlen(CLIENT_FINISH_MESSAGE);
     
     MPI_Send(&messageLen, 1, MPI_INT, 0, 4711, MPI_COMM_WORLD);
-    MPI_Send((void*)CLIENT_FINISH_MESSAGE, messageLen, MPI_CHAR, 0, 4712, MPI_COMM_WORLD);
+    MPI_Send((void*) CLIENT_FINISH_MESSAGE, messageLen, MPI_CHAR, 0, 4712, MPI_COMM_WORLD);
 }
 
 void printFoundPwToFile(char* password, char* hash) {
@@ -49,8 +52,8 @@ sds getTime() {
 
     time(&current_time);
     time_info = localtime(&current_time);
-    timeString = sdscatprintf(timeString,"%d.%d, %d:%d:%d", time_info->tm_mday,time_info->tm_mon+1,time_info->tm_hour,time_info->tm_min,time_info->tm_sec);
-    
+    timeString = sdscatprintf(timeString, "%d.%d, %d:%d:%d", time_info->tm_mday, time_info->tm_mon + 1, time_info->tm_hour, time_info->tm_min, time_info->tm_sec);
+
     return timeString;
 }
 
@@ -67,31 +70,38 @@ void printEndTimeToFile() {
     writeTimeToFile("Bruteforce end: ");
 }
 
-int hasRunningClients(char runningClients[], int numClients){
-    char* testArray=(char*)malloc(sizeof(char)*numClients);
-    memset(testArray,'0',sizeof(char)*numClients);
-    
-    int result = memcmp(runningClients,testArray,sizeof(char)*numClients);
-    
+int hasRunningClients(char runningClients[], int numClients) {
+    char* testArray = (char*) malloc(sizeof (char)*numClients);
+    memset(testArray, '0', sizeof (char)*numClients);
+
+    int result = memcmp(runningClients, testArray, sizeof (char)*numClients);
+
     free(testArray);
     return result;
 }
 
-
-
 void printStartTimeToFile() {
     writeTimeToFile("Bruteforce start: ");
 }
-void exitWrongTaskCount(int nTasks){
+
+void exitWrongTaskCount(int nTasks) {
     DBG_WARN("The MPI-Communicator contains only one (or less) tasks.");
-        DBG_WARN("Disturbed brute force attack cannot be executed with the defined number (%d) of tasks.", nTasks);
-        DBG_WARN("Consider setting up more MPI-Processors.");
-        MPI_Finalize();
-        exit(EXIT_FAILURE);
+    DBG_WARN("Disturbed brute force attack cannot be executed with the defined number (%d) of tasks.", nTasks);
+    DBG_WARN("Consider setting up more MPI-Processors.");
+    MPI_Finalize();
+    exit(EXIT_FAILURE);
 }
+
+void finishExecution() {
+    MPI_Abort(MPI_COMM_WORLD, MPI_SUCCESS);
+    exit(EXIT_SUCCESS);
+}
+
+
+
 int main(int argc, char** argv) {
 
-    int nTasks, rank;
+    int nTasks;
 
     if (MPI_Init(&argc, &argv) != MPI_SUCCESS) {
         printf("MPI_init failed\n");
@@ -113,16 +123,16 @@ int main(int argc, char** argv) {
     }
     ThreadContext *threadContext;
     if (rank == 0) {
-        char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.+=&"};
+        char alphabet[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.+=&!$%?-*#|"};
         /*
          * Calculate and initialize server side information about the job. 
          * The created context also holds the information about the work, each 
          * client will do.
          */
-        ServerContext* context = initializeWithAlphaAndPW(alphabet,hashFile, nTasks - 1, "a", "0000");
-        
+        ServerContext* context = initializeWithAlphaAndPW(alphabet, hashFile, nTasks - 1, "a", "0000");
+
         printServerContext(context);
-        appendServerContextToFile(FOUND_PASSWORD_FILE_NAME,context, alphabet);
+        appendServerContextToFile(FOUND_PASSWORD_FILE_NAME, context, alphabet);
 
 
 
@@ -162,7 +172,7 @@ int main(int argc, char** argv) {
 
         /*Wait until all clients received the data.*/
         MPI_Barrier(MPI_COMM_WORLD);
-        
+
         DBG_OK("Sending algo id");
         /* Send the password generation algorithm identifier. Tag parameter -> 3*/
         for (int i = 1; i < nTasks; i++) {
@@ -175,15 +185,15 @@ int main(int argc, char** argv) {
 
 
         DBG_OK("Sending alphabet");
-        
+
         int alphaLengthValues[nTasks - 1];
         sds alphabetBuffer[nTasks - 1];
-        
+
         /* Send the password generation algorithm identifier. Tag parameter -> 3*/
         for (int i = 1; i < nTasks; i++) {
-      
-            alphaLengthValues[i-1]=strlen(alphabet);
-            alphabetBuffer[i-1]=sdsnew(alphabet);
+
+            alphaLengthValues[i - 1] = strlen(alphabet);
+            alphabetBuffer[i - 1] = sdsnew(alphabet);
             MPI_Send(&alphaLengthValues[i - 1], 1, MPI_INT, i, 6, MPI_COMM_WORLD);
 
             MPI_Send(alphabetBuffer[i - 1], alphaLengthValues[i - 1], MPI_CHAR, i, 7, MPI_COMM_WORLD);
@@ -191,7 +201,7 @@ int main(int argc, char** argv) {
 
         /*Wait until all clients received the data.*/
         MPI_Barrier(MPI_COMM_WORLD);
-        
+
         threadContext = createThreadContext(&fh, 1);
 
         DBG_OK("Sent all data to clients ... now going to receive cracked hashes");
@@ -201,15 +211,15 @@ int main(int argc, char** argv) {
         for (int i = nTasks - 1; i <= 0; i) {
             free((context->tasks + i));
         }
-        
-        char runningClients[nTasks-1];
-        memset(runningClients, '1', sizeof(char)*(nTasks-1));
-        
+
+        char runningClients[nTasks - 1];
+        memset(runningClients, '1', sizeof (char)*(nTasks - 1));
+
         ulong hashesToReceive = threadContext->numHashes;
 
         printStartTimeToFile();
-
-        for (ulong hashesFound = 0; hashesFound < hashesToReceive; hashesFound++) {
+        ulong hashesFound = 0;
+        for (; hashesFound < hashesToReceive; hashesFound++) {
             MPI_Status status;
             int pwLen;
             int hashLen;
@@ -221,20 +231,17 @@ int main(int argc, char** argv) {
             pwBuffer = (char*) malloc(sizeof (char)*(pwLen + 1));
             MPI_Recv(pwBuffer, pwLen, MPI_CHAR, status.MPI_SOURCE, 4712, MPI_COMM_WORLD, &status);
             pwBuffer[pwLen] = '\0';
-            
-            if(strcmp(pwBuffer,CLIENT_FINISH_MESSAGE)==0){
-                DBG_OK("Client %d finished job.",status.MPI_SOURCE);
-                
-                runningClients[status.MPI_SOURCE-1]='0';
-                if(hasRunningClients(runningClients,nTasks-1)==0){
-                    DBG_OK("All clients finish! MPI-Master is terminating");
-                    fflush(stdout);
+
+            if (strcmp(pwBuffer, CLIENT_FINISH_MESSAGE) == 0) {
+                printf("Client %d finished job.\n", status.MPI_SOURCE);
+
+                runningClients[status.MPI_SOURCE - 1] = '0';
+                if (hasRunningClients(runningClients, nTasks - 1) == 0) {
+                    printf("All clients finished their jobs! MPI-Master is terminating\n");
                     free(pwBuffer);
                     break;
                 }
-            }
-            
-            
+            }else{
             MPI_Recv(&hashLen, 1, MPI_INT, status.MPI_SOURCE, 4713, MPI_COMM_WORLD, &status);
             hashBuffer = (char*) malloc(sizeof (char)*(hashLen + 1));
             MPI_Recv(hashBuffer, hashLen, MPI_CHAR, status.MPI_SOURCE, 4714, MPI_COMM_WORLD, &status);
@@ -243,17 +250,20 @@ int main(int argc, char** argv) {
 
             printf("%sPassword found on client %d: %s -> %s%s\n", KGRN, status.MPI_SOURCE, pwBuffer, hashBuffer, KNRM);
             printFoundPwToFile(pwBuffer, hashBuffer);
-            free(pwBuffer);
             free(hashBuffer);
-
+            }
+            free(pwBuffer);
 
         }
         free(context);
-        
+
         printEndTimeToFile();
         /*If we reach here, we have found any password, so we can terminate MPI execution environment.*/
-        if (MPI_Abort(MPI_COMM_WORLD, MPI_SUCCESS) == -1)
-            exit(EXIT_SUCCESS);
+        sleep(4);
+        if (hashesFound == hashesToReceive) {
+            printf("All passwords found. Finishing execution.\n");
+            finishExecution();
+        }
 
     } else {
         MPI_Status status;
@@ -289,13 +299,13 @@ int main(int argc, char** argv) {
         MPI_Recv(&pwAlgoValue, 1, MPI_INT, 0, 5, MPI_COMM_WORLD, &status);
 
         MPI_Barrier(MPI_COMM_WORLD);
-        
+
         MPI_Recv(&alphabetLen, 1, MPI_INT, 0, 6, MPI_COMM_WORLD, &status);
         MPI_Recv(alpha, alphabetLen, MPI_CHAR, 0, 7, MPI_COMM_WORLD, &status);
 
         MPI_Barrier(MPI_COMM_WORLD);
 
-        DBG_OK("Received data from server. Hash filename: %s\n          start: %s, end: %s, pwAlgoType:%d\n          alphabet: %s", hashFileName, startPass, endPass, pwAlgoValue,alpha);
+        DBG_OK("Received data from server. Hash filename: %s\n          start: %s, end: %s, pwAlgoType:%d\n          alphabet: %s", hashFileName, startPass, endPass, pwAlgoValue, alpha);
 
         PasswordGenTask* clientTaskInfo = createClientTask(pwAlgoValue, startPass, endPass);
 
@@ -312,18 +322,20 @@ int main(int argc, char** argv) {
             memset(passphraseBuffer[i], 0, sizeof (passphraseBuffer[i]));
         }
 
-        struct timeval timeBefore, timeAfter;
-        gettimeofday(&timeBefore, NULL);
+        //        struct timeval timeBefore, timeAfter;
+        //        gettimeofday(&timeBefore, NULL);
         //printHashes(pwHashes, rank);
 
         initLock();
-        bruteforcePasswordTaskObserved(clientTaskInfo, threadContext, threadContext->attackStrategy->bruteforceMethod, sendFoundPasswordAndHashToRoot, passphraseBuffer);
+        bruteforcePasswordTaskObserved(clientTaskInfo, threadContext, threadContext->attackStrategy->bruteforceMethod, sendFoundPasswordAndHashToRoot, passphraseBuffer, rank);
         clearLock();
 
-        gettimeofday(&timeAfter, NULL);
-        printf("needed %ld secs %ld usecs\n", (ulong) (timeAfter.tv_sec - timeBefore.tv_sec), (ulong) (timeAfter.tv_usec - timeBefore.tv_usec));
+        //        gettimeofday(&timeAfter, NULL);
+        //        printf("needed %ld secs %ld usecs\n", (ulong) (timeAfter.tv_sec - timeBefore.tv_sec), (ulong) (timeAfter.tv_usec - timeBefore.tv_usec));
+        
         
         sendClientFinishMessageToRoot();
+        sleep(3);
     }
     freeThreadContext(threadContext);
 

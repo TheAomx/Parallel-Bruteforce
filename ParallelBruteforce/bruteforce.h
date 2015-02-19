@@ -47,18 +47,20 @@ typedef int (*bruteforceCallback) (void *ctx, char *password);
  * @param ctx 
  * @param callback
  * @param passphraseBuffer
+ * @param mpiRank
  */
-void bruteforcePasswordTask(PasswordGenTask* taskInfo,void *ctx, bruteforceCallback callback, char **passphraseBuffer);
+void bruteforcePasswordTask(PasswordGenTask* taskInfo, void *ctx, bruteforceCallback callback, char **passphraseBuffer, int mpiRank);
 
 /**
- * 
+ * Provides functionality equal to 'bruteforcePasswordTask'. In difference, this method enables the you to pass an user defined callback which is invoked when a password is found.
  * @param taskInfo
  * @param ctx
  * @param callback
  * @param onHashFound
  * @param passphraseBuffer
+ * @param mpiRank
  */
-void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo,void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer);
+void bruteforcePasswordTaskObserved(PasswordGenTask* taskInfo, void *ctx, bruteforceCallbackObserved callback, hashFoundCallback onHashFound, char **passphraseBuffer, int mpiRank);
 
 
 
